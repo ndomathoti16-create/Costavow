@@ -38,6 +38,10 @@ that comparison. No third-party implementation was copied and no new service was
 - Ruff lint and formatting passed; all 107 Python files are formatted. Python compilation and
   `git diff --check` passed. Bandit reported no findings (two existing informational suppression
   warnings remain on the allow-listed BigQuery query).
+- GitHub Linux CI also passed all 151 tests, lint, formatting, compilation, and Bandit. Its
+  dependency audit identified the runner's preinstalled Setuptools 79.0.1; build and development
+  requirements now enforce 83 or newer, the patched version in the
+  [upstream advisory](https://github.com/pypa/setuptools/security/advisories/GHSA-h35f-9h28-mq5c).
 - `pip check` passed. `pip-audit --local` found no known vulnerabilities in installed third-party
   packages; the local Metrora project has no PyPI advisory entry and was skipped. UTF-8 mode was
   required because the Windows workspace name contains an em dash.
@@ -72,5 +76,5 @@ truth of every narrative claim.
 review the exact release's dependency notices and missing-license markers; approve cloud IAM,
 AI-provider terms, data retention, backups, and device access/encryption. Determine any legal,
 privacy, or financial-services obligations from the actual deployment and jurisdiction. Live cloud
-identities, remote AI providers, the Windows executable build, Linux execution, and deployment were
-not exercised in this review. No compliance certification or complete security guarantee is made.
+identities, remote AI providers, the Windows executable build, and deployment were not exercised
+in this review. No compliance certification or complete security guarantee is made.

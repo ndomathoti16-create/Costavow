@@ -10,6 +10,7 @@ backend. The packaged Windows release includes its Python dependencies.
 
 Run commands from the repository root. `requirements.txt` pins the verified Streamlit runtime;
 use it for development, CI, containers, and release builds so rendering does not change implicitly.
+The development extra also updates Setuptools to the minimum patched build-tool version.
 
 ## Python setup
 

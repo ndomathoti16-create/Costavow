@@ -7,6 +7,8 @@ unchanged until a new version is published.
 
 ### Fixed
 
+- Require patched Setuptools for source builds and development/release verification environments.
+
 - Correct rolling MAD anomaly scores, finite-value validation, budget currency checks, and
   selected-period business-volume comparisons.
 - Refresh source caches when nested values or same-named supporting files change.
