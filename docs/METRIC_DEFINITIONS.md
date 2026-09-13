@@ -6,10 +6,10 @@ All monetary values come from the normalized canonical `cost` field and are calc
 
 The accepted field mapping records the source column behind `cost`; every reconciliation,
 chart, forecast, anomaly, recommendation, and export uses that same basis. For a FOCUS 1.3
-export containing both fields, Metrora automatically proposes `EffectiveCost` because FOCUS
+export containing both fields, Costavow automatically proposes `EffectiveCost` because FOCUS
 defines it as the amortized cost after discounts and prepaid-purchase allocation and identifies
 it as a common basis for spend trends. A reviewer can select `BilledCost` in Data settings for
-cash-basis budgeting, invoice alignment, or payable reconciliation. Metrora never combines the
+cash-basis budgeting, invoice alignment, or payable reconciliation. Costavow never combines the
 two bases or silently changes basis within an analysis.
 
 | Metric | Definition | Caveat |

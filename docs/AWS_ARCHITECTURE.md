@@ -1,4 +1,4 @@
-# Metrora AWS extension architecture
+# Costavow AWS extension architecture
 
 The local application remains the default demo path. The AWS extension uses the same canonical Parquet shape so a reviewer can understand the cloud path without needing cloud credentials to run the application.
 
