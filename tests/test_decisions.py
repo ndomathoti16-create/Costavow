@@ -267,3 +267,13 @@ def test_outcome_summary_never_adds_unknown_or_mixed_currencies(currencies) -> N
         for currency in currencies
     ]
     assert _summary_value(records)[0] == "Review separately"
+
+
+def test_receipt_selector_preserves_decisions_with_matching_labels() -> None:
+    from finops_cost_intelligence.ui.decision_view import _decision_options
+
+    records = [_decision(decision_id="first-source"), _decision(decision_id="second-source")]
+    assert {item.decision_id for item in _decision_options(records).values()} == {
+        "first-source",
+        "second-source",
+    }

@@ -194,7 +194,7 @@ def _render_priority_queue(decisions: list[DecisionRecord]) -> None:
 
 def _decision_options(decisions: list[DecisionRecord]) -> dict[str, DecisionRecord]:
     return {
-        f"{item.title} — {item.status} — {item.owner}": item
+        f"{item.title} — {item.status} — {item.owner} [{item.decision_id}]": item
         for item in sorted(decisions, key=lambda value: value.title.casefold())
     }
 
