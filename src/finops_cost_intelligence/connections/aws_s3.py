@@ -69,7 +69,7 @@ class AwsS3BillingConnector:
     ) -> None:
         self.config = config
         self._client = client
-        self.max_bytes = max_bytes or DEFAULT_CLOUD_IMPORT_LIMIT_BYTES
+        self.max_bytes = DEFAULT_CLOUD_IMPORT_LIMIT_BYTES if max_bytes is None else max_bytes
         enforce_size_limit(0, self.max_bytes, label="AWS export batch")
 
     @property
@@ -142,7 +142,11 @@ class AwsS3BillingConnector:
                     None if self.max_bytes is None else self.max_bytes - downloaded_bytes
                 )
                 read_size = None if remaining_bytes is None else remaining_bytes + 1
-                payload = bytes(response["Body"].read(read_size))
+                body = response["Body"]
+                try:
+                    payload = bytes(body.read(read_size))
+                finally:
+                    body.close()
                 downloaded_bytes += len(payload)
                 enforce_size_limit(
                     downloaded_bytes,

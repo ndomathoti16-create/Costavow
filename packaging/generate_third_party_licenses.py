@@ -27,14 +27,26 @@ def _declared_license(distribution: metadata.Distribution) -> str:
 
 def _license_texts(distribution: metadata.Distribution) -> list[tuple[str, str]]:
     available = {str(item).replace("\\", "/"): item for item in distribution.files or ()}
-    collected: list[tuple[str, str]] = []
+    candidates = {
+        path: item
+        for path, item in available.items()
+        if PurePosixPath(path)
+        .name.casefold()
+        .startswith(("license", "licence", "copying", "notice"))
+    }
     for declared_path in distribution.metadata.get_all("License-File", []):
-        normalized = declared_path.replace("\\", "/")
-        relative = PurePosixPath(normalized)
+        relative = PurePosixPath(declared_path.replace("\\", "/"))
         if relative.is_absolute() or ".." in relative.parts:
             continue
-        package_path = available.get(normalized)
-        if package_path is None:
+        for path, item in available.items():
+            if path == str(relative) or path.endswith(
+                (".dist-info/licenses/" + str(relative), ".dist-info/" + str(relative))
+            ):
+                candidates[path] = item
+    collected: list[tuple[str, str]] = []
+    for normalized, package_path in sorted(candidates.items()):
+        relative = PurePosixPath(normalized)
+        if relative.is_absolute() or ".." in relative.parts:
             continue
         located = Path(distribution.locate_file(package_path))
         try:
@@ -77,7 +89,10 @@ def build_license_bundle() -> str:
         )
         license_texts = _license_texts(distribution)
         if not license_texts:
-            sections.append("No license file was declared in the installed package metadata.")
+            sections.append(
+                "No license text was found in the installed package files; "
+                "verify before redistribution."
+            )
             continue
         for relative_path, contents in license_texts:
             sections.extend(["", f"--- {relative_path} ---", contents])

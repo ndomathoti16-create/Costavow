@@ -5,6 +5,7 @@ from __future__ import annotations
 import pandas as pd
 
 from ..contracts.analytics import AnalyticsInputError
+from .spend import _coerce_cost
 
 DEFAULT_ALLOCATION_FIELDS = ("account_id", "department", "project", "environment")
 
@@ -23,9 +24,7 @@ def calculate_allocation_coverage(
     selected_fields = [field for field in fields if field in dataframe.columns]
     if not selected_fields:
         raise AnalyticsInputError("No requested allocation fields are present in the data.")
-    costs = pd.to_numeric(dataframe["cost"], errors="coerce")
-    if costs.isna().any():
-        raise AnalyticsInputError("cost contains invalid values for allocation analysis.")
+    costs = _coerce_cost(dataframe)
     positive_cost = costs.clip(lower=0)
     total_positive_cost = float(positive_cost.sum())
     rows: list[dict[str, object]] = []

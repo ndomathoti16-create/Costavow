@@ -74,8 +74,9 @@ def _write_crash_report(exc: BaseException) -> Path | None:
         log_directory.mkdir(parents=True, exist_ok=True)
         report_path = log_directory / "desktop-crash.log"
         with report_path.open("a", encoding="utf-8") as report:
-            report.write(f"\n[{datetime.now(UTC).isoformat()}] {type(exc).__name__}: {exc}\n")
-            report.write("".join(traceback.format_exception(exc)))
+            report.write(f"\n[{datetime.now(UTC).isoformat()}] {type(exc).__name__}\n")
+            for frame in traceback.extract_tb(exc.__traceback__):
+                report.write(f"  {Path(frame.filename).name}:{frame.lineno} in {frame.name}\n")
         return report_path
     except OSError:
         return None
@@ -205,7 +206,7 @@ def main() -> None:
         report_path = _write_crash_report(exc)
         if not is_child:
             _show_startup_error(report_path)
-        raise
+        raise SystemExit(1) from None
 
 
 if __name__ == "__main__":

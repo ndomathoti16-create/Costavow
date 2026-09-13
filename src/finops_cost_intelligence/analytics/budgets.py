@@ -6,6 +6,7 @@ import pandas as pd
 
 from ..contracts.analytics import AnalyticsInputError
 from ..contracts.budget import BudgetVarianceSummary
+from .spend import _coerce_cost
 
 
 def calculate_budget_variance(
@@ -27,18 +28,33 @@ def calculate_budget_variance(
     missing_budget = sorted(required_budget - set(budget_dataframe.columns))
     if missing_budget:
         raise AnalyticsInputError("Normalized budget data is missing: " + ", ".join(missing_budget))
+    if budget_dataframe.empty:
+        raise AnalyticsInputError("Budget data contains no rows to compare.")
+    currencies = set()
+    for frame in (actual_dataframe, budget_dataframe):
+        if "currency" in frame:
+            currencies.update(frame["currency"].dropna().astype(str).str.strip().str.upper())
+    currencies -= {"", "UNSPECIFIED"}
+    if len(currencies) > 1:
+        raise AnalyticsInputError(
+            "Budget and actual currencies must match; no conversion is applied."
+        )
     actual = actual_dataframe.copy()
     actual["usage_date"] = pd.to_datetime(actual["usage_date"], errors="coerce").dt.normalize()
-    actual["cost"] = pd.to_numeric(actual["cost"], errors="coerce")
+    actual["cost"] = _coerce_cost(actual)
     if actual[["usage_date", "cost"]].isna().any().any():
         raise AnalyticsInputError("Actual data contains invalid usage_date or cost values.")
     budget = budget_dataframe.copy()
     budget["period_start"] = pd.to_datetime(budget["period_start"], errors="coerce").dt.normalize()
     budget["period_end"] = pd.to_datetime(budget["period_end"], errors="coerce").dt.normalize()
-    budget["budget_amount"] = pd.to_numeric(budget["budget_amount"], errors="coerce")
+    budget["budget_amount"] = pd.to_numeric(budget["budget_amount"], errors="coerce").replace(
+        [float("inf"), float("-inf")], float("nan")
+    )
     if budget[["period_start", "period_end", "budget_amount"]].isna().any().any():
         raise AnalyticsInputError("Budget data contains invalid period or amount values.")
 
+    if (budget["period_end"] < budget["period_start"]).any() or (budget["budget_amount"] < 0).any():
+        raise AnalyticsInputError("Budget periods must be ordered and amounts nonnegative.")
     rows: list[dict[str, object]] = []
     for _, budget_row in budget.iterrows():
         start = budget_row["period_start"]
@@ -56,7 +72,7 @@ def calculate_budget_variance(
         budget_amount = float(budget_row["budget_amount"])
         variance = actual_cost - budget_amount
         utilization = actual_cost / budget_amount if budget_amount else None
-        if actual_cost == 0:
+        if not mask.any():
             status = "no_actuals"
         elif variance > 0:
             status = "over_budget"

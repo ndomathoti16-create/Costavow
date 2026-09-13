@@ -28,8 +28,8 @@ def detect_spend_anomalies(
         raise AnalyticsInputError("minimum_history_days must be an integer of at least 3.")
     if minimum_history_days > window_days:
         raise AnalyticsInputError("minimum_history_days cannot exceed window_days.")
-    if threshold <= 0:
-        raise AnalyticsInputError("threshold must be greater than zero.")
+    if not np.isfinite(threshold) or threshold <= 0:
+        raise AnalyticsInputError("threshold must be finite and greater than zero.")
     daily = prepare_daily_spend(dataframe)
     if daily.empty:
         return pd.DataFrame(), AnomalySummary(
@@ -41,16 +41,19 @@ def detect_spend_anomalies(
         )
     values = daily["cost"].astype(float)
     prior = values.shift(1)
-    baseline = prior.rolling(window_days, min_periods=minimum_history_days).median()
-    deviations = (prior - baseline).abs()
-    mad = deviations.rolling(window_days, min_periods=minimum_history_days).median()
+    rolling = prior.rolling(window_days, min_periods=minimum_history_days)
+    baseline = rolling.median()
+    mad = rolling.apply(lambda window: np.median(np.abs(window - np.median(window))), raw=True)
     robust_scale = mad * 1.4826
-    standard_scale = prior.rolling(window_days, min_periods=minimum_history_days).std(ddof=1)
+    standard_scale = rolling.std(ddof=1)
     scale = robust_scale.where(robust_scale > 0, standard_scale)
-    history_count = prior.rolling(window_days, min_periods=minimum_history_days).count()
+    history_count = rolling.count()
     score = (values - baseline).div(scale)
     zero_scale = scale.fillna(0).eq(0)
-    score = score.mask(zero_scale & baseline.notna() & values.ne(baseline), np.inf)
+    score = score.mask(
+        zero_scale & baseline.notna() & values.ne(baseline),
+        np.sign(values - baseline) * np.inf,
+    )
     score = score.fillna(0.0)
     valid = history_count.ge(minimum_history_days) & baseline.notna()
     is_anomaly = valid & score.abs().ge(threshold)
@@ -65,12 +68,11 @@ def detect_spend_anomalies(
     )
     output.loc[~valid, "severity"] = "insufficient_history"
     output.loc[~is_anomaly, "severity"] = "normal"
-    anomalies = output.loc[output["is_anomaly"]].copy().reset_index(drop=True)
     summary = AnomalySummary(
         method="rolling_median_mad",
         threshold=threshold,
         window_days=window_days,
         minimum_history_days=minimum_history_days,
-        anomaly_count=len(anomalies),
+        anomaly_count=int(is_anomaly.sum()),
     )
     return output, summary

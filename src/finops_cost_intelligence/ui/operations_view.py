@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 from datetime import datetime
+from hashlib import sha256
 from html import escape
-from typing import TYPE_CHECKING
 
 import pandas as pd
 
 from ..analytics.allocation import calculate_allocation_coverage
 from ..analytics.budgets import calculate_budget_variance
 from ..analytics.business_metrics import calculate_unit_economics
+from ..config import Settings
 from ..contracts.analytics import AnalyticsInputError
 from ..contracts.budget import BudgetValidationError
 from ..contracts.business_metrics import BusinessMetricValidationError
@@ -19,9 +20,6 @@ from ..ingestion.readers import IngestionError, load_table
 from ..normalization.budgets import normalize_budget_dataframe
 from ..normalization.business_metrics import normalize_business_metrics
 from .branding import apply_plotly_theme, render_compact_table
-
-if TYPE_CHECKING:
-    from ..config import Settings
 
 
 def _format_amount(value: float | None, currency: str = "Unspecified") -> str:
@@ -34,7 +32,9 @@ def _format_amount(value: float | None, currency: str = "Unspecified") -> str:
 
 def _load_optional(uploaded_file, kind: str):
     try:
-        loaded = load_table(uploaded_file)
+        loaded = load_table(
+            uploaded_file, max_bytes=Settings.from_environment().max_upload_mb * 1024 * 1024
+        )
         if kind == "budget":
             return normalize_budget_dataframe(loaded.dataframe)
         return normalize_business_metrics(loaded.dataframe)
@@ -59,13 +59,14 @@ def _render_budget_view(actual: pd.DataFrame, source_key: str) -> None:
         )
     budget = st.session_state.get("budget_table")
     if uploaded is not None:
-        upload_key = f"{uploaded.name}:{getattr(uploaded, 'size', '')}"
+        upload_key = f"{uploaded.name}:{sha256(uploaded.getvalue()).hexdigest()}"
         if st.session_state.get("budget_upload_key") != upload_key:
             try:
                 budget = _load_optional(uploaded, "budget")
             except ValueError as exc:
                 st.error(f"Budget upload needs attention: {exc}")
                 st.session_state.pop("budget_table", None)
+                st.session_state.pop("budget_upload_key", None)
                 return
             st.session_state["budget_table"] = budget
             st.session_state["budget_upload_key"] = upload_key
@@ -194,13 +195,14 @@ def _render_business_metric_view(actual: pd.DataFrame, source_key: str) -> None:
         )
     metrics = st.session_state.get("business_metrics_table")
     if uploaded is not None:
-        upload_key = f"{uploaded.name}:{getattr(uploaded, 'size', '')}"
+        upload_key = f"{uploaded.name}:{sha256(uploaded.getvalue()).hexdigest()}"
         if st.session_state.get("business_upload_key") != upload_key:
             try:
                 metrics = _load_optional(uploaded, "business")
             except ValueError as exc:
                 st.error(f"Business metrics upload needs attention: {exc}")
                 st.session_state.pop("business_metrics_table", None)
+                st.session_state.pop("business_upload_key", None)
                 return
             st.session_state["business_metrics_table"] = metrics
             st.session_state["business_upload_key"] = upload_key

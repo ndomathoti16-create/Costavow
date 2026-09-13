@@ -57,7 +57,7 @@ class GcpBigQueryBillingConnector:
     ) -> None:
         self.config = config
         self._client = client
-        self.max_bytes = max_bytes or DEFAULT_CLOUD_IMPORT_LIMIT_BYTES
+        self.max_bytes = DEFAULT_CLOUD_IMPORT_LIMIT_BYTES if max_bytes is None else max_bytes
         enforce_size_limit(0, self.max_bytes, label="Google Cloud billing result")
 
     @property

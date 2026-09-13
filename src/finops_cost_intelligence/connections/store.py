@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
+
+from ..storage.local_json import write_json_atomically
 
 STORE_VERSION = 1
 ALLOWED_SETTINGS = {
@@ -107,17 +108,18 @@ class ConnectionStore:
             payload = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise ValueError("The local connection profile file is unreadable.") from exc
+        if not isinstance(payload, dict) or not isinstance(payload.get("connections"), list):
+            raise ValueError("The local connection profile has an invalid structure.")
+        if not all(isinstance(item, dict) for item in payload["connections"]):
+            raise ValueError("The local connection profile contains an invalid record.")
         if payload.get("version") != STORE_VERSION:
             raise ValueError("The local connection profile version is not supported.")
+        try:
+            for item in payload["connections"]:
+                ConnectionProfile.from_dict(item)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("The local state contains an invalid record.") from exc
         return payload
-
-    def _write(self, payload: dict[str, Any]) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = self.path.with_suffix(self.path.suffix + ".tmp")
-        temporary.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        os.replace(temporary, self.path)
-        if os.name != "nt":
-            self.path.chmod(0o600)
 
     def list(self) -> list[ConnectionProfile]:
         payload = self._read()
@@ -132,6 +134,7 @@ class ConnectionStore:
         return None
 
     def save(self, profile: ConnectionProfile, *, make_active: bool = True) -> None:
+        ConnectionProfile.from_dict(asdict(profile))
         payload = self._read()
         profiles = [
             item
@@ -142,7 +145,7 @@ class ConnectionStore:
         payload["connections"] = profiles
         if make_active:
             payload["active_connection_id"] = profile.connection_id
-        self._write(payload)
+        write_json_atomically(self.path, payload)
 
     def delete(self, connection_id: str) -> None:
         payload = self._read()
@@ -151,7 +154,7 @@ class ConnectionStore:
         ]
         if payload.get("active_connection_id") == connection_id:
             payload["active_connection_id"] = None
-        self._write(payload)
+        write_json_atomically(self.path, payload)
 
     def record_sync(
         self,

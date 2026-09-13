@@ -9,9 +9,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-COPY pyproject.toml README.md ./
+COPY pyproject.toml README.md requirements.txt ./
 COPY src ./src
-RUN python -m pip install --upgrade pip && python -m pip install .
+RUN python -m pip install --upgrade pip && python -m pip install -r requirements.txt
 
 COPY app.py ./
 COPY data/demo ./data/demo

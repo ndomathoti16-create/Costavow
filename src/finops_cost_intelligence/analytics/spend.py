@@ -43,7 +43,9 @@ def _coerce_dates(dataframe: pd.DataFrame) -> pd.Series:
 
 
 def _coerce_cost(dataframe: pd.DataFrame) -> pd.Series:
-    costs = pd.to_numeric(dataframe["cost"], errors="coerce")
+    costs = pd.to_numeric(dataframe["cost"], errors="coerce").replace(
+        [float("inf"), float("-inf")], float("nan")
+    )
     if costs.isna().any():
         raise AnalyticsInputError(
             f"cost contains {int(costs.isna().sum()):,} invalid or missing value(s)."

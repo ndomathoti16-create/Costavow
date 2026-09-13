@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from math import isfinite
 from typing import Any
 
 import pandas as pd
@@ -93,7 +94,7 @@ def _reconciliation(
 
     absolute_difference = round(abs(source_total - canonical_total), 10)
     denominator = max(abs(source_total), tolerance)
-    relative_difference = round(absolute_difference / denominator, 10)
+    relative_difference = round(absolute_difference / denominator, 10) if denominator else 0.0
     passed = absolute_difference <= tolerance
     result = ReconciliationResult(
         source_total=source_total,
@@ -304,8 +305,8 @@ def run_quality_checks(
     optional_null_warning_rate: float = DEFAULT_OPTIONAL_NULL_WARNING_RATE,
 ) -> QualityReport:
     """Run deterministic checks and return a downstream analysis decision."""
-    if reconciliation_tolerance < 0:
-        raise ValueError("reconciliation_tolerance cannot be negative.")
+    if not isfinite(reconciliation_tolerance) or reconciliation_tolerance < 0:
+        raise ValueError("reconciliation_tolerance must be finite and nonnegative.")
     if not 0 <= optional_null_warning_rate <= 1:
         raise ValueError("optional_null_warning_rate must be between zero and one.")
 

@@ -141,7 +141,7 @@ def test_one_desktop_upload_opens_a_complete_analysis_automatically(monkeypatch)
     app = AppTest.from_file(APP_PATH)
     app.query_params.update({"surface": "workspace", "page": "Home"})
     app.run(timeout=30)
-    app.button(key="top_workspace_new_analysis").click().run(timeout=30)
+    assert app.button(key="top_workspace_new_analysis").disabled
 
     content = DEMO_BILLING_PATH.read_bytes()
     app.file_uploader(key="billing_upload").upload(

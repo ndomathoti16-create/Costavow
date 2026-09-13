@@ -487,8 +487,10 @@ def render_report_view(
     if settings.ai_provider != "none" and st.session_state.get("desktop_mode", False):
         with st.expander("Optional AI narrative", expanded=False):
             st.caption(
-                "The provider can rewrite the calculated evidence for readability. It cannot "
-                "add values, calculate savings, or see data outside this fact pack."
+                f"This sends the fact pack to {settings.ai_base_url}. It includes billing "
+                "totals, source and service names, ownership labels, and calculated findings. "
+                "Only send data your organization permits this provider to process. "
+                "Generated wording still needs human review."
             )
             if st.button(
                 "Refresh narrative with configured AI",
@@ -571,7 +573,7 @@ def render_report_view(
             key=f"download_quality_{source_key}",
             width="stretch",
         )
-    if settings.s3_bucket:
+    if settings.s3_bucket and st.session_state.get("desktop_mode", False):
         with st.expander("AWS export", expanded=False):
             st.caption(
                 f"AWS export is configured for bucket `{settings.s3_bucket}`. "

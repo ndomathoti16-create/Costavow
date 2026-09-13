@@ -14,14 +14,12 @@ from ..contracts.normalization import NormalizedTable
 from ..contracts.profile import DataProfile
 from ..contracts.quality import QualityReport
 from ..ingestion import IngestionError, LoadedTable, load_table, profile_table
-from ..mapping import MappingValidationError, suggest_mappings, validate_mapping
-from ..normalization import normalize_billing_table
+from ..mapping import MappingValidationError
 from ..normalization.budgets import normalize_budget_dataframe
 from ..normalization.business_metrics import normalize_business_metrics
-from ..quality import run_quality_checks
 from ..runtime import resource_path
-from .branding import METRORA_LOGO_SVG, reset_workspace_state
-from .mapping_view import source_key_for
+from .branding import reset_workspace_state
+from .mapping_view import build_automatic_model, source_key_for
 from .navigation import set_product_route, set_workspace_route
 
 if TYPE_CHECKING:
@@ -2074,17 +2072,11 @@ def build_demo_artifacts(
         max_bytes=settings.max_upload_mb * 1024 * 1024,
     )
     profile = profile_table(loaded_table)
-    review = suggest_mappings(profile)
-    suggested_mapping = {
-        suggestion.canonical_field: suggestion.source_column for suggestion in review.suggestions
-    }
     try:
-        accepted_mapping = validate_mapping(suggested_mapping, review.source_columns)
-        normalized = normalize_billing_table(loaded_table, accepted_mapping)
+        accepted_mapping, normalized, report = build_automatic_model(loaded_table, profile)
     except (MappingValidationError, ValueError, KeyError) as exc:
         raise IngestionError(f"The demo billing file could not be prepared: {exc}") from exc
 
-    report = run_quality_checks(loaded_table, normalized)
     return loaded_table, profile, accepted_mapping, normalized, report
 
 
@@ -2190,28 +2182,6 @@ def _demo_preview_facts(settings: Settings) -> dict[str, object]:
     }
     st.session_state[cache_key] = facts
     return facts
-
-
-def _render_brand_header() -> None:
-    """Render a compact product header without competing controls."""
-    st.markdown(
-        f"""
-        <header class="metrora-product-nav">
-            <div class="metrora-product-brand">
-                <span class="metrora-product-mark">{METRORA_LOGO_SVG}</span>
-                <div>
-                    <div class="metrora-product-name">Metrora</div>
-                    <div class="metrora-product-subtitle">Cloud FinOps intelligence</div>
-                </div>
-            </div>
-            <div class="metrora-product-nav-meta">
-                <span>Local-first</span>
-                <span>Evidence-led</span>
-            </div>
-        </header>
-        """,
-        unsafe_allow_html=True,
-    )
 
 
 def _render_page_intro(

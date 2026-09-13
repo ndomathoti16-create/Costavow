@@ -7,6 +7,7 @@ import re
 import pandas as pd
 
 from ..contracts.budget import BudgetValidationError
+from .billing import normalize_numeric_values
 
 _ALIASES: dict[str, tuple[str, ...]] = {
     "period_start": ("period start", "start date", "date", "month", "period"),
@@ -35,14 +36,6 @@ def _find_column(columns: list[str], aliases: tuple[str, ...]) -> str | None:
         if _normal_name(alias) in normalized:
             return normalized[_normal_name(alias)]
     return None
-
-
-def _numeric(series: pd.Series) -> pd.Series:
-    text = series.astype("string").str.strip()
-    text = text.str.replace(r"^\((.*)\)$", r"-\1", regex=True)
-    text = text.str.replace(r"[$€£¥]", "", regex=True)
-    text = text.str.replace(",", "", regex=False)
-    return pd.to_numeric(text, errors="coerce")
 
 
 def normalize_budget_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -120,7 +113,7 @@ def normalize_budget_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
     if non_total_missing.any():
         raise BudgetValidationError("Non-total budget rows require a scope_value.")
 
-    output["budget_amount"] = _numeric(source[matches["budget_amount"]])
+    output["budget_amount"] = normalize_numeric_values(source[matches["budget_amount"]])
     if output["budget_amount"].isna().any():
         raise BudgetValidationError(
             "budget_amount contains "

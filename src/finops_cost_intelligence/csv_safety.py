@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
+FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r", "\n")
 
 
 def neutralize_spreadsheet_formulas(dataframe: pd.DataFrame) -> pd.DataFrame:

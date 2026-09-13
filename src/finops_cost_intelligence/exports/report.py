@@ -8,6 +8,7 @@ from ..contracts.ai import FactPack, SummaryResult
 
 
 def _display_value(value: object, unit: str) -> str:
+    unit = html.escape(unit)
     if value is None:
         return "Unavailable"
     if isinstance(value, float):

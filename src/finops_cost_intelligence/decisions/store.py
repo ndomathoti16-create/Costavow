@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from typing import Any
 
+from ..storage.local_json import write_json_atomically
 from .models import DecisionRecord
 
 STORE_VERSION = 1
@@ -25,34 +25,24 @@ class DecisionStore:
             payload = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise ValueError("The local decision register is unreadable.") from exc
+        if not isinstance(payload, dict) or not isinstance(payload.get("decisions"), list):
+            raise ValueError("The local decision register has an invalid structure.")
+        if not all(isinstance(item, dict) for item in payload["decisions"]):
+            raise ValueError("The local decision register contains an invalid record.")
         if payload.get("version") != STORE_VERSION:
             raise ValueError("The local decision register version is not supported.")
-        if not isinstance(payload.get("decisions"), list):
-            raise ValueError("The local decision register has an invalid structure.")
+        try:
+            for item in payload["decisions"]:
+                DecisionRecord.from_dict(item)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("The local state contains an invalid record.") from exc
         return payload
-
-    def _write(self, payload: dict[str, Any]) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = self.path.with_suffix(self.path.suffix + ".tmp")
-        temporary.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
-        os.replace(temporary, self.path)
-        if os.name != "nt":
-            self.path.chmod(0o600)
 
     def list(self) -> list[DecisionRecord]:
         return [DecisionRecord.from_dict(item) for item in self._read()["decisions"]]
 
     def save(self, decision: DecisionRecord) -> None:
-        payload = self._read()
-        remaining = [
-            item for item in payload["decisions"] if item.get("decision_id") != decision.decision_id
-        ]
-        remaining.append(decision.to_dict())
-        payload["decisions"] = sorted(
-            remaining,
-            key=lambda item: (str(item.get("created_at", "")), str(item["decision_id"])),
-        )
-        self._write(payload)
+        self.save_many([decision])
 
     def save_many(self, decisions: list[DecisionRecord]) -> None:
         payload = self._read()
@@ -63,11 +53,11 @@ class DecisionStore:
             indexed.values(),
             key=lambda item: (str(item.get("created_at", "")), str(item["decision_id"])),
         )
-        self._write(payload)
+        write_json_atomically(self.path, payload)
 
     def delete(self, decision_id: str) -> None:
         payload = self._read()
         payload["decisions"] = [
             item for item in payload["decisions"] if item.get("decision_id") != decision_id
         ]
-        self._write(payload)
+        write_json_atomically(self.path, payload)

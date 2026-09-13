@@ -72,7 +72,7 @@ def _inferred_type(
 def _sample_values(series: pd.Series, limit: int) -> tuple[Any, ...]:
     values: list[Any] = []
     seen: set[str] = set()
-    for value in series.dropna().tolist():
+    for value in series.dropna():
         safe_value = _json_safe(value)
         key = repr(safe_value)
         if key in seen:
@@ -98,6 +98,10 @@ def _column_profile(series: pd.Series, sample_value_limit: int) -> ColumnProfile
             format="mixed",
         ),
     )
+    try:
+        unique_count = int(series.nunique(dropna=True))
+    except TypeError:
+        unique_count = int(series.map(_json_safe).nunique(dropna=True))
     return ColumnProfile(
         name=str(series.name),
         dtype=str(series.dtype),
@@ -106,7 +110,7 @@ def _column_profile(series: pd.Series, sample_value_limit: int) -> ColumnProfile
         non_null_count=non_null_count,
         null_count=null_count,
         null_rate=null_rate,
-        unique_count=int(series.nunique(dropna=True)),
+        unique_count=unique_count,
         numeric_parse_rate=numeric_parse_rate,
         datetime_parse_rate=datetime_parse_rate,
         sample_values=_sample_values(series, sample_value_limit),
@@ -136,6 +140,10 @@ def profile_table(
     columns = tuple(
         _column_profile(dataframe[column], sample_values) for column in dataframe.columns
     )
+    try:
+        duplicate_count = int(dataframe.duplicated(keep="first").sum())
+    except TypeError:
+        duplicate_count = int(dataframe.map(_json_safe).duplicated(keep="first").sum())
     return DataProfile(
         profile_version=PROFILE_VERSION,
         source_name=loaded_table.source_name,
@@ -144,7 +152,7 @@ def profile_table(
         sheet_name=loaded_table.sheet_name,
         row_count=int(len(dataframe)),
         column_count=int(len(dataframe.columns)),
-        duplicate_row_count=int(dataframe.duplicated(keep="first").sum()),
+        duplicate_row_count=duplicate_count,
         all_null_row_count=int(dataframe.isna().all(axis=1).sum()),
         memory_usage_bytes=int(dataframe.memory_usage(deep=True).sum()),
         columns=columns,

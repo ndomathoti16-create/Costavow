@@ -12,3 +12,13 @@ stock imagery.
 The Windows release workflow generates `THIRD_PARTY_LICENSES.txt` from the exact build environment
 and includes it alongside this notice in the portable application. The generated inventory should
 be reviewed whenever dependencies change and before redistributing a build.
+
+The generator collects modern `dist-info/licenses` files, legacy license files, and packaged
+LICENSE/COPYING/NOTICE texts. A missing license text is explicitly marked for verification.
+Regenerate the bundle from the release build environment before redistributing; an inventory does
+not by itself establish permission or satisfy every component's attribution obligations.
+
+The application uses standard-library configuration, so Pydantic, pydantic-settings, and
+python-dotenv are no longer direct requirements. NumPy was already required by the numerical
+stack and is now declared explicitly because application code imports it. GitPython's minimum
+version constraint remains in place for Streamlit's transitive dependency.

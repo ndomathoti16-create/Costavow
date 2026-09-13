@@ -181,12 +181,20 @@ def _provider_summary(fact_pack: FactPack, client: SummaryClient) -> SummaryResu
     raw = client.complete(system_prompt, json.dumps(fact_pack.to_dict(), default=str))
     try:
         payload = json.loads(raw)
+        if not isinstance(payload, dict) or not isinstance(payload.get("headline"), str):
+            raise AIResponseValidationError("The AI response requires a text headline.")
+        for field in ("bullets", "recommendation_ids", "used_fact_ids", "caveats"):
+            values = payload.get(field, [] if field == "caveats" else None)
+            if not isinstance(values, list) or not all(isinstance(v, str) for v in values):
+                raise AIResponseValidationError("AI summary fields must be lists of text.")
+        if not payload["headline"].strip() or len(payload["bullets"]) > 4:
+            raise AIResponseValidationError("The AI summary is empty or exceeds four bullets.")
         result = SummaryResult(
-            headline=str(payload["headline"]),
-            bullets=tuple(str(value) for value in payload["bullets"]),
-            recommendation_ids=tuple(str(value) for value in payload["recommendation_ids"]),
-            used_fact_ids=tuple(str(value) for value in payload["used_fact_ids"]),
-            caveats=tuple(str(value) for value in payload.get("caveats", [])),
+            headline=payload["headline"],
+            bullets=tuple(payload["bullets"]),
+            recommendation_ids=tuple(payload["recommendation_ids"]),
+            used_fact_ids=tuple(payload["used_fact_ids"]),
+            caveats=tuple(payload.get("caveats", [])),
             provider="external_provider",
         )
     except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:

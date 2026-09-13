@@ -219,27 +219,6 @@ button[aria-label^="Help for"] {
     color: #4f43bf !important;
 }
 
-[data-testid="stSidebar"] {
-    background: #ffffff;
-    border-right: 1px solid #e6ebf2;
-}
-
-[data-testid="stSidebar"] * {
-    color: var(--metrora-ink);
-}
-
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] li {
-    color: #52627a;
-}
-
-.metrora-sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: .7rem;
-    padding: .4rem 0 1.3rem;
-}
-
 .metrora-sidebar-mark,
 .metrora-mark {
     display: inline-flex;
@@ -258,43 +237,6 @@ button[aria-label^="Help for"] {
     width: 100%;
     height: 100%;
     filter: drop-shadow(0 8px 12px rgba(41, 75, 107, .12));
-}
-
-.metrora-sidebar-name {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -.04em;
-}
-
-.metrora-sidebar-subtitle {
-    color: #718097;
-    font-size: .76rem;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-}
-
-.metrora-sidebar-label {
-    color: #718097;
-    font-size: .69rem;
-    font-weight: 700;
-    letter-spacing: .13em;
-    text-transform: uppercase;
-}
-
-.metrora-sidebar-status {
-    margin: .65rem 0 1.25rem;
-    padding: .75rem .85rem;
-    border: 1px solid #e1e7ef;
-    border-radius: .9rem;
-    background: #f6f8fb;
-    color: #52627a;
-    font-size: .86rem;
-}
-
-.metrora-sidebar-status strong {
-    color: #3d9f7d;
-    font-weight: 600;
 }
 
 .metrora-hero {
@@ -899,40 +841,6 @@ div[data-testid="stDataFrame"] {
     }
 }
 
-[data-testid="stSidebar"] .st-key-workspace_nav_home button,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button {
-    justify-content: flex-start;
-    min-height: 2.35rem;
-    padding: .35rem .55rem;
-    border: 0 !important;
-    border-left: 3px solid transparent !important;
-    border-radius: .25rem !important;
-    background: transparent !important;
-    color: #52627a !important;
-    box-shadow: none !important;
-    text-align: left;
-}
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button[kind="primary"] {
-    border-left-color: var(--metrora-violet) !important;
-    background: #f1f0ff !important;
-    color: #4f43bf !important;
-}
-
-.metrora-sidebar-guidance {
-    margin: .45rem 0 1rem;
-    color: #728096;
-    font-size: .78rem;
-    line-height: 1.5;
-}
-
 .metrora-report-kpis {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1170,12 +1078,6 @@ div[data-testid="stDataFrame"] {
     line-height: 1.5;
 }
 
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced {
-    margin-top: .45rem;
-    padding-top: .45rem;
-    border-top: 1px solid #e5eaf1;
-}
-
 /* Keep native Streamlit content readable when the host theme is dark. */
 [data-testid="stAppViewContainer"] h1,
 [data-testid="stAppViewContainer"] h2,
@@ -1253,30 +1155,6 @@ METRORA_DARK_CSS = """
 
 [data-testid="stMain"] {
     color: #edf3fb;
-}
-
-[data-testid="stSidebar"] {
-    background: #111a2b;
-    border-right: 0;
-}
-
-[data-testid="stSidebar"] * {
-    color: #e7edf7;
-}
-
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] li {
-    color: #b9c6d8;
-}
-
-.metrora-sidebar-status {
-    border-color: rgba(255,255,255,.10);
-    background: rgba(255,255,255,.05);
-    color: #dbe5f3;
-}
-
-.metrora-sidebar-status strong {
-    color: var(--metrora-lime);
 }
 
 .metrora-hero {
@@ -1768,31 +1646,6 @@ div[data-testid="stDataFrame"] .stDataFrameGlideDataEditor {
     color: #a8b5c8 !important;
 }
 
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced {
-    border-top-color: #253249;
-}
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button {
-    border: 0 !important;
-    border-left: 3px solid transparent !important;
-    background: transparent !important;
-    color: #b9c6d8 !important;
-}
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button[kind="primary"] {
-    border-left-color: #8c82ff !important;
-    background: rgba(102,88,232,.13) !important;
-    color: #f4f2ff !important;
-}
-
 .stTabs [data-baseweb="tab-list"] {
     border-color: #2a3850;
 }
@@ -1866,17 +1719,6 @@ html, body, [class*="css"] {
 [data-testid="stAppViewContainer"] [data-testid="stCaptionContainer"],
 [data-testid="stAppViewContainer"] [data-testid="stWidgetLabel"] p,
 [data-testid="stAppViewContainer"] [data-testid="stWidgetLabel"] label {
-    color: var(--metrora-muted) !important;
-}
-
-[data-testid="stSidebar"] {
-    background: #0c111a !important;
-    border-right: 1px solid var(--metrora-line) !important;
-}
-
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] li,
-[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {
     color: var(--metrora-muted) !important;
 }
 
@@ -2060,43 +1902,6 @@ div[data-testid="stDataFrame"] .stDataFrameGlideDataEditor {
 .stTabs [data-baseweb="tab"] { color: var(--metrora-muted) !important; }
 .stTabs [aria-selected="true"] { color: var(--metrora-ink) !important; }
 
-[data-testid="stSidebar"] .st-key-workspace_nav_home button,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button {
-    background: transparent !important;
-    color: #aeb9ca !important;
-}
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button[kind="primary"] {
-    border-left-color: #9bb8ff !important;
-    background: rgba(155, 184, 255, .1) !important;
-    color: #f2f5fb !important;
-}
-
-/* Active workspace navigation uses a soft surface, not the generic blue CTA.
-   Explicitly carry its light label into Streamlit's nested text elements. */
-[data-testid="stSidebar"] .st-key-workspace_nav_home button[kind="primary"] *,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button[kind="primary"] *,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button[kind="primary"] *,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button[kind="primary"] *,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button[kind="primary"] * {
-    color: #f2f5fb !important;
-}
-
-[data-testid="stSidebar"] [data-testid="stButton"].st-key-workspace_nav_home button[kind="primary"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stButton"].st-key-workspace_nav_cost_explorer button[kind="primary"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stButton"].st-key-workspace_nav_plans_alerts button[kind="primary"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stButton"].st-key-workspace_nav_reports button[kind="primary"] [data-testid="stMarkdownContainer"] p,
-[data-testid="stSidebar"] [data-testid="stButton"].st-key-workspace_nav_advanced button[kind="primary"] [data-testid="stMarkdownContainer"] p {
-    color: #f2f5fb !important;
-}
-
 /* Keep the operating area rich in context without turning it into a wall of cards. */
 .metrora-workspace-command-meta {
     display: flex;
@@ -2235,138 +2040,6 @@ html, body, [class*="css"] {
     max-width: 1540px !important;
     padding: 1.25rem 2.35rem 6rem !important;
 }
-
-[data-testid="stSidebar"] {
-    min-width: 17rem !important;
-    max-width: 17rem !important;
-    border-right: 1px solid #202a35 !important;
-    background: #0a0e14 !important;
-}
-
-[data-testid="stSidebar"] > div:first-child { width: 17rem !important; }
-[data-testid="stSidebar"] [data-testid="stSidebarContent"] { padding: 1.35rem 1rem 1rem !important; }
-
-.metrora-sidebar-brand {
-    margin: .1rem .3rem 2rem;
-    padding: 0;
-}
-.metrora-sidebar-mark,
-.metrora-sidebar-mark .metrora-logo { width: 2.55rem; height: 2.55rem; }
-.metrora-sidebar-name {
-    color: #f4f7f9 !important;
-    font-family: 'Manrope', 'Outfit', sans-serif;
-    font-size: 1.02rem;
-    letter-spacing: -.035em;
-}
-.metrora-sidebar-subtitle { color: #778495 !important; font-size: .58rem; letter-spacing: .11em; }
-
-.metrora-sidebar-label {
-    margin: 1.4rem .55rem .65rem;
-    color: #657284 !important;
-    font-size: .58rem;
-    letter-spacing: .14em;
-}
-
-.metrora-sidebar-status {
-    margin: 0 .2rem .75rem;
-    padding: .9rem .85rem .8rem;
-    border: 1px solid #222d39 !important;
-    border-radius: .78rem !important;
-    background: linear-gradient(145deg, rgba(17, 24, 33, .94), rgba(12, 17, 24, .94)) !important;
-}
-.metrora-sidebar-status-line { display: grid; gap: .25rem; }
-.metrora-sidebar-status-line strong {
-    overflow: hidden;
-    color: #e9eef4 !important;
-    font-size: .79rem;
-    font-weight: 650;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.metrora-sidebar-status-line span { color: #79dbd0; font-size: .68rem; font-weight: 700; }
-.metrora-sidebar-status small { color: #667487 !important; font-size: .61rem; }
-.metrora-sidebar-progress {
-    height: 3px;
-    margin: .8rem 0 .6rem;
-    overflow: hidden;
-    border-radius: 999px;
-    background: #222c37;
-}
-.metrora-sidebar-progress i {
-    display: block;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #7da7ff, #55d6c7);
-}
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button {
-    display: flex !important;
-    justify-content: flex-start !important;
-    min-height: 2.65rem !important;
-    margin: .08rem 0;
-    padding: 0 .72rem !important;
-    border: 0 !important;
-    border-radius: .58rem !important;
-    background: transparent !important;
-    color: #8f9baa !important;
-    font-size: .82rem !important;
-    font-weight: 550 !important;
-    text-align: left !important;
-}
-[data-testid="stSidebar"] .st-key-workspace_nav_home button::before,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button::before,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button::before,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button::before,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button::before {
-    width: 1.45rem;
-    margin-right: .25rem;
-    color: #596779;
-    font-family: 'Manrope', sans-serif;
-    font-size: .58rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-}
-[data-testid="stSidebar"] .st-key-workspace_nav_home button::before { content: '01'; }
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button::before { content: '02'; }
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button::before { content: '03'; }
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button::before { content: '04'; }
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button::before { content: '05'; }
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button:hover,
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button:hover,
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button:hover,
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button:hover,
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button:hover {
-    background: #111821 !important;
-    color: #dfe5ec !important;
-}
-
-[data-testid="stSidebar"] .st-key-workspace_nav_home button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_cost_explorer button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_plans_alerts button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_reports button[kind="primary"],
-[data-testid="stSidebar"] .st-key-workspace_nav_advanced button[kind="primary"] {
-    border: 1px solid #252f3b !important;
-    background: linear-gradient(90deg, rgba(125, 167, 255, .11), rgba(85, 214, 199, .045)) !important;
-    color: #f2f5f8 !important;
-}
-
-.metrora-sidebar-guidance {
-    margin: 1rem .25rem .5rem;
-    padding: .9rem .75rem 0;
-    border: 0 !important;
-    border-top: 1px solid #202a35 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: #6f7c8d !important;
-    font-size: .67rem;
-    line-height: 1.55;
-}
-.metrora-sidebar-guidance strong { display: block; margin-bottom: .28rem; color: #9eabb9 !important; }
 
 .metrora-workspace-topbar {
     display: block;
@@ -3511,251 +3184,6 @@ def render_compact_table(dataframe, *, max_rows: int = 20) -> None:
     )
     if len(dataframe) > max_rows:
         st.caption(f"Showing the first {max_rows:,} of {len(dataframe):,} rows.")
-
-
-def render_brand_header() -> None:
-    """Render the product hero and high-level capability cards."""
-    import streamlit as st
-
-    st.markdown(
-        """
-        <section class="metrora-hero">
-            <div class="metrora-kicker">Metrora · cloud FinOps intelligence</div>
-            <h1>Turn cloud spend into decisions.</h1>
-            <p>
-                Validate the data, find the signal, and give finance and engineering teams
-                a shared view of cost, risk, and what to do next.
-            </p>
-            <div class="metrora-hero-meta">
-                <span>Local-first workflow</span>
-                <span>Evidence before AI</span>
-                <span>Built for FinOps teams</span>
-            </div>
-        </section>
-        """,
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<div class="metrora-section-kicker">The Metrora loop</div>',
-        unsafe_allow_html=True,
-    )
-    columns = st.columns(3)
-    cards = [
-        (
-            "01",
-            "See the signal",
-            "Profile billing exports, map their meaning, and surface the services "
-            "and owners moving spend.",
-        ),
-        (
-            "02",
-            "Prove the number",
-            "Reconcile totals, expose data-quality caveats, and keep every metric "
-            "traceable to source rows.",
-        ),
-        (
-            "03",
-            "Act with context",
-            "Connect budgets and business metrics to forecasts, anomalies, and "
-            "evidence-backed next steps.",
-        ),
-    ]
-    for column, (number, title, copy) in zip(columns, cards, strict=True):
-        with column:
-            st.markdown(
-                f"""
-                <div class="metrora-feature-card">
-                    <div class="icon">{number}</div>
-                    <h3>{title}</h3>
-                    <p>{copy}</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-
-def render_product_sidebar() -> None:
-    """Render the public-product navigation in the same persistent left rail."""
-    import streamlit as st
-
-    from .navigation import set_product_route
-
-    pages = (
-        ("Product overview", "Product", "product"),
-        ("How it works", "Workflow", "workflow"),
-        ("Trust & evidence", "Evidence", "evidence"),
-        ("Demo scenarios", "Demo", "demo"),
-    )
-    current_page = st.session_state.get("product_page", "Product")
-    destinations = {destination for _, destination, _ in pages}
-    if current_page not in destinations:
-        current_page = "Product"
-        st.session_state["product_page"] = current_page
-
-    with st.sidebar:
-        st.markdown(
-            f"""
-            <div class="metrora-sidebar-brand">
-                <span class="metrora-sidebar-mark">{METRORA_LOGO_SVG}</span>
-                <div>
-                    <div class="metrora-sidebar-name">Metrora</div>
-                    <div class="metrora-sidebar-subtitle">Cloud FinOps intelligence</div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            '<div class="metrora-sidebar-label">Explore Metrora</div>', unsafe_allow_html=True
-        )
-        for label, destination, slug in pages:
-            if st.button(
-                label,
-                key=f"product_nav_{slug}",
-                type="primary" if current_page == destination else "tertiary",
-                width="stretch",
-            ):
-                set_product_route(destination)
-                st.rerun()
-        st.divider()
-        st.markdown(
-            """
-            <div class="metrora-sidebar-guidance">
-                <strong>Start with a scenario</strong>
-                Choose a ready-to-share baseline, a data-quality issue, or a future-risk case.
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if st.button("Choose a demo scenario", key="product_nav_demo_cta", width="stretch"):
-            set_product_route("Demo")
-            st.rerun()
-        st.caption("Synthetic local data · no sign-in required")
-
-
-def render_sidebar(settings: Settings) -> None:
-    """Render simple workspace navigation and current-source context."""
-    import streamlit as st
-
-    from .navigation import set_product_route, set_workspace_route
-
-    with st.sidebar:
-        st.markdown(
-            f"""
-            <div class="metrora-sidebar-brand">
-                <span class="metrora-sidebar-mark">{METRORA_LOGO_SVG}</span>
-                <div>
-                    <div class="metrora-sidebar-name">Metrora</div>
-                    <div class="metrora-sidebar-subtitle">Cloud FinOps intelligence</div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        has_source = st.session_state.get("loaded_table") is not None
-        has_model = st.session_state.get("normalized_table") is not None
-        quality_report = st.session_state.get("quality_report")
-        analysis_ready = bool(
-            has_model and quality_report is not None and quality_report.ready_for_analysis
-        )
-        status_label = (
-            "Analysis ready"
-            if analysis_ready
-            else "Review needed"
-            if has_model
-            else "Source loaded"
-            if has_source
-            else "Add billing data"
-        )
-        workspace_label = st.session_state.get(
-            "demo_workspace",
-            f"{settings.app_env.title()} workspace",
-        )
-        if st.session_state.get("demo_mode"):
-            workspace_label = "Guided demo workspace"
-        progress = 100 if analysis_ready else 66 if has_model else 33 if has_source else 8
-        st.markdown(
-            '<div class="metrora-sidebar-label">Current workspace</div>'
-            '<div class="metrora-sidebar-status">'
-            f'<div class="metrora-sidebar-status-line"><strong>{escape(workspace_label)}</strong>'
-            f"<span>{escape(status_label)}</span></div>"
-            '<div class="metrora-sidebar-progress" aria-hidden="true">'
-            f'<i style="width:{progress}%"></i></div>'
-            "<small>Local analytical session</small></div>",
-            unsafe_allow_html=True,
-        )
-
-        pages = (
-            ("Overview", "Home", "home"),
-            ("Spend explorer", "Cost explorer", "cost_explorer"),
-            ("Forecast & alerts", "Plans & alerts", "plans_alerts"),
-            ("Decision register", "Decisions", "decisions"),
-            ("Reports & exports", "Reports", "reports"),
-            ("Data settings", "Advanced", "advanced"),
-        )
-        legacy_pages = {
-            "Overview": "Home",
-            "Spend explorer": "Cost explorer",
-            "Forecast & alerts": "Plans & alerts",
-            "Reports & exports": "Reports",
-            "Data settings": "Advanced",
-            "Data & quality": "Advanced",
-            "Investigate": "Plans & alerts",
-        }
-        current_page = legacy_pages.get(
-            st.session_state.get("workspace_page", "Home"),
-            st.session_state.get("workspace_page", "Home"),
-        )
-        st.session_state["workspace_page"] = current_page
-        st.markdown('<div class="metrora-sidebar-label">Workspace</div>', unsafe_allow_html=True)
-        for label, destination, slug in pages:
-            if st.button(
-                label,
-                key=f"workspace_nav_{slug}",
-                type="primary" if current_page == destination else "tertiary",
-                width="stretch",
-            ):
-                set_workspace_route(destination)
-                st.rerun()
-        st.markdown(
-            """
-            <div class="metrora-sidebar-guidance">
-                <strong>Automated by default</strong>
-                Overview handles the standard workflow. Open Data settings only for mapping
-                exceptions, reconciliation detail, or model tuning.
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        st.divider()
-        if st.button(
-            "New analysis",
-            key="new_analysis",
-            disabled=not (has_source or has_model),
-            width="stretch",
-            help="Clear the current data and begin a new analysis.",
-        ):
-            reset_workspace_state()
-            for key in ("demo_mode", "demo_scenario", "demo_workspace"):
-                st.session_state.pop(key, None)
-            set_workspace_route("Home", scenario_id=None)
-            st.rerun()
-        if st.button(
-            "Back to product page",
-            key="back_to_product_page",
-            width="stretch",
-            help="Return to the Metrora product page and access options.",
-        ):
-            reset_workspace_state()
-            st.session_state.pop("demo_authenticated", None)
-            st.session_state.pop("demo_mode", None)
-            st.session_state.pop("demo_scenario", None)
-            st.session_state.pop("demo_user_email", None)
-            st.session_state.pop("demo_workspace", None)
-            set_product_route("Demo")
-            st.rerun()
-        st.caption(f"Local calculations · AI: {settings.ai_provider}")
 
 
 def reset_workspace_state() -> None:

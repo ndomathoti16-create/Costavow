@@ -1,5 +1,9 @@
 # Metrora product UX research
 
+> Historical planning and research context. For current behavior and setup, use the
+> [documentation index](README.md), [developer guide](DEVELOPMENT.md), and
+> [changelog](../CHANGELOG.md). Proposed capabilities below are not release commitments.
+
 Last reviewed: 2026-08-09
 
 This note records the product decisions behind the authenticated Metrora workspace. It is

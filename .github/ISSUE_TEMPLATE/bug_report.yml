@@ -1,0 +1,25 @@
+name: Bug report
+description: Report a reproducible problem with synthetic data.
+body:
+  - type: markdown
+    attributes:
+      value: "For vulnerabilities, follow SECURITY.md. Do not submit credentials, real billing exports, or unredacted logs."
+  - type: input
+    id: environment
+    attributes:
+      label: Version and environment
+      description: Version or commit, operating system, and demo/desktop/source mode.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Use a bundled scenario or fictional data. Include expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted error details
+      description: Optional error text or screenshots with sensitive values removed.

@@ -2,17 +2,20 @@
 
 ## Cloud billing input
 
-The billing upload may use provider-specific names. The mapping screen converts it into `fact_cloud_cost`.
+Billing uploads may use provider-specific names. Automatic mapping and normalization produce
+the canonical model; optional persistence writes it to `fact_cloud_cost`. Accepted local formats
+are CSV, XLSX, XLS, and Parquet. Cloud export connectors also accept CSV.GZ.
 
 | Canonical field | Required | Meaning |
 |---|---:|---|
-| `usage_date` | Yes | Date assigned to the charge or usage |
+| `usage_date` | Yes | UTC calendar day assigned to the charge or usage; naive timestamps are treated as UTC |
 | `service` | Yes | Cloud service or product family |
 | `cost` | Yes | Monetary amount used for analysis |
 | `currency` | No | Currency code; mixed currencies block analysis |
 | `provider` | No | Cloud provider |
 | `account_id` / `account_name` | No | Cloud account or subscription identity |
 | `region` | No | Region or global scope |
+| `resource_id` / `resource_name` | No | Provider resource identifier and display name |
 | `department` | No | Owning department or cost center |
 | `project` | No | Product, application, or workload |
 | `environment` | No | Production, staging, development, or similar |
@@ -24,8 +27,13 @@ The application adds `ingestion_id`, `source_file`, `source_row_number`, and `so
 
 ## Budget input
 
-Minimum fields are `period_start`, `period_end`, `scope_type`, `scope_value`, `budget_amount`, and `currency`. Common aliases such as `month`, `budget`, `dimension`, and `value` are accepted. Supported scope types are total, service, account, department, project, environment, and region.
+Required fields are `period_start` and `budget_amount`. If omitted, `period_end` defaults to
+month-end, `scope_type` to `total`, and `currency` to `Unspecified`. Non-total scopes require
+`scope_value`. Common aliases such as `month`, `budget`, `dimension`, and `value` are accepted.
+Supported scopes are total, service, account_id (or the alias account), department, project,
+environment, and region. Currency assumptions and overlapping budgets require review; see
+[metric definitions](METRIC_DEFINITIONS.md).
 
 ## Business metric input
 
-Minimum fields are `metric_date`, `metric_name`, `metric_value`, and `unit`. The application aggregates duplicate rows to daily metric grain before calculating cost per unit. A user selects one metric explicitly; unrelated metrics are not silently combined.
+Required fields are `metric_date`, `metric_name`, and `metric_value`; `unit` defaults to `units`. The application aggregates duplicate rows to daily metric grain before calculating cost per unit. A user selects one metric explicitly; unrelated metrics are not silently combined.

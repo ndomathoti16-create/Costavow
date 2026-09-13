@@ -24,9 +24,9 @@ API tokens, or service-account files in its own connection profiles. Cloud SDKs 
 tools may maintain authentication caches outside Metrora; those remain governed by the provider's
 tools and your operating-system account.
 
-Data leaves the local application only after an explicit user action:
+Application-initiated external transfers require a user action or a previously enabled refresh-on-open setting:
 
-- a cloud refresh reads billing exports through the configured provider SDK;
+- a cloud refresh reads billing exports through the configured provider SDK; refresh-on-open repeats this when enabled in a saved connection;
 - an optional S3 export writes the selected canonical dataset to the configured bucket; or
 - an optional desktop AI request sends the calculated fact pack to the configured HTTPS provider.
 
@@ -36,9 +36,16 @@ handling practices for sensitive billing data.
 
 ## Logs and support material
 
-Local crash and service logs may contain exception messages and local file paths. Review and redact
-them before sharing. Screenshots and exported reports may contain billing values or identifiers;
+Application crash reports contain the exception type and stack frame basenames, function names,
+and line numbers; exception messages and source lines are omitted. Third-party service logs may
+still contain exception messages and local paths. Review and redact logs before sharing. Screenshots and exported reports may contain billing values or identifiers;
 treat them with the same controls as the source data.
+
+Local data and logs remain until you delete them; there is no automatic expiry. Decision records
+can include owner names, notes, account IDs, and resource IDs. Optional AI fact packs can include
+source names, service names, ownership labels, and financial totals. Approve the configured
+provider and its retention terms before transmitting organizational data. JSON state assumes a
+single local writer; atomic file replacement is not a multi-user transaction system.
 
 This notice describes the current reference implementation and should be reviewed again before any
 multi-user or commercial deployment.

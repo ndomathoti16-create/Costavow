@@ -5,13 +5,22 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from ..config import ConfigurationError, validate_ai_base_url
 
 
 class AIProviderError(RuntimeError):
     """Raised when an optional provider cannot return a response."""
+
+
+class _NoRedirects(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Credentials and billing facts must stay at the explicitly configured endpoint.
+        return None
+
+
+MAX_RESPONSE_BYTES = 1024 * 1024
 
 
 class OpenAICompatibleClient:
@@ -33,6 +42,8 @@ class OpenAICompatibleClient:
             validated_base_url = validate_ai_base_url(base_url)
         except ConfigurationError as exc:
             raise AIProviderError(str(exc)) from exc
+        if timeout_seconds <= 0:
+            raise AIProviderError("AI timeout must be greater than zero.")
         self.api_key = api_key
         self.model = model
         self.endpoint = validated_base_url + "/chat/completions"
@@ -58,15 +69,22 @@ class OpenAICompatibleClient:
             method="POST",
         )
         try:
-            # The URL was constrained to HTTPS or loopback by validate_ai_base_url.
-            with urlopen(request, timeout=self.timeout_seconds) as response:  # nosec B310
-                body = json.loads(response.read().decode("utf-8"))
-        except (HTTPError, URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+            with build_opener(_NoRedirects()).open(
+                request, timeout=self.timeout_seconds
+            ) as response:
+                raw = response.read(MAX_RESPONSE_BYTES + 1)
+                if len(raw) > MAX_RESPONSE_BYTES:
+                    raise AIProviderError("The AI provider response exceeded the size limit.")
+                body = json.loads(raw.decode("utf-8"))
+        except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
             raise AIProviderError(
                 "The configured AI provider did not return a usable response."
             ) from exc
         try:
-            return str(body["choices"][0]["message"]["content"])
+            content = body["choices"][0]["message"]["content"]
+            if not isinstance(content, str) or not content.strip():
+                raise AIProviderError("The AI provider returned empty or invalid message content.")
+            return content
         except (KeyError, IndexError, TypeError) as exc:
             raise AIProviderError(
                 "The AI provider response did not contain message content."

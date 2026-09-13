@@ -37,7 +37,9 @@ def source_key_for(loaded_table: LoadedTable, profile: DataProfile) -> str:
         content_digest = sha256(row_hashes.to_numpy().tobytes()).hexdigest()[:16]
     except (TypeError, ValueError):
         content_digest = sha256(
-            "|".join(str(column) for column in loaded_table.dataframe.columns).encode("utf-8")
+            loaded_table.dataframe.to_json(
+                orient="split", date_format="iso", default_handler=str
+            ).encode("utf-8")
         ).hexdigest()[:16]
     return ":".join(
         [

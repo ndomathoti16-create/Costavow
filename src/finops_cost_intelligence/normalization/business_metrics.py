@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import re
-
 import pandas as pd
 
 from ..contracts.business_metrics import BusinessMetricValidationError
+from .budgets import _find_column
 
 _ALIASES: dict[str, tuple[str, ...]] = {
     "metric_date": ("metric date", "date", "period date", "usage date", "day"),
@@ -14,18 +13,6 @@ _ALIASES: dict[str, tuple[str, ...]] = {
     "metric_value": ("metric value", "value", "amount", "quantity", "count", "volume"),
     "unit": ("unit", "metric unit", "unit type"),
 }
-
-
-def _normal_name(value: object) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value).strip().lower()).strip()
-
-
-def _find_column(columns: list[str], aliases: tuple[str, ...]) -> str | None:
-    normalized = {_normal_name(column): column for column in columns}
-    for alias in aliases:
-        if _normal_name(alias) in normalized:
-            return normalized[_normal_name(alias)]
-    return None
 
 
 def normalize_business_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -48,7 +35,9 @@ def normalize_business_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
         source[matches["metric_date"]], errors="coerce", format="mixed"
     ).dt.normalize()
     output["metric_name"] = source[matches["metric_name"]].astype("string").str.strip()
-    output["metric_value"] = pd.to_numeric(source[matches["metric_value"]], errors="coerce")
+    output["metric_value"] = pd.to_numeric(
+        source[matches["metric_value"]], errors="coerce"
+    ).replace([float("inf"), float("-inf")], float("nan"))
     output["unit"] = (
         source[matches["unit"]].astype("string").str.strip()
         if matches["unit"]

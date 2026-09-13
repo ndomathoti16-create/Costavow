@@ -1,382 +1,127 @@
 # Metrora
 
-<p align="left">
-  <img src="docs/assets/metrora-mark.svg" width="54" alt="Metrora logo">
-</p>
+<img src="docs/assets/metrora-mark.svg" width="54" alt="Metrora logo">
 
-## Cloud financial intelligence for modern cloud teams
+**Cloud cost evidence, accountable decisions, and measured outcomes.**
 
-Metrora helps finance, FinOps, and engineering leaders understand where cloud money is going, what changed, who owns the next decision, and whether the result was actually achieved.
+[![CI](https://github.com/ndomathoti16-create/Metrora/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ndomathoti16-create/Metrora/actions/workflows/ci.yml)
+[![Windows release](https://img.shields.io/github/v/release/ndomathoti16-create/Metrora?label=Windows%20release)](https://github.com/ndomathoti16-create/Metrora/releases/latest)
 
-It brings provider billing data, native optimization recommendations, budgets, ownership, business context, forecasts, decisions, and verified outcomes into one provider-neutral workspace.
+Metrora is a local-first FinOps reference application for finance, engineering, and cloud teams.
+It turns billing exports into reconciled cost analysis, connects findings to budgets and business
+volume, and records who owns each decision and what happened afterward.
 
-**Live read-only product demo:** [metrora.streamlit.app](https://metrora.streamlit.app/)
+[**Explore the synthetic demo**](https://metrora.streamlit.app/) ·
+[**Download for Windows**](https://github.com/ndomathoti16-create/Metrora/releases/latest) ·
+[Documentation](docs/README.md) · [Run from source](docs/DEVELOPMENT.md) · [Changelog](CHANGELOG.md)
 
-**Windows desktop app:** [download the latest portable release](https://github.com/ndomathoti16-create/Metrora/releases/latest)
+## Choose how to use it
 
-**Metrora** · Cloud FinOps analytics · Local-first reference implementation
+| Surface | What you can do | Data and requirements |
+| --- | --- | --- |
+| Hosted demo | Explore three prepared scenarios and download their reports. | Synthetic data only; no sign-in, uploads, cloud connections, or external AI requests. |
+| Windows app | Upload your files, connect billing exports, manage decisions, and export results. | Local processing and storage; the portable ZIP includes Python and optional cloud SDKs. |
+| Source or Docker | Run the demo or local workspace and work on the code. | Python 3.11+ or Docker; see the [developer guide](docs/DEVELOPMENT.md). |
 
-> Validate the data. Find the signal. Move with confidence.
+The latest packaged release is [v0.2.3](https://github.com/ndomathoti16-create/Metrora/releases/tag/v0.2.3).
+Changes on `main` after that release are listed under **Unreleased** in the [changelog](CHANGELOG.md).
 
-[Product capabilities](#what-metrora-delivers) · [How it works](#how-metrora-works) · [Technical appendix](#technical-appendix)
+## What it does
 
-## The cloud cost visibility gap
+- **Prepare trustworthy inputs:** read CSV, Excel, or Parquet; detect columns; normalize billing;
+  reconcile totals; surface blocking errors and quality warnings.
+- **Explain cost movements:** compare periods, rank service drivers, inspect ownership coverage,
+  and explore forecasts and anomalies with their methods and limitations.
+- **Add planning context:** compare budgets and calculate unit costs from supplied business volume.
+- **Connect provider evidence:** read AWS S3, Azure Blob Storage, or GCP BigQuery billing exports;
+  optionally import AWS Cost Optimization Hub recommendations.
+- **Track decisions:** assign owners, due dates, status, risk, and rejection reasons. Compare
+  user-supplied baseline and post-change costs without treating provider estimates as realized savings.
+- **Share the result:** export an executive HTML brief, cleaned data, decision register, fact pack,
+  and quality report. An optional AI provider can rewrite calculated evidence for human review.
 
-Cloud spend is easy to generate and difficult to explain. Provider exports use different structures, ownership information is often incomplete, and the most important business questions rarely stop at a billing total.
+Cloud connectors read data and recommendations; they do not resize, stop, or delete resources.
+Provider credentials and an AI key are unnecessary for file-only analysis.
 
-Metrora is designed for teams that need to answer questions such as:
-
-- Which services, accounts, projects, departments, environments, or regions are driving spend?
-- What changed compared with the prior period?
-- Are actual costs within budget, and where is risk emerging?
-- How much spend can be attributed to an accountable owner?
-- What does cloud cost look like relative to customers, revenue, transactions, or usage?
-- Which actions are supported by the available evidence?
-- Who accepted, rejected, or implemented each action, and why?
-- Did post-change actual cost verify the expected result?
-
-## Why Metrora when cloud providers already have dashboards?
-
-Metrora is not positioned as a replacement for AWS Cloud Intelligence Dashboards, AWS Cost
-Optimization Hub, Azure Advisor, or Google Cloud FinOps Hub. Those products have the deepest
-provider-specific billing, resource, commitment, and rightsizing data.
-
-Metrora addresses the operating gap after a signal is found: one cross-provider place to
-reconcile the evidence, connect it to budgets and business outcomes, assign an owner, record the
-decision, preserve rejection reasons, and verify value from comparable before-and-after actuals.
-Provider savings remain labeled as estimates until actual billing proves the outcome.
-
-The competitive boundary and roadmap are documented in
-[docs/DIFFERENTIATION_STRATEGY.md](docs/DIFFERENTIATION_STRATEGY.md).
-
-## What Metrora delivers
-
-| Product area | Business value |
-| --- | --- |
-| Trusted cost foundation | Convert provider-specific files into a consistent, reviewable cost model. |
-| Automated cloud connections | Refresh scheduled AWS, Azure, or Google Cloud billing exports without storing cloud secrets. |
-| Native recommendation intake | Import AWS Cost Optimization Hub findings without changing cloud resources or presenting estimates as realized savings. |
-| Spend intelligence | See trends, service drivers, ownership mix, and regional or environmental patterns. |
-| Planning and outlook | Compare actuals with budgets and estimate future spend using transparent methods. |
-| Cost accountability | Measure allocation and tagging coverage so teams know where ownership is missing. |
-| Governance review | Turn trust, allocation, budget, freshness, and business-linkage controls into an actionable policy view. |
-| Business context | Relate cloud cost to customers, revenue, transactions, or product usage. |
-| Accountable decision register | Track owner, due date, disposition, effort, risk, supporting evidence, and rejection reason. |
-| Verified outcomes | Calculate measured cost change only from user-supplied comparable baseline and post-change actuals. |
-| Decision-ready communication | Generate concise summaries, recommendations, cleaned data, and executive reports. |
-
-## Built for the people who manage technology economics
-
-**Finance and FP&A** get a clearer view of technology spend, budget variance, and forward-looking cost risk.
-
-**FinOps teams** get a repeatable workflow for ingestion, validation, allocation, trend analysis, anomaly review, and action planning.
-
-**Engineering and platform teams** get service- and ownership-level context without needing to interpret raw billing exports.
-
-**Business and product leaders** can connect infrastructure cost to the outcomes their teams are responsible for delivering.
-
-## How Metrora works
-
-1. **Bring in the data** — upload CSV, Excel, or Parquet, or connect a scheduled AWS, Azure, or Google Cloud billing export.
-2. **Let Metrora prepare it** — field detection, mapping, normalization, reconciliation, and quality checks run automatically.
-3. **Start with the answer** — Home opens on the current cost position, movement, forecast, anomalies, and attention queue.
-4. **Investigate when needed** - Cost explorer supports filtering and driver analysis; Plans & alerts connects forecasts, anomalies, budgets, ownership, and business metrics.
-5. **Assign the decision** - calculated signals and imported provider recommendations enter a decision register with an owner, status, due date, effort, risk, and evidence.
-6. **Verify the result** - after implementation, compare actual baseline and post-change cost; provider estimates are never counted as realized value.
-7. **Review exceptions, not every setting** - manual mapping, reconciliation evidence, and model controls stay under Advanced.
-8. **Share the record** - export an evidence-backed brief, decision register, fact pack, quality report, or cleaned dataset.
-
-## A decision layer built on traceable data
+## The workflow
 
 ```mermaid
 flowchart LR
-    SOURCES[Billing, budget, and business data] --> WORKSPACE[Metrora workspace]
-    WORKSPACE --> TRUST[Profile, map, normalize, reconcile]
-    TRUST --> INSIGHT[Spend, budget, ownership, and business insight]
-    INSIGHT --> OUTLOOK[Forecasts and anomaly signals]
-    INSIGHT --> ACTION[Calculated and provider recommendations]
-    OUTLOOK --> DECISION[Owned decision register]
-    ACTION --> DECISION
-    DECISION --> OUTCOME[Verified before-and-after outcome]
-    OUTCOME --> BRIEF[Executive brief and exports]
+    INPUT[Billing exports] --> CHECK[Map and reconcile]
+    CHECK --> ANALYZE[Spend, budgets, forecasts]
+    ANALYZE --> DECIDE[Assign and track decisions]
+    DECIDE --> VERIFY[Compare actual outcomes]
+    VERIFY --> REPORT[Brief and evidence exports]
 ```
 
-Metrora keeps the analytical path explainable: source data is profiled and normalized before metrics are calculated, and every summary is grounded in those calculated facts.
+The workspace follows that sequence through **Overview**, **Explore spend**, **Forecast & alerts**,
+**Decisions**, **Reports & exports**, **Data sources**, and **Data settings**. Data sources and editing
+controls are available in the local workspace. Mapping changes are only needed when automatic
+preparation flags an exception or you want to change the accepted cost basis.
 
-The downloadable workspace is organized as business software rather than a long-form site:
+## See the product
 
-- **Home** — automated operating position and prioritized attention queue.
-- **Cost explorer** — date, dimension, and ownership filtering with exact drilldown values.
-- **Plans & alerts** — forecast, anomalies, budgets, allocation coverage, and unit economics.
-- **Decisions** — prioritized actions, owners, dispositions, native AWS recommendation intake, and verified outcomes.
-- **Reports** — executive decision brief and reproducible exports.
-- **Data sources** — file uploads, saved cloud connections, sync status, and refresh-on-open.
-- **Advanced** — source inspection, mapping corrections, reconciliation, and analytical defaults.
+![Metrora product overview](docs/screenshots/metrora-product-current.png)
 
-The market and workflow rationale is documented in
-[docs/PRODUCT_UX_RESEARCH.md](docs/PRODUCT_UX_RESEARCH.md).
+The [guided demo](https://metrora.streamlit.app/?surface=product&page=Demo) includes:
 
-## The product experience
+- **Healthy baseline:** clean, stable spend with ownership and budget context.
+- **Data needs review:** deliberately invalid values and mixed currencies that block analysis.
+- **Hidden future risk:** reconciled spend with an accelerating run rate and forecast risk.
 
-### Product preview
+![Metrora analytical workspace](docs/screenshots/metrora-workspace-current.png)
 
-The product opens as one clear, scrolling story: what Metrora does, how its decision path
-works, and why each result is trustworthy. The separate demo page then offers three
-one-click, deterministic stories in the same workspace used for real files:
+Screenshots are from v0.2.3. Unreleased calculation changes can produce different values and anomaly
+counts. All bundled scenarios are synthetic; see the [demo data guide](data/demo/README.md).
 
-<p align="center">
-  <img src="docs/screenshots/metrora-product-current.png" alt="Current Metrora product experience" width="900">
-</p>
+## Start on Windows
 
-<p align="center">
-  <img src="docs/screenshots/metrora-demo-scenarios.png" alt="Metrora demo scenario chooser" width="900">
-</p>
-
-- **Healthy baseline** shows clean, stable, fully owned spend that is ready to share.
-- **Data needs review** contains invalid required values, mixed currency, duplicates, and
-  ownership gaps, so Metrora blocks unreliable analysis and explains what must be fixed.
-- **Hidden future risk** is reconciled and under its current budget, but its recent run rate
-  accelerates enough to create a clear forecast warning and action plan.
-
-<p align="center">
-  <img src="docs/screenshots/metrora-workspace-current.png" alt="Current Metrora analytical workspace" width="900">
-</p>
-
-The screenshots above are fresh captures from the current release.
-
-The product and workspace use the original Metrora signal-ribbon mark above rather than a
-borrowed asset or stock logo.
-
-### Start with any supported billing export
-
-Metrora accepts CSV, Excel, and Parquet files, then profiles their structure before analysis begins. Users can review detected dates, services, costs, accounts, regions, departments, projects, environments, usage fields, currencies, and tags.
-
-### See the cost story, not just the total
-
-Interactive views show total spend, average daily spend, period movement, top-service concentration, daily trends, and ranked breakdowns across the dimensions present in the data.
-
-### Connect actuals to operating context
-
-Optional budgets provide actual-versus-budget comparisons. Ownership analysis measures allocation and tagging coverage. Business metrics support cost-per-customer, cost-per-transaction, or other unit-cost views when the data supports them.
-
-### Look forward without hiding uncertainty
-
-Metrora provides a transparent baseline forecast and historical anomaly detection. Each result includes its method, history, threshold, and caveats so a forecast is not mistaken for certainty.
-
-### Use AI where it adds value
-
-AI helps explain validated results and prioritize follow-up actions. It does not calculate financial values, create unsupported savings claims, or replace the underlying evidence.
-
-## Delivery model
-
-Metrora is a local-first desktop product with a clear data contract, modular analytical services,
-a Streamlit workspace, local persistence, and optional cloud storage and query adapters. The
-public website is a read-only product demonstration, not a hosted customer-data service.
-
-The current reference implementation runs locally and can operate without cloud credentials or an AI API key. The same canonical Parquet model provides a path to S3, Glue, and Athena for a hosted deployment.
-
-## Technical appendix
-
-The sections below are intended for implementation teams and technical stakeholders who want to reproduce or extend the current release.
-
-### Current release
-
-Metrora now has two deliberate surfaces: a hosted product preview with synthetic demo stories,
-and a portable Windows application that opens directly into the real analytical workspace.
-The hosted surface is intentionally read-only: visitors can explore preloaded scenarios but
-cannot upload files, replace planning or business data, change mappings, connect cloud exports,
-or import provider recommendations. Those capabilities remain in the downloadable desktop app.
-The desktop release includes secure read-only AWS, Azure, and Google Cloud billing connections,
-AWS Cost Optimization Hub recommendation intake, refresh-on-open, local connection history,
-governance review, an accountable decision register, actual outcome verification, and the
-complete analysis and reporting workflow. File-only analysis still works without cloud
-credentials or an AI key.
-
-### Requirements
-
-- Python 3.11 or newer
-- Windows PowerShell, macOS, or Linux shell
-- A supported billing file with mappable date, service, and cost columns
-- Optional: budget data with period, scope, amount, and currency fields
-- Optional: business data with date, metric name, metric value, and unit fields
-- Optional: an OpenAI-compatible API key for AI-generated explanations
-- Optional: AWS credentials with least-privilege S3 and Athena access; Cost Optimization Hub
-  import additionally requires `cost-optimization-hub:ListRecommendations`
-- Optional: Azure CLI or managed identity with Storage Blob Data Reader access
-- Optional: Google Application Default Credentials with BigQuery Job User and Data Viewer access
-
-### Detailed data workflow
-
-1. Upload a CSV, Excel, or Parquet billing file, or connect a provider-managed export under **Data sources**.
-2. Metrora profiles, maps, normalizes, reconciles, and quality-checks the source automatically.
-3. **Home** opens with the current position and prioritized attention queue.
-4. Open **Cost explorer** to change the date range, grouping dimension, or optional filters.
-5. Add budget and business-metric files from **Plans & alerts** when available.
-6. Open **Advanced** only to replace a source, correct a flagged mapping exception, inspect reconciliation, or tune analytical defaults.
-7. Review forecasts, anomaly evidence, allocation coverage, and operating context.
-8. Review **Governance** for trust, ownership, budget, freshness, and business-linkage policy status.
-9. Open **Decisions** to assign calculated actions, import AWS recommendations, record the
-   disposition, or verify an implemented result with actual costs.
-10. Open **Reports** for the calculated brief, fact pack, quality report, and cleaned data.
-11. Optionally persist the run to DuckDB or configured S3 storage.
-
-### Minimum billing fields
-
-The billing source must contain mappable fields for:
-
-- `usage_date`
-- `service`
-- `cost`
-
-Recommended fields include `currency`, `provider`, `account_id`, `account_name`, `region`, `department`, `project`, `environment`, `resource_id`, `usage_quantity`, `usage_unit`, `usage_type`, `cost_type`, and `tags_json`.
-
-See [docs/DATA_DICTIONARY.md](docs/DATA_DICTIONARY.md) for the canonical schema and accepted upload shapes.
-
-### Data-quality requirements
-
-Metrora checks for missing required fields, duplicates, invalid dates, invalid costs, unsupported or mixed currencies, blank ownership dimensions, normalization issues, row-count changes, and reconciliation differences. Blocking errors pause analysis; warnings remain visible as caveats.
-
-Metric formulas, denominators, and caveats are documented in [docs/METRIC_DEFINITIONS.md](docs/METRIC_DEFINITIONS.md).
-
-## Try Metrora
-
-### Download the Windows app
-
-Open the [latest Metrora release](https://github.com/ndomathoti16-create/Metrora/releases/latest),
-download `Metrora-Windows-x64.zip`, extract the folder, and run `Metrora.exe`. Python is not
-required. The app opens directly into a private local workspace and stores its database and
-non-secret connection profiles under the current Windows user's local application-data folder.
-
-The Windows package is portable rather than a signed installer. Windows SmartScreen may show an
-unrecognized-app warning until the executable has established reputation or is code-signed.
-Compare the downloaded ZIP with `SHA256SUMS.txt` on the release before opening it. The source and
-automated build recipe are included in this repository for inspection.
-
-To create a release, run the **Windows desktop release** workflow from GitHub Actions for a test
-artifact, or push a version tag such as `v0.2.3` to publish the ZIP and checksum on the Releases page.
-
-### Hosted preview
-
-Open [metrora.streamlit.app](https://metrora.streamlit.app/) to explore the hosted product
-experience. The public preview uses synthetic data only, is read-only, and does not accept user
-uploads or cloud connections. It does not require an account, cloud credentials, or an API key.
-
-### Run locally
-
-The shortest deployment path is Docker. From the repository root:
+1. Open the [latest release](https://github.com/ndomathoti16-create/Metrora/releases/latest).
+2. Download `Metrora-Windows-x64.zip` and `SHA256SUMS.txt`.
+3. Compare the ZIP's SHA-256 hash with the checksum, extract it, and run `Metrora.exe`.
 
 ```powershell
-docker compose up --build
+Get-FileHash .\Metrora-Windows-x64.zip -Algorithm SHA256
 ```
 
-Open `http://localhost:8501`. The included health check, production defaults, and persistent
-Docker volume are configured in `compose.yaml`. The port is bound to this computer's loopback
-interface and the container runs as a non-root user. Stop the service with
-`docker compose down`.
+Python is not required for the portable app. The native launcher binds its service to `127.0.0.1`
+and normally stores local state under `%LOCALAPPDATA%\Metrora`. The executable is unsigned;
+Windows may show a SmartScreen warning. Check the source and checksum before deciding to run it.
 
-For a Python development environment, run these commands from the Metrora repository root.
-Replace the example path with the folder where you cloned the repository.
+## Data and trust boundaries
 
-PowerShell:
+Billing data needs mappable **date**, **service**, and **cost** columns. Currency, account, region,
+project, department, environment, resource, and usage fields improve the analysis. See the
+[data dictionary](docs/DATA_DICTIONARY.md) and [metric definitions](docs/METRIC_DEFINITIONS.md).
 
-```powershell
-cd "C:\path\to\metrora"
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-python data/demo/generate_demo_data.py
-python -m streamlit run app.py
-```
+Financial values are calculated before optional AI narration. Malformed or unsupported AI output
+falls back to the deterministic summary, but generated wording still requires review. Optional cloud
+and AI actions can transmit data; the application describes the selected action and destination.
 
-The app opens on a single scrolling Metrora product experience. Use **Explore demos** to open
-the separate scenario chooser, then select **Healthy baseline**, **Data needs review**, or
-**Hidden future risk**. Each option loads its complete billing, budget, and business context in
-one click. The local preview uses synthetic data and does not require an account, password,
-cloud credentials, or external identity provider.
+This is a single-user local workspace, not an authenticated multi-tenant service. Local application
+files are not independently encrypted. Forecasts are estimates, and before-and-after billing alone
+does not establish causation. Review [security](SECURITY.md), [privacy](PRIVACY.md), and
+[known metric limitations](docs/METRIC_DEFINITIONS.md) before using organizational data.
 
-When using the blank workspace, upload `data/demo/cloud_billing_demo.csv`. Metrora prepares
-the cost model and opens **Overview** automatically. Add `data/demo/budget_demo.csv` or
-`data/demo/business_metrics_demo.csv` from **Forecast & alerts** when needed. The complete
-scenario file list is documented in [data/demo/README.md](data/demo/README.md).
+## Repository guide
 
-If PowerShell says a command or file cannot be found, check that the prompt is inside the repository folder and that the virtual environment is activated. You can also run the app directly with `.venv\Scripts\python.exe -m streamlit run app.py`.
+| Location | Purpose |
+| --- | --- |
+| [`src/finops_cost_intelligence/`](src/finops_cost_intelligence/) | Application, analytics, provider adapters, and UI. |
+| [`tests/`](tests/) | Unit, regression, and Streamlit workflow checks. |
+| [`data/demo/`](data/demo/) | Synthetic datasets and their generator. |
+| [`docs/`](docs/README.md) | Setup, metric definitions, architecture, and historical research. |
+| [`packaging/`](packaging/) | Windows packaging and third-party license inventory. |
+| [`infra/aws/`](infra/aws/README.md) | Optional S3/Glue/Athena setup notes. |
+| [`.github/`](.github/) | CI, Windows release workflow, and dependency update configuration. |
 
-Metrora uses one deliberate dark visual system across the product page and analytical workspace. This keeps the visual hierarchy, charts, evidence tables, and interactive controls consistent in every view.
+## Issues, security reports, and licensing
 
-### Connect scheduled cloud exports
+For a reproducible bug, [open an issue](https://github.com/ndomathoti16-create/Metrora/issues/new/choose)
+with synthetic data and the affected version. Report vulnerabilities through the private route in
+[SECURITY.md](SECURITY.md), not a public issue. See [contribution guidance](CONTRIBUTING.md) before
+proposing changes.
 
-Install the cloud SDKs when running from source:
-
-```powershell
-python -m pip install -e ".[cloud,dev]"
-```
-
-- **AWS:** schedule Data Exports or CUR 2.0 to S3, authenticate with AWS SSO or an IAM role,
-  then enter the bucket and prefix under **Data sources**.
-- **Azure:** schedule a Cost Management ActualCost or AmortizedCost export to Blob Storage,
-  run `az login` for local access or use managed identity, then enter the account URL,
-  container, and prefix.
-- **Google Cloud:** enable Cloud Billing export to BigQuery, run
-  `gcloud auth application-default login`, then enter the project, dataset, and table pattern.
-
-Only export locations and identity selectors are saved. Access keys, passwords, tokens, and
-service-account files are not stored by Metrora. See
-[the productization and security rationale](docs/PRODUCTIZATION_RESEARCH.md) for the permission
-model, evidence boundaries, and deferred enterprise controls.
-
-### Validation and testing
-
-```powershell
-python -m pytest -q
-python -m ruff check .
-python -m compileall -q app.py src tests data/demo
-```
-
-GitHub Actions runs tests, linting, formatting, compilation, source security checks, and a
-dependency vulnerability audit on Python 3.11 and 3.12.
-
-### AI guardrails
-
-Python and pandas calculate all financial values before the AI boundary. The AI receives a versioned fact pack containing calculated facts, definitions, quality status, caveats, and recommendation IDs.
-
-The optional provider must return structured JSON. Unsupported fact references or numeric claims cause Metrora to use the deterministic fallback summary.
-
-### AWS extension
-
-When configured, Metrora can upload canonical Parquet to S3 under `standardized/cloud_cost/{ingestion_id}.parquet`. `AthenaWarehouse` can run bounded SQL against a Glue/Athena table and return a DataFrame.
-
-See [docs/AWS_ARCHITECTURE.md](docs/AWS_ARCHITECTURE.md) and [infra/aws/README.md](infra/aws/README.md).
-
-### Repository guide
-
-- [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md): scope, architecture, milestone gates, and future work.
-- [docs/DATA_DICTIONARY.md](docs/DATA_DICTIONARY.md): canonical fields and accepted upload shapes.
-- [docs/METRIC_DEFINITIONS.md](docs/METRIC_DEFINITIONS.md): formulas, denominators, and caveats.
-- [data/demo/README.md](data/demo/README.md): deterministic demo-data workflow.
-
-### Privacy, security, and licensing
-
-- [PRIVACY.md](PRIVACY.md) explains what the hosted demo and desktop app process and where local
-  application state is stored.
-- [SECURITY.md](SECURITY.md) documents supported versions, safe configuration, and private
-  vulnerability reporting.
-- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) describes third-party dependency attribution.
-
-This repository does not currently include an open-source license. Copyright therefore remains
-with the repository owner, and public visibility should not be interpreted as permission to copy,
-modify, or redistribute the software. A formal license should be selected before inviting outside
-reuse or contributions.
-
-Portable builds also contain a generated `THIRD_PARTY_LICENSES.txt` inventory with the dependency
-license files declared by the exact build environment.
-
-### Security and limitations
-
-Use synthetic or anonymized data for development. Do not commit cloud account identifiers, customer data, billing exports, access keys, or `.env` files.
-
-The current release does not claim rightsizing, idle-resource deletion, commitment optimization, multi-currency conversion, or causal explanations without the utilization, pricing, or operational evidence required to support those conclusions.
-
-### Future extensions
-
-Potential next capabilities include hosted multi-user workspaces, scheduled ingestion, provider APIs, resource-utilization evidence, rightsizing analysis, commitment optimization, richer allocation rules, alert delivery, and broader cloud-provider coverage.
+**No project distribution license has been selected.** Public visibility does not grant an
+open-source license; contact the owner before reuse or redistribution. Third-party components keep
+their own licenses and notices; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

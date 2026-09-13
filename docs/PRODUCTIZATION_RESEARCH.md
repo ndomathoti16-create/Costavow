@@ -1,5 +1,9 @@
 # Metrora productization research
 
+> Historical planning and research context. For current behavior and setup, use the
+> [documentation index](README.md), [developer guide](DEVELOPMENT.md), and
+> [changelog](../CHANGELOG.md). Proposed capabilities below are not release commitments.
+
 ## Decision
 
 Metrora's first downloadable release is a local, read-only FinOps decision workspace rather

@@ -145,7 +145,7 @@ def _load_remote_payload(
         return load_table(payload, source_name=source_name, max_bytes=max_bytes)
     except Exception as exc:
         raise CloudConnectionError(
-            f"The billing object {source_name!r} could not be parsed: {exc}"
+            f"The billing object {source_name!r} could not be parsed within the import limits."
         ) from exc
 
 

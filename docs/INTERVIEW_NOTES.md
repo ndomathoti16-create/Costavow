@@ -1,5 +1,9 @@
 # Interview notes
 
+> Historical planning and research context. For current behavior and setup, use the
+> [documentation index](README.md), [developer guide](DEVELOPMENT.md), and
+> [changelog](../CHANGELOG.md). Proposed capabilities below are not release commitments.
+
 ## Two-minute walkthrough
 
 1. Upload a provider-style billing file and inspect its profile.

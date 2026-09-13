@@ -22,9 +22,13 @@ safe proof of concept. Reports made in good faith will be reviewed as time permi
   webview session.
 - Saved cloud profiles contain locations and identity selectors, not passwords, tokens, access
   keys, or service-account contents.
-- Cloud import sizes are bounded, including compressed payload expansion.
+- File and cloud import sizes are bounded, including gzip and Excel/Parquet expansion checks.
+  Parsed tables are also checked against the configured limit. Parsing still occurs in-process;
+  these checks are not a hard operating-system memory or CPU sandbox.
 - Azure identity credentials are only used with canonical HTTPS Azure Blob Storage account URLs.
 - Optional remote AI endpoints require HTTPS, except for explicit loopback development services.
+  Requests refuse redirects, cap responses at 1 MiB, and validate the returned summary structure.
+  These checks do not establish that every generated statement is true.
 - Financial values are calculated before any optional narrative request.
 
 Users remain responsible for least-privilege IAM, endpoint security, credential rotation, device
@@ -35,3 +39,7 @@ encryption, backup controls, and validating exported reports before business use
 Never commit `.env`, Streamlit secrets, cloud credentials, private keys, real billing exports, or
 customer identifiers. Verify release checksums, keep the desktop app current, and use synthetic or
 anonymized data when reproducing a problem.
+
+The desktop workspace has no application-level user authentication or tenant authorization. Keep
+it bound to loopback on a trusted device. A shared deployment needs authentication, authorization,
+rate limits, transactional state, organizational retention rules, and an independent security review.

@@ -1,5 +1,9 @@
 # Metrora differentiation strategy
 
+> Historical planning and research context. For current behavior and setup, use the
+> [documentation index](README.md), [developer guide](DEVELOPMENT.md), and
+> [changelog](../CHANGELOG.md). Proposed capabilities below are not release commitments.
+
 ## Executive decision
 
 Metrora should not compete with AWS, Azure, or Google Cloud on the number of provider-specific

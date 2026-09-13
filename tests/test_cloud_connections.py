@@ -27,6 +27,9 @@ class _Body:
     def __init__(self, payload: bytes):
         self.payload = payload
 
+    def close(self) -> None:
+        pass
+
     def read(self, amount: int | None = None) -> bytes:
         return self.payload if amount is None else self.payload[:amount]
 

@@ -216,7 +216,9 @@ def ranked_decisions(
     as_of: date | None = None,
 ) -> list[tuple[DecisionRecord, int]]:
     """Rank open work first while preserving a deterministic order for auditability."""
-    max_impact = max((abs(item.impact_amount or 0.0) for item in decisions), default=0.0)
+    max_impact = max(
+        (abs(item.impact_amount or 0.0) for item in decisions if item.is_open), default=0.0
+    )
     ranked = [
         (item, decision_priority_score(item, max_impact=max_impact, as_of=as_of))
         for item in decisions

@@ -12,6 +12,9 @@ def test_overview_and_anomaly_drilldown_use_the_same_history_and_threshold() -> 
     _, _, _, normalized, report = build_demo_artifacts(settings, "forecast_risk")
 
     history = select_comparable_anomaly_history(normalized.dataframe)
+    # Inject a known spike; trending synthetic data alone need not be anomalous.
+    latest = history["usage_date"].eq(history["usage_date"].max())
+    history.loc[latest, "cost"] *= 100
     _, overview = detect_spend_anomalies(history, threshold=3.5)
     diagnostics, drilldown = detect_spend_anomalies(history, threshold=3.5)
 

@@ -75,9 +75,15 @@ def _usage_explanation(
     if len(unique_units) != 1:
         return result
 
-    recent_usage_values = pd.to_numeric(recent["usage_quantity"], errors="coerce").dropna()
-    prior_usage_values = pd.to_numeric(prior["usage_quantity"], errors="coerce").dropna()
-    if recent_usage_values.empty or prior_usage_values.empty:
+    recent_usage_values = pd.to_numeric(recent["usage_quantity"], errors="coerce")
+    prior_usage_values = pd.to_numeric(prior["usage_quantity"], errors="coerce")
+    if (
+        len(units) != len(combined_units)
+        or recent_usage_values.empty
+        or prior_usage_values.empty
+        or recent_usage_values.isna().any()
+        or prior_usage_values.isna().any()
+    ):
         return result
 
     recent_usage = float(recent_usage_values.sum())

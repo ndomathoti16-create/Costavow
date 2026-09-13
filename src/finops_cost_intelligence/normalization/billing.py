@@ -79,44 +79,37 @@ def _normalize_tags(series: pd.Series) -> pd.Series:
     return series.map(normalize_value).astype("string")
 
 
-def _normalize_numeric(series: pd.Series) -> pd.Series:
+def normalize_numeric_values(series: pd.Series) -> pd.Series:
+    """Parse finite billing-style numbers for normalization and reconciliation."""
     text = series.astype("string").str.strip()
     text = text.str.replace(r"^\((.*)\)$", r"-\1", regex=True)
     text = text.str.replace(r"[$€£¥]", "", regex=True)
     text = text.str.replace(",", "", regex=False)
-    return pd.to_numeric(text, errors="coerce").astype("Float64")
-
-
-def normalize_numeric_values(series: pd.Series) -> pd.Series:
-    """Parse billing-style numeric values for quality reconciliation and normalization."""
-    return _normalize_numeric(series)
+    return (
+        pd.to_numeric(text, errors="coerce")
+        .replace([float("inf"), float("-inf")], pd.NA)
+        .astype("Float64")
+    )
 
 
 def _normalize_date(series: pd.Series) -> pd.Series:
-    return pd.to_datetime(series, errors="coerce", format="mixed").dt.normalize()
+    return (
+        pd.to_datetime(series, errors="coerce", format="mixed", utc=True)
+        .dt.tz_localize(None)
+        .dt.normalize()
+    )
 
 
 def _converted_series(spec: CanonicalFieldSpec, series: pd.Series) -> pd.Series:
     if spec.kind == "date":
         return _normalize_date(series)
     if spec.kind == "numeric":
-        return _normalize_numeric(series)
+        return normalize_numeric_values(series)
     if spec.kind == "currency":
         return _normalize_currency(series)
     if spec.kind == "tags":
         return _normalize_tags(series)
     return _normalize_string(series)
-
-
-def _invalid_mask(
-    spec: CanonicalFieldSpec,
-    source_series: pd.Series,
-    converted: pd.Series,
-) -> pd.Series:
-    source_present = source_series.notna()
-    if spec.kind in {"string", "currency", "tags"}:
-        return source_present & converted.isna()
-    return source_present & converted.isna()
 
 
 def _row_hashes(dataframe: pd.DataFrame, source_name: str) -> list[str]:
@@ -175,7 +168,7 @@ def normalize_billing_table(
         raw_series = source[source_column]
         converted = _converted_series(spec, raw_series)
         output[spec.name] = converted
-        invalid = _invalid_mask(spec, raw_series, converted)
+        invalid = raw_series.notna() & converted.isna()
         invalid_positions = [int(position) for position in invalid[invalid].index]
         issue_counts[spec.name] += len(invalid_positions)
         issue_rows.update(invalid_positions)

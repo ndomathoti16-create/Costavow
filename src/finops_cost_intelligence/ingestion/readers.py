@@ -6,6 +6,7 @@ import io
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, BinaryIO, TextIO
+from zipfile import BadZipFile, ZipFile
 
 import pandas as pd
 
@@ -70,9 +71,9 @@ def _source_payload(source: Source, source_name: str) -> tuple[Any, str, int | N
     if isinstance(source, (str, Path)):
         path = Path(source).expanduser()
         if not path.exists():
-            raise SourceNotFoundError(f"Source file does not exist: {path}")
+            raise SourceNotFoundError("The source file does not exist.")
         if not path.is_file():
-            raise SourceNotFoundError(f"Source path is not a regular file: {path}")
+            raise SourceNotFoundError("The source path is not a regular file.")
         return path, path.name, path.stat().st_size
 
     if isinstance(source, bytes):
@@ -137,7 +138,7 @@ def _read_excel(source: Any, suffix: str) -> tuple[pd.DataFrame, str]:
             f"Reading {suffix} files requires the {dependency} package."
         ) from exc
     except (OSError, ValueError, TypeError) as exc:
-        raise UnreadableFileError(f"Could not open Excel workbook: {exc}") from exc
+        raise UnreadableFileError("Could not open the Excel workbook.") from exc
 
     first_header_only_sheet: tuple[pd.DataFrame, str] | None = None
     try:
@@ -145,9 +146,7 @@ def _read_excel(source: Any, suffix: str) -> tuple[pd.DataFrame, str]:
             try:
                 candidate = pd.read_excel(workbook, sheet_name=sheet_name)
             except (OSError, ValueError, TypeError) as exc:
-                raise UnreadableFileError(
-                    f"Could not read worksheet {sheet_name!r}: {exc}"
-                ) from exc
+                raise UnreadableFileError("Could not read an Excel worksheet.") from exc
 
             if len(candidate.columns) > 0 and candidate.empty:
                 first_header_only_sheet = (candidate, sheet_name)
@@ -190,7 +189,7 @@ def load_table(
         source: A filesystem path, bytes, or a readable file-like object. Streamlit's
             UploadedFile is supported through its ``name``, ``size``, and read methods.
         source_name: Optional name used for in-memory uploads that have no ``name``.
-        max_bytes: Optional hard byte limit checked before parsing.
+        max_bytes: Optional limit for the file, expanded data, and loaded table.
     """
     if max_bytes is not None and max_bytes <= 0:
         raise ValueError("max_bytes must be greater than zero when provided.")
@@ -203,7 +202,9 @@ def load_table(
             f"Unsupported file type for {name!r}. "
             f"Supported types: {', '.join(sorted(SUPPORTED_EXTENSIONS))}."
         )
-    if max_bytes is not None and source_size_bytes is not None and source_size_bytes > max_bytes:
+    if max_bytes is not None and source_size_bytes is None:
+        raise UnreadableFileError("Cannot verify the size of this source before parsing.")
+    if max_bytes is not None and source_size_bytes > max_bytes:
         limit_mb = max_bytes / (1024 * 1024)
         actual_mb = source_size_bytes / (1024 * 1024)
         raise FileTooLargeError(
@@ -212,6 +213,21 @@ def load_table(
 
     _rewind(payload)
     try:
+        if max_bytes is not None and suffix in {".xlsx", ".parquet"}:
+            if suffix == ".xlsx":
+                with ZipFile(payload) as archive:
+                    expanded_size = sum(item.file_size for item in archive.infolist())
+            else:
+                import pyarrow.parquet as parquet
+
+                metadata = parquet.read_metadata(payload)
+                expanded_size = sum(
+                    metadata.row_group(index).total_byte_size
+                    for index in range(metadata.num_row_groups)
+                )
+            if expanded_size > max_bytes:
+                raise FileTooLargeError("Expanded file data exceeds the configured import limit.")
+            _rewind(payload)
         dataframe, sheet_name = _read_by_format(payload, suffix)
     except IngestionError:
         raise
@@ -230,9 +246,18 @@ def load_table(
         raise MissingDependencyError(
             f"Reading {suffix} files requires {dependency}. Install project dependencies first."
         ) from exc
-    except (OSError, ValueError, TypeError) as exc:
-        raise UnreadableFileError(f"Could not read {name!r}: {exc}") from exc
+    except (OSError, ValueError, TypeError, BadZipFile) as exc:
+        raise UnreadableFileError(
+            f"Could not read {name!r}. Check that its content matches the file format."
+        ) from exc
 
+    if (
+        max_bytes is not None
+        and int(dataframe.memory_usage(index=True, deep=True).sum()) > max_bytes
+    ):
+        raise FileTooLargeError("The loaded table exceeds the configured memory limit.")
+    if not dataframe.columns.map(str).is_unique:
+        raise UnreadableFileError("Source column names must be unique when converted to text.")
     if dataframe.shape[1] == 0:
         raise EmptyTableError(f"{name!r} contains no columns.")
     if dataframe.shape[0] == 0:
