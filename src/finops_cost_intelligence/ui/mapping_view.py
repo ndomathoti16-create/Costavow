@@ -120,7 +120,7 @@ def _selected_mapping_from_form(
     optional_specs = [spec for spec in CANONICAL_FIELD_SPECS if not spec.required]
     with st.expander("Optional fields", expanded=False):
         st.caption(
-            "Metrora already applied its best matches. Change only the fields your analysis needs."
+            "Costavow already applied its best matches. Change only the fields your analysis needs."
         )
         optional_columns = st.columns(3)
         for index, spec in enumerate(optional_specs):
@@ -152,7 +152,7 @@ def _render_normalized_result(source_key: str) -> None:
 
     with st.expander("Inspect normalized rows", expanded=False):
         st.caption(
-            "This preview is for verification. Metrora uses the complete normalized table "
+            "This preview is for verification. Costavow uses the complete normalized table "
             "for every calculation."
         )
         render_compact_table(normalized.dataframe, max_rows=15)
@@ -214,7 +214,7 @@ def render_mapping_view(
 
     st.subheader("Automatic field mapping")
     st.write(
-        "Metrora matched the source columns to its standard cost model. You only need "
+        "Costavow matched the source columns to its standard cost model. You only need "
         "to intervene when a required field is missing or a suggestion is incorrect."
     )
     metrics = st.columns(3)
@@ -281,7 +281,7 @@ def render_mapping_view(
             st.session_state["quality_source_key"] = source_key
             st.session_state["mapping_edit_mode"] = False
             st.session_state["auto_analysis_message"] = (
-                "Field corrections applied. Metrora rebuilt and rechecked the cost model."
+                "Field corrections applied. Costavow rebuilt and rechecked the cost model."
             )
             st.rerun()
 
@@ -321,7 +321,7 @@ def render_mapping_audit(
 
     st.subheader("Automatic field mapping")
     st.write(
-        "This guided source is fixed. Metrora detected its semantic fields and retained "
+        "This guided source is fixed. Costavow detected its semantic fields and retained "
         "the mapping evidence below for review."
     )
     metrics = st.columns(3)

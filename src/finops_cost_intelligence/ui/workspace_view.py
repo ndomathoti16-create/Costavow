@@ -1,4 +1,4 @@
-"""Task-focused Metrora workspace orchestration."""
+"""Task-focused Costavow workspace orchestration."""
 
 from __future__ import annotations
 
@@ -151,7 +151,7 @@ def _render_page_header(page: str) -> None:
         f"""
         <header class="metrora-workspace-topbar">
             <div class="metrora-workspace-location">
-                <span>Metrora</span><i>/</i><strong>{escape(title)}</strong>
+                <span>Costavow</span><i>/</i><strong>{escape(title)}</strong>
                 <span class="metrora-workspace-state">{escape(status)}</span>
             </div>
             <div class="metrora-workspace-title-row">
@@ -261,7 +261,7 @@ def _render_home(settings: Settings) -> None:
             """
             <div class="metrora-automation-note">
                 <strong>Drop in one billing export.</strong>
-                <span>Metrora detects the fields, builds the cost model, reconciles the total,
+                <span>Costavow detects the fields, builds the cost model, reconciles the total,
                 and opens the completed analysis automatically.</span>
             </div>
             """,
@@ -351,7 +351,7 @@ def _render_reports(settings: Settings) -> None:
     if normalized is None or source_key is None:
         _render_empty_state(
             "Nothing to report yet",
-            "Add a billing source so Metrora can calculate and package the evidence.",
+            "Add a billing source so Costavow can calculate and package the evidence.",
             "Overview > Billing source",
         )
         return
@@ -438,7 +438,7 @@ def _render_analysis_defaults(normalized, source_key: str) -> None:
             help="Minimum positive-spend ownership coverage used by the Governance panel.",
         )
     st.info(
-        "Metrora still calculates financial values deterministically. These settings only "
+        "Costavow still calculates financial values deterministically. These settings only "
         "change the analytical view, not the source data or reconciliation result."
     )
 
@@ -451,7 +451,7 @@ def _render_advanced(settings: Settings) -> None:
     area_title = "Power-user area" if desktop_mode else "Demo evidence"
     area_copy = (
         "Use this page to inspect or override automation. It is not required for a "
-        "standard analysis unless Metrora flags an exception."
+        "standard analysis unless Costavow flags an exception."
         if desktop_mode
         else "Review how the preloaded source was mapped, normalized, and checked. "
         "Uploads and mapping changes are available in the Windows app."

@@ -5,6 +5,13 @@ unchanged until a new version is published.
 
 ## Unreleased
 
+- Rebrand current source as **Costavow**, with an original vector mark and evidence-led messaging.
+- Add a portable decision receipt with source references, ownership, financial basis, supplied
+  actuals, and explicit interpretation limits. Synthetic demo receipts can be downloaded too.
+- Do not sum measured outcomes across mixed or unknown currencies.
+- Preserve legacy launch settings, local storage, and decision IDs. v0.2.3 assets are unchanged.
+- Add current competitor research and a concise engineering review path.
+
 ### Fixed
 
 - Require patched Setuptools for source builds and development/release verification environments.
@@ -29,12 +36,12 @@ unchanged until a new version is published.
 Anomaly counts can differ from v0.2.3 because the prior-window MAD calculation was corrected.
 No migration or new hosted customer-data service is introduced.
 
-## [0.2.3](https://github.com/ndomathoti16-create/Metrora/releases/tag/v0.2.3) — 2026-09-08
+## [0.2.3](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.2.3) — 2026-09-08
 
 Portable Windows release with a synthetic, read-only hosted demo; a separate local data workspace;
 read-only billing connections; decision tracking; and downloadable analysis artifacts. The release
 provides `Metrora-Windows-x64.zip` and `SHA256SUMS.txt`.
 
-[Changes since v0.2.2](https://github.com/ndomathoti16-create/Metrora/compare/v0.2.2...v0.2.3).
+[Changes since v0.2.2](https://github.com/ndomathoti16-create/Costavow/compare/v0.2.2...v0.2.3).
 The executable is unsigned. Review the release's source, privacy notice, and third-party notices
 before using or redistributing it.

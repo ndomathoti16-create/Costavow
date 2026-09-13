@@ -1,4 +1,4 @@
-"""Native desktop launcher for the local Metrora Streamlit workspace."""
+"""Native desktop launcher for the local Costavow Streamlit workspace."""
 
 from __future__ import annotations
 
@@ -22,7 +22,9 @@ _DESKTOP_STREAMS: list[object] = []
 
 def _user_data_directory() -> Path:
     """Return a writable per-user directory for local models and connection profiles."""
-    override = os.environ.get("METRORA_USER_DATA_DIR", "").strip()
+    override = os.environ.get(
+        "COSTAVOW_USER_DATA_DIR", os.environ.get("METRORA_USER_DATA_DIR", "")
+    ).strip()
     if override:
         return Path(override).expanduser().resolve()
     if sys.platform == "win32":
@@ -31,7 +33,7 @@ def _user_data_directory() -> Path:
         base = Path.home() / "Library" / "Application Support"
     else:
         base = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share"))
-    return base / "Metrora"
+    return base / "Metrora"  # Keep existing workspaces after the rebrand.
 
 
 def _available_port() -> int:
@@ -44,7 +46,7 @@ def _configure_desktop_environment() -> Path:
     data_root = _user_data_directory()
     data_root.mkdir(parents=True, exist_ok=True)
     os.environ.setdefault("APP_ENV", "production")
-    os.environ["METRORA_DESKTOP"] = "1"
+    os.environ["COSTAVOW_DESKTOP"] = "1"
     os.environ.setdefault("DATA_DIR", str(data_root / "data"))
     os.environ.setdefault("DB_PATH", str(data_root / "data" / "metrora.duckdb"))
     return data_root
@@ -91,8 +93,8 @@ def _show_startup_error(report_path: Path | None) -> None:
         detail = f"\n\nDetails were saved to:\n{report_path}" if report_path else ""
         ctypes.windll.user32.MessageBoxW(
             0,
-            "Metrora could not start." + detail,
-            "Metrora startup error",
+            "Costavow could not start." + detail,
+            "Costavow startup error",
             0x10,
         )
     except (AttributeError, OSError):
@@ -136,7 +138,7 @@ def _wait_until_ready(url: str, process: subprocess.Popen, *, timeout: float = 4
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            raise RuntimeError("The local Metrora service stopped before the window opened.")
+            raise RuntimeError("The local Costavow service stopped before the window opened.")
         try:
             # Callers construct this health URL from a locally allocated loopback port.
             with urlopen(url, timeout=1.0) as response:  # nosec B310
@@ -144,7 +146,7 @@ def _wait_until_ready(url: str, process: subprocess.Popen, *, timeout: float = 4
                     return
         except (URLError, OSError, TimeoutError):
             time.sleep(0.25)
-    raise RuntimeError("Metrora did not finish starting within 45 seconds.")
+    raise RuntimeError("Costavow did not finish starting within 45 seconds.")
 
 
 def _launch_desktop() -> None:
@@ -177,7 +179,7 @@ def _launch_desktop() -> None:
         try:
             _wait_until_ready(base_url, process)
             webview.create_window(
-                "Metrora · Cloud FinOps Intelligence",
+                "Costavow · FinOps Decision Evidence",
                 workspace_url,
                 width=1500,
                 height=960,

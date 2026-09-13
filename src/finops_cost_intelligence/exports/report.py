@@ -175,7 +175,7 @@ Usage and effective-rate evidence is used only when the source supports it.</p>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Metrora Executive Brief</title>
+<title>Costavow Executive Brief</title>
 <style>
 :root {{ color-scheme: light; font-family: Inter, system-ui, sans-serif; color: #142033; }}
 body {{
@@ -217,7 +217,7 @@ small {{ color: #64748b; }}
 </style>
 </head>
 <body>
-<p class="eyebrow">Metrora · Cloud FinOps intelligence</p>
+<p class="eyebrow">Costavow · FinOps decision evidence</p>
 <h1>Executive decision brief</h1>
 <p class="meta"><strong>Analysis period:</strong> {html.escape(period)}<br>
 <strong>Source:</strong> {html.escape(fact_pack.source_name)}<br>

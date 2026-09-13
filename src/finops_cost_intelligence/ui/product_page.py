@@ -1,4 +1,4 @@
-"""Public Metrora product pages and local-only demo access flow."""
+"""Public Costavow product pages and local-only demo access flow."""
 
 # ruff: noqa: E501
 
@@ -43,7 +43,7 @@ DEMO_SCENARIOS: dict[str, dict[str, str]] = {
         "label": "Data needs review",
         "status": "Blocked on quality",
         "description": "Mixed currency, invalid required values, duplicates, and ownership gaps.",
-        "lesson": "See how Metrora stops unreliable numbers before analysis.",
+        "lesson": "See how Costavow stops unreliable numbers before analysis.",
         "billing": "cloud_billing_quality_risk.csv",
         "budget": "budget_quality_risk.csv",
         "business": "business_metrics_quality_risk.csv",
@@ -800,7 +800,7 @@ PRODUCT_PAGE_REFINED_CSS = """
 .metrora-product-subtitle,
 .metrora-product-kicker,
 .metrora-product-section-kicker {
-    color: #9bb8ff !important;
+    color: #eabd78 !important;
     font-size: .64rem;
     font-weight: 700;
     letter-spacing: .15em;
@@ -850,7 +850,7 @@ PRODUCT_PAGE_REFINED_CSS = """
     align-items: center;
     justify-content: center;
     color: #f5f7fb !important;
-    border-bottom-color: #9bb8ff !important;
+    border-bottom-color: #eabd78 !important;
 }
 
 .metrora-premium-hero {
@@ -912,7 +912,7 @@ PRODUCT_PAGE_REFINED_CSS = """
 }
 
 .metrora-product-hero h1 em {
-    color: #a9c1ff;
+    color: #eabd78;
     font-family: 'DM Serif Display', Georgia, serif;
     font-size: .98em;
     font-weight: 400;
@@ -955,9 +955,9 @@ PRODUCT_PAGE_REFINED_CSS = """
     text-transform: uppercase;
 }
 
-.metrora-visual-status { color: #7ee0d0 !important; }
+.metrora-visual-status { color: #78c8b0 !important; }
 .metrora-visual-metric { color: #f7f9fc !important; font-size: 2.3rem; letter-spacing: -.06em; }
-.metrora-visual-metric small { margin-left: .48rem; color: #7ee0d0; font-size: .73rem; letter-spacing: 0; }
+.metrora-visual-metric small { margin-left: .48rem; color: #78c8b0; font-size: .73rem; letter-spacing: 0; }
 
 .metrora-line-visual {
     position: relative;
@@ -975,7 +975,7 @@ PRODUCT_PAGE_REFINED_CSS = """
 .metrora-chart-area { fill: url(#metrora-area); }
 .metrora-chart-trace {
     fill: none;
-    stroke: #a9c1ff;
+    stroke: #eabd78;
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 3;
@@ -983,7 +983,7 @@ PRODUCT_PAGE_REFINED_CSS = """
     stroke-dashoffset: 740;
     animation: metrora-draw 2.5s .35s ease forwards;
 }
-.metrora-chart-point { fill: #7ee0d0; filter: drop-shadow(0 0 7px rgba(126, 224, 208, .56)); animation: metrora-pulse 2.8s 1.7s ease-in-out infinite; }
+.metrora-chart-point { fill: #78c8b0; filter: drop-shadow(0 0 7px rgba(126, 224, 208, .56)); animation: metrora-pulse 2.8s 1.7s ease-in-out infinite; }
 .metrora-visual-footer strong { color: #e8edf6 !important; font-size: .69rem; letter-spacing: 0; text-transform: none; }
 
 .metrora-centered-caption {
@@ -1038,7 +1038,7 @@ PRODUCT_PAGE_REFINED_CSS = """
     background: transparent !important;
 }
 .metrora-model-node:last-of-type { border-right: 0 !important; }
-.metrora-model-node small { color: #9bb8ff; font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.metrora-model-node small { color: #eabd78; font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .metrora-model-node strong { display: block; margin: 1.65rem 0 .7rem; color: #edf2fb !important; font-family: 'Outfit', sans-serif; font-size: 1.02rem; letter-spacing: -.035em; }
 .metrora-model-node p { margin: 0; color: #9ba8bb !important; font-size: .86rem; line-height: 1.65; }
 .metrora-model-arrow { display: none; }
@@ -1094,10 +1094,10 @@ PRODUCT_PAGE_REFINED_CSS = """
 
 .metrora-evidence-visual { padding: 1.55rem 1.65rem; border: 1px solid #29364a; border-radius: 1rem; background: linear-gradient(145deg, rgba(20, 30, 45, .72), rgba(12, 18, 27, .72)) !important; }
 .metrora-evidence-title { display: flex; justify-content: space-between; margin-bottom: 1.45rem; color: #eaf0f9; font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.metrora-evidence-title b { color: #7ee0d0; font-size: .66rem; }
+.metrora-evidence-title b { color: #78c8b0; font-size: .66rem; }
 .metrora-evidence-row { display: grid; grid-template-columns: 8.6rem minmax(0, 1fr); gap: .7rem; align-items: center; margin: .8rem 0; color: #9ba8bb; font-size: .77rem; }
 .metrora-evidence-row i { position: relative; display: block; height: .42rem; overflow: hidden; border-radius: 999px; background: #202c3d; }
-.metrora-evidence-row i::before { position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: inherit; background: linear-gradient(90deg, #7ee0d0, #9bb8ff); content: ''; transform-origin: left; animation: metrora-grow 1.1s ease both; }
+.metrora-evidence-row i::before { position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: inherit; background: linear-gradient(90deg, #78c8b0, #eabd78); content: ''; transform-origin: left; animation: metrora-grow 1.1s ease both; }
 .metrora-evidence-row:nth-child(3) i::before { animation-delay: .12s; }.metrora-evidence-row:nth-child(4) i::before { animation-delay: .24s; }.metrora-evidence-row:nth-child(5) i::before { animation-delay: .36s; }
 .metrora-evidence-visual p { margin: 1.6rem 0 0; padding-top: 1rem; border-top: 1px solid #273347; color: #8090a5 !important; font-size: .76rem; }
 
@@ -1111,7 +1111,7 @@ PRODUCT_PAGE_REFINED_CSS = """
     box-shadow: none !important;
 }
 .metrora-product-step { max-width: 53rem; margin: 0 auto; padding: 1.5rem 0 !important; }
-.metrora-product-step-number { color: #9bb8ff !important; font-family: 'Outfit', sans-serif; }
+.metrora-product-step-number { color: #eabd78 !important; font-family: 'Outfit', sans-serif; }
 .metrora-product-step strong { color: #edf2fb !important; font-family: 'Outfit', sans-serif; }
 .metrora-product-step p { color: #a8b5c5 !important; }
 .metrora-centered-section { max-width: 50rem; margin: 5rem auto 2.8rem; padding-top: 0; border: 0; text-align: center; }
@@ -1169,7 +1169,7 @@ PRODUCT_PAGE_V2_CSS = """
     --metrora-line-soft: #222c38;
     --metrora-text: #f3f6f8;
     --metrora-text-muted: #98a4b2;
-    --metrora-blue-v2: #7da7ff;
+    --metrora-blue-v2: #eabd78;
     --metrora-teal-v2: #55d6c7;
 }
 
@@ -1316,7 +1316,7 @@ html { scroll-behavior: smooth; }
 .metrora-product-hero h1 {
     max-width: 38rem;
     font-family: 'Manrope', 'Outfit', sans-serif;
-    font-size: clamp(3.35rem, 6.2cqw, 5.65rem) !important;
+    font-size: clamp(3.1rem, 5.2cqw, 4.65rem) !important;
     font-weight: 620;
     letter-spacing: -.075em;
     line-height: .96;
@@ -1327,7 +1327,7 @@ html { scroll-behavior: smooth; }
 .metrora-product-hero h1 em {
     display: block;
     margin-top: .12em;
-    color: #b9d0ff;
+    color: #eabd78;
     font-family: 'DM Serif Display', Georgia, serif;
     font-weight: 400;
     letter-spacing: -.045em;
@@ -1937,7 +1937,7 @@ html { scroll-behavior: smooth; }
 }
 
 .metrora-connection-grid small {
-    color: #7da7ff;
+    color: #eabd78;
     font-size: .66rem;
     font-weight: 800;
     letter-spacing: .1em;
@@ -2086,7 +2086,7 @@ def activate_demo_session(
     *,
     persist_route: bool = True,
 ) -> None:
-    """Start a local guided demo with real Metrora analysis state."""
+    """Start a local guided demo with real Costavow analysis state."""
     scenario = _demo_scenario(scenario_id)
     loaded_table, profile, accepted_mapping, normalized, report = build_demo_artifacts(
         settings,
@@ -2101,7 +2101,7 @@ def activate_demo_session(
             "demo_mode": True,
             "demo_scenario": scenario_id,
             "demo_user_email": "demo@metrora.local",
-            "demo_workspace": f"Metrora / {scenario['label']}",
+            "demo_workspace": f"Costavow / {scenario['label']}",
             "loaded_table": loaded_table,
             "data_profile": profile,
             "mapping_source_key": source_key,
@@ -2117,10 +2117,10 @@ def activate_demo_session(
             "auto_attempted_source_key": source_key,
             "workspace_page": "Home" if report.ready_for_analysis else "Advanced",
             "auto_analysis_message": (
-                "Guided scenario ready. Metrora mapped, normalized, and checked the source "
+                "Guided scenario ready. Costavow mapped, normalized, and checked the source "
                 "automatically."
                 if report.ready_for_analysis
-                else "Metrora stopped the analysis because the guided source contains "
+                else "Costavow stopped the analysis because the guided source contains "
                 "blocking quality issues. Review the highlighted checks before using its totals."
             ),
         }
@@ -2207,7 +2207,7 @@ def _render_model_map() -> None:
     """Show the calculation-to-explanation model in a compact visual map."""
     st.markdown(
         """
-        <div class="metrora-model-map metrora-scroll-reveal" role="list" aria-label="Metrora operating model">
+        <div class="metrora-model-map metrora-scroll-reveal" role="list" aria-label="Costavow operating model">
             <div class="metrora-model-node" role="listitem">
                 <small>01 / Source</small>
                 <strong>Billing export</strong>
@@ -2243,17 +2243,17 @@ def _render_model_map() -> None:
 
 
 def _render_native_bridge() -> None:
-    """Explain why Metrora complements provider-native cost products."""
+    """Explain why Costavow complements provider-native cost products."""
     st.markdown(
         """
         <section class="metrora-native-bridge metrora-scroll-reveal">
             <header>
                 <span>Designed to complement the cloud</span>
-                <h2>Native tools find opportunities. Metrora closes the loop.</h2>
+                <h2>Make the finance-to-engineering handoff inspectable.</h2>
                 <p>AWS, Azure, and Google Cloud remain the best source for provider-specific
-                billing and resource recommendations. Metrora gives finance and engineering a
-                neutral place to validate the evidence, assign the decision, and verify the
-                result across providers.</p>
+                billing and resource recommendations. Costavow gives finance and engineering a
+                local place to reconcile exports, record the human decision, and review
+                supplied actuals with the evidence and caveats attached.</p>
             </header>
             <div class="metrora-native-lanes">
                 <article class="metrora-native-lane">
@@ -2266,12 +2266,12 @@ def _render_native_bridge() -> None:
                     </ul>
                 </article>
                 <article class="metrora-native-lane metrora">
-                    <small>Metrora decision layer</small>
+                    <small>Costavow decision layer</small>
                     <h3>Cross-provider accountability</h3>
                     <ul>
                         <li>Reconciled evidence and one provider-neutral cost model</li>
                         <li>Budget, ownership, and business-unit context</li>
-                        <li>Owner, decision, due date, rejection reason, and verified outcome</li>
+                        <li>A portable decision receipt with ownership, evidence, actuals, and caveats</li>
                     </ul>
                 </article>
             </div>
@@ -2299,11 +2299,11 @@ def _render_overview(settings: Settings) -> None:
                 </svg>
             </div>
             <div class="metrora-hero-copy">
-                <div class="metrora-product-kicker">Metrora / FinOps decision system</div>
-                <h1><span>Know what changed.</span> <em>Prove the number.</em></h1>
+                <div class="metrora-product-kicker">Costavow / FinOps decision evidence</div>
+                <h1><span>Every cost claim</span> <em>needs a trail.</em></h1>
                 <p>
-                    Turn billing exports, budgets, ownership data, and business metrics into one
-                    calm operating view—then keep every finding traceable to source.
+                    Reconcile the billing. Record the decision. Review what changed.
+                    A local FinOps workspace with a portable receipt for the evidence behind each action.
                 </p>
                 <div class="metrora-product-pills">
                     <span class="metrora-product-pill">One-click guided analysis</span>
@@ -2334,7 +2334,7 @@ def _render_overview(settings: Settings) -> None:
                     <span>Largest service driver</span>
                     <strong>{escape(str(facts["lead_service"]))} / {facts["lead_share"]:.0%} of spend</strong>
                 </div>
-                <div class="metrora-command-flow" aria-label="Metrora analysis flow">
+                <div class="metrora-command-flow" aria-label="Costavow analysis flow">
                     <div class="metrora-command-node is-ready"><i>01</i><span>Source</span><b>{escape(str(facts["source"]))}</b></div>
                     <div class="metrora-command-link"><span></span></div>
                     <div class="metrora-command-node is-ready"><i>02</i><span>Model</span><b>{escape(str(facts["currency"]))} {float(facts["difference"]):,.2f} difference</b></div>
@@ -2359,14 +2359,14 @@ def _render_overview(settings: Settings) -> None:
     with button_columns[2]:
         st.markdown(
             '<a class="metrora-hero-secondary-link" '
-            'href="https://github.com/ndomathoti16-create/Metrora/releases/latest" '
+            'href="https://github.com/ndomathoti16-create/Costavow/releases/latest" '
             'target="_blank" rel="noopener">Download for Windows</a>',
             unsafe_allow_html=True,
         )
     st.markdown(
         '<p class="metrora-centered-caption">'
-        f"Hosted preview: {facts['rows']:,} synthetic billing rows. Download the Windows "
-        "app to analyze your own files or cloud exports."
+        f"Hosted preview: {facts['rows']:,} synthetic billing rows. The existing Windows "
+        "download is the earlier Metrora v0.2.3 build; run current source for Costavow."
         "</p>",
         unsafe_allow_html=True,
     )
@@ -2374,7 +2374,7 @@ def _render_overview(settings: Settings) -> None:
     _render_page_intro(
         "A visible operating loop",
         "From export to action, without losing the evidence.",
-        "Metrora automates the normal path, keeps the workflow legible, and opens the technical "
+        "Costavow automates the normal path, keeps the workflow legible, and opens the technical "
         "detail only when a reviewer needs it.",
     )
     _render_model_map()
@@ -2404,7 +2404,7 @@ def _render_overview(settings: Settings) -> None:
             </div>
             <p class="metrora-connection-footnote">
                 <strong>Read-only by design</strong>
-                <span>Metrora stores export locations and refresh history&mdash;not passwords,
+                <span>Costavow stores export locations and refresh history&mdash;not passwords,
                 access keys, tokens, or cloud resource controls.</span>
             </p>
         </section>
@@ -2493,7 +2493,7 @@ def _render_pipeline() -> None:
         (
             "02",
             "Map",
-            "Review Metrora's column suggestions and correct the semantic fields that matter.",
+            "Review Costavow's column suggestions and correct the semantic fields that matter.",
         ),
         (
             "03",
@@ -2580,7 +2580,7 @@ def _render_trust() -> None:
     _render_page_intro(
         "Trust by design",
         "Numbers first. Narrative second.",
-        "Every value is calculated and checked before Metrora explains what it means.",
+        "Every value is calculated and checked before Costavow explains what it means.",
         anchor_id="metrora-evidence",
     )
     columns = st.columns(3, gap="medium")
@@ -2601,7 +2601,7 @@ def _render_trust() -> None:
             "03",
             "Read-only access",
             "Cloud exports and native AWS recommendations are imported through least-privilege "
-            "identities; Metrora does not change resources.",
+            "identities; Costavow does not change resources.",
         ),
     ]
     for column, (number, title, copy) in zip(columns, trust_cards, strict=True):
@@ -2623,7 +2623,7 @@ def _render_trust() -> None:
             <h3>Provider depth, neutral accountability</h3>
             <p>
                 Use AWS, Azure, and Google Cloud for their native telemetry and optimization
-                engines. Use Metrora to reconcile the cost story, connect it to business context,
+                engines. Use Costavow to reconcile the cost story, connect it to business context,
                 record what people decided, and verify the outcome from actual billing.
             </p>
         </div>
@@ -2699,7 +2699,7 @@ def _render_demo_access(settings: Settings) -> None:
 
 
 def render_product_page(settings: Settings) -> None:
-    """Render the public Metrora product experience before the analytical workspace."""
+    """Render the public Costavow product experience before the analytical workspace."""
     st.html(
         "".join(
             (
@@ -2725,7 +2725,7 @@ def render_product_page(settings: Settings) -> None:
 
     st.markdown(
         '<div class="metrora-product-footer">'
-        "Metrora - cloud FinOps intelligence - local product preview"
+        "Costavow - FinOps decision evidence - local product preview"
         "</div>",
         unsafe_allow_html=True,
     )

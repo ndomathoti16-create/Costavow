@@ -1,4 +1,4 @@
-# Run and develop Metrora
+# Run and develop Costavow
 
 [Documentation index](README.md) · [Project overview](../README.md)
 
@@ -17,8 +17,8 @@ The development extra also updates Setuptools to the minimum patched build-tool 
 PowerShell:
 
 ```powershell
-git clone https://github.com/ndomathoti16-create/Metrora.git
-cd Metrora
+git clone https://github.com/ndomathoti16-create/Costavow.git
+cd Costavow
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt -e ".[dev]"
@@ -27,8 +27,8 @@ python -m pip install -r requirements.txt -e ".[dev]"
 macOS or Linux, for the browser workspace:
 
 ```bash
-git clone https://github.com/ndomathoti16-create/Metrora.git
-cd Metrora
+git clone https://github.com/ndomathoti16-create/Costavow.git
+cd Costavow
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt -e '.[dev]'
@@ -49,24 +49,24 @@ python -m streamlit run app.py --server.address=127.0.0.1
 ```
 
 This opens the synthetic product demo. It does not enable real-data uploads. On Windows,
-`run-metrora.cmd` starts the same preview on port 8502 using the repository's virtual environment.
+`run-costavow.cmd` starts the same preview on port 8502 using the repository's virtual environment.
 
 ### Real-data browser workspace
 
 PowerShell:
 
 ```powershell
-$env:METRORA_DESKTOP = "1"
+$env:COSTAVOW_DESKTOP = "1"
 python -m streamlit run app.py --server.address=127.0.0.1
 ```
 
 macOS or Linux:
 
 ```bash
-METRORA_DESKTOP=1 python -m streamlit run app.py --server.address=127.0.0.1
+COSTAVOW_DESKTOP=1 python -m streamlit run app.py --server.address=127.0.0.1
 ```
 
-Open the local URL printed by Streamlit. `METRORA_DESKTOP=1` enables file uploads and local workflow
+Open the local URL printed by Streamlit. `COSTAVOW_DESKTOP=1` enables file uploads and local workflow
 controls; it is a mode selector, not authentication. Keep this workspace on a trusted local device.
 Unset that variable to return to the product preview.
 
@@ -74,7 +74,7 @@ Unset that variable to return to the product preview.
 
 ```powershell
 python -m pip install -r requirements.txt -e ".[cloud,desktop,dev]"
-metrora-desktop
+costavow-desktop
 ```
 
 The native launcher chooses a loopback port and sets up per-user storage. Unlike a plain Streamlit
@@ -93,7 +93,7 @@ analysis and AWS through boto3; Azure/GCP need the optional cloud SDKs and appro
 
 ## Configuration and external services
 
-[.env.example](../.env.example) lists placeholders. Metrora reads process environment variables;
+[.env.example](../.env.example) lists placeholders. Costavow reads process environment variables;
 it does **not** automatically load a `.env` file. Use your shell or deployment environment to set them.
 
 | Setting | Use |
@@ -101,8 +101,8 @@ it does **not** automatically load a `.env` file. Use your shell or deployment e
 | `APP_ENV`, `LOG_LEVEL` | Environment label and logging level. |
 | `DATA_DIR`, `DB_PATH` | Local state directory and DuckDB file. Defaults for plain Streamlit are under `./data`. |
 | `MAX_UPLOAD_MB` | Import limit; defaults to 200 MiB and also bounds supported expansion/table checks. |
-| `METRORA_DESKTOP` | Set to `1` for local data workflows; leave unset for the hosted-style demo. |
-| `METRORA_USER_DATA_DIR` | Override the native launcher's per-user storage root. |
+| `COSTAVOW_DESKTOP` | Set to `1` for local data workflows; leave unset for the hosted-style demo. |
+| `COSTAVOW_USER_DATA_DIR` | Override the native launcher's per-user storage root. |
 | `AI_PROVIDER`, `AI_MODEL`, `AI_API_KEY`, `AI_BASE_URL` | Optional narrative provider. AI is disabled by default; the adapter supports `openai`/`openai-compatible`. |
 | `AWS_REGION`, `S3_BUCKET` | Optional canonical Parquet export. |
 | `ATHENA_DATABASE`, `ATHENA_OUTPUT_LOCATION` | Settings available for programmatic Athena integration; there is no automatic Athena query UI. |
@@ -147,8 +147,8 @@ Use the **Windows desktop release** workflow's manual dispatch to build a test a
 published release, first update the package version and changelog, verify CI, then publish a matching
 version tag. A new commit on `main` does not replace an existing release ZIP.
 
-The workflow generates third-party notices, builds with [metrora.spec](../packaging/metrora.spec),
-and packages `Metrora-Windows-x64.zip` with `SHA256SUMS.txt`. Review license texts, missing-license
+The workflow generates third-party notices, builds with [metrora.spec](../packaging/costavow.spec),
+and packages `Costavow-Windows-x64.zip` with `SHA256SUMS.txt`. Review license texts, missing-license
 markers, launch behavior, checksums, and unsigned-executable handling before distribution.
 
 ## Scope and limitations
@@ -157,3 +157,15 @@ This repository does not yet implement tenant authentication, application-level 
 automatic retention, or multi-writer transactional state. Size checks do not isolate parsers at the
 OS level. Budget overlap, period alignment, business-metric coverage, floating-point arithmetic,
 and model uncertainty are documented in [metric definitions](METRIC_DEFINITIONS.md).
+
+## Rebrand compatibility
+
+Costavow replaces the visible Metrora identity in current source. Existing v0.2.3 downloads and
+screenshots retain their original name. The hosted preview still uses `metrora.streamlit.app`.
+Legacy `METRORA_DESKTOP`, `METRORA_USER_DATA_DIR`, `metrora-desktop`, `metrora-check`, and
+`run-metrora.cmd` remain supported; the new environment names take precedence. Existing database
+filenames, desktop data directories, Docker volume names, and decision IDs remain unchanged so a
+rename does not orphan user data. Internal CSS selectors retain their old prefix.
+
+Future release builds use `packaging/costavow.spec`, `Costavow.exe`, and
+`Costavow-Windows-x64.zip`. Current source is version `0.3.0.dev0`, not a published binary release.

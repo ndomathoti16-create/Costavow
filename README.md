@@ -1,18 +1,19 @@
-# Metrora
+# Costavow
 
-<img src="docs/assets/metrora-mark.svg" width="54" alt="Metrora logo">
+<img src="docs/assets/costavow-lockup.svg" width="700" alt="Costavow. Every cost claim needs a trail.">
 
-**Cloud cost evidence, accountable decisions, and measured outcomes.**
+**A local FinOps workspace for evidence, decisions, and measured outcomes.**
 
-[![CI](https://github.com/ndomathoti16-create/Metrora/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ndomathoti16-create/Metrora/actions/workflows/ci.yml)
-[![Windows release](https://img.shields.io/github/v/release/ndomathoti16-create/Metrora?label=Windows%20release)](https://github.com/ndomathoti16-create/Metrora/releases/latest)
+[![CI](https://github.com/ndomathoti16-create/Costavow/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ndomathoti16-create/Costavow/actions/workflows/ci.yml)
+[![Windows release](https://img.shields.io/github/v/release/ndomathoti16-create/Costavow?label=Windows%20release)](https://github.com/ndomathoti16-create/Costavow/releases/latest)
 
-Metrora is a local-first FinOps reference application for finance, engineering, and cloud teams.
+Costavow (formerly Metrora) is a local-first FinOps reference application for finance, engineering, and cloud teams.
 It turns billing exports into reconciled cost analysis, connects findings to budgets and business
-volume, and records who owns each decision and what happened afterward.
+volume, and records who owns each decision and what happened afterward. A portable decision receipt
+keeps the source, financial basis, human disposition, and supplied actuals together.
 
 [**Explore the synthetic demo**](https://metrora.streamlit.app/) ·
-[**Download for Windows**](https://github.com/ndomathoti16-create/Metrora/releases/latest) ·
+[**Download for Windows**](https://github.com/ndomathoti16-create/Costavow/releases/latest) ·
 [Documentation](docs/README.md) · [Run from source](docs/DEVELOPMENT.md) · [Changelog](CHANGELOG.md)
 
 ## Choose how to use it
@@ -23,8 +24,9 @@ volume, and records who owns each decision and what happened afterward.
 | Windows app | Upload your files, connect billing exports, manage decisions, and export results. | Local processing and storage; the portable ZIP includes Python and optional cloud SDKs. |
 | Source or Docker | Run the demo or local workspace and work on the code. | Python 3.11+ or Docker; see the [developer guide](docs/DEVELOPMENT.md). |
 
-The latest packaged release is [v0.2.3](https://github.com/ndomathoti16-create/Metrora/releases/tag/v0.2.3).
-Changes on `main` after that release are listed under **Unreleased** in the [changelog](CHANGELOG.md).
+The latest packaged release still uses the **Metrora** name: [v0.2.3](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.2.3).
+Costavow branding and decision receipts are available from current source and listed under
+**Unreleased** in the [changelog](CHANGELOG.md). The hosted demo keeps its existing URL.
 
 ## What it does
 
@@ -37,11 +39,32 @@ Changes on `main` after that release are listed under **Unreleased** in the [cha
   optionally import AWS Cost Optimization Hub recommendations.
 - **Track decisions:** assign owners, due dates, status, risk, and rejection reasons. Compare
   user-supplied baseline and post-change costs without treating provider estimates as realized savings.
-- **Share the result:** export an executive HTML brief, cleaned data, decision register, fact pack,
+- **Share the result:** export a decision receipt, executive HTML brief, cleaned data, register, fact pack,
   and quality report. An optional AI provider can rewrite calculated evidence for human review.
 
 Cloud connectors read data and recommendations; they do not resize, stop, or delete resources.
 Provider credentials and an AI key are unnecessary for file-only analysis.
+
+## Why this project exists
+
+Enterprise FinOps platforms already offer rich reporting, unit economics, and optimization.
+Costavow focuses this reference application on an inspectable handoff: **what the bill supports,
+who decided, and what was observed afterward**. This is a deliberate product scope, not a claim
+that competitors lack accountability workflows. See the [market review and design rationale](docs/PRODUCT_STRATEGY.md).
+
+## Inspect the engineering
+
+| Capability demonstrated | Evidence to inspect |
+| --- | --- |
+| Data engineering | [Normalization contracts](src/finops_cost_intelligence/contracts/normalization.py), [warehouse schema](src/finops_cost_intelligence/warehouse/schema.sql), and source reconciliation. |
+| Analytical judgment | [Metric definitions](docs/METRIC_DEFINITIONS.md), explicit financial bases, and [boundary regressions](tests/test_review_regressions.py). |
+| Product and backend design | [Decision records](src/finops_cost_intelligence/decisions/models.py), refresh-preserving merges, and [portable receipts](src/finops_cost_intelligence/decisions/receipt.py). |
+| Responsible implementation | Negative tests, escaped exports, local persistence, restricted provider actions, and [documented limits](SECURITY.md). |
+
+**Five-minute review:** open the synthetic demo, choose **Hidden future risk**, inspect **Data settings** for input
+quality, open **Decisions**, and download a receipt. Follow its source and fact references into the
+report's fact-pack export. The receipt states missing information and keeps provider estimates
+separate from supplied actuals. No provider account or API key is needed.
 
 ## The workflow
 
@@ -61,7 +84,7 @@ preparation flags an exception or you want to change the accepted cost basis.
 
 ## See the product
 
-![Metrora product overview](docs/screenshots/metrora-product-current.png)
+![Costavow product overview](docs/screenshots/costavow-product.png)
 
 The [guided demo](https://metrora.streamlit.app/?surface=product&page=Demo) includes:
 
@@ -69,14 +92,14 @@ The [guided demo](https://metrora.streamlit.app/?surface=product&page=Demo) incl
 - **Data needs review:** deliberately invalid values and mixed currencies that block analysis.
 - **Hidden future risk:** reconciled spend with an accelerating run rate and forecast risk.
 
-![Metrora analytical workspace](docs/screenshots/metrora-workspace-current.png)
+![Costavow decision workspace with receipt export](docs/screenshots/costavow-decisions.png)
 
-Screenshots are from v0.2.3. Unreleased calculation changes can produce different values and anomaly
-counts. All bundled scenarios are synthetic; see the [demo data guide](data/demo/README.md).
+Screenshots show current Costavow source with synthetic data. Historical v0.2.3 captures remain
+in `docs/screenshots`. See the [demo data guide](data/demo/README.md).
 
 ## Start on Windows
 
-1. Open the [latest release](https://github.com/ndomathoti16-create/Metrora/releases/latest).
+1. Open the [latest release](https://github.com/ndomathoti16-create/Costavow/releases/latest).
 2. Download `Metrora-Windows-x64.zip` and `SHA256SUMS.txt`.
 3. Compare the ZIP's SHA-256 hash with the checksum, extract it, and run `Metrora.exe`.
 
@@ -117,7 +140,7 @@ does not establish causation. Review [security](SECURITY.md), [privacy](PRIVACY.
 
 ## Issues, security reports, and licensing
 
-For a reproducible bug, [open an issue](https://github.com/ndomathoti16-create/Metrora/issues/new/choose)
+For a reproducible bug, [open an issue](https://github.com/ndomathoti16-create/Costavow/issues/new/choose)
 with synthetic data and the affected version. Report vulnerabilities through the private route in
 [SECURITY.md](SECURITY.md), not a public issue. See [contribution guidance](CONTRIBUTING.md) before
 proposing changes.

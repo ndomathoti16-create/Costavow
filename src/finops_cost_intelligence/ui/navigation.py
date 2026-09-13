@@ -1,4 +1,4 @@
-"""Durable, shareable navigation state for the Metrora Streamlit application."""
+"""Durable, shareable navigation state for the Costavow Streamlit application."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ def read_route() -> dict[str, str]:
 
 
 def _write_route(route: Mapping[str, str]) -> None:
-    """Replace Metrora's location values only when they have changed."""
+    """Replace Costavow's location values only when they have changed."""
     import streamlit as st
 
     normalized = {key: str(value) for key, value in route.items() if value}

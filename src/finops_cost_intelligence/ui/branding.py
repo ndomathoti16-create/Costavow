@@ -1,4 +1,4 @@
-"""Shared Metrora visual identity and Streamlit presentation helpers."""
+"""Shared Costavow visual identity and Streamlit presentation helpers."""
 
 # ruff: noqa: E501
 
@@ -11,27 +11,18 @@ if TYPE_CHECKING:
     from ..config import Settings
 
 
-PRODUCT_NAME = "Metrora"
-PRODUCT_SUBTITLE = "Cloud FinOps intelligence"
+PRODUCT_NAME = "Costavow"
+PRODUCT_SUBTITLE = "FinOps decision evidence"
 PRODUCT_DESCRIPTION = (
-    "Turn messy cloud billing exports into trusted cost signals, forecasts, and decisions."
+    "Every cost claim needs a trail. Reconcile the evidence, own the decision, review the outcome."
 )
 
 METRORA_LOGO_SVG = """
-<svg class="metrora-logo" viewBox="0 0 48 48" role="img" aria-label="Metrora logo">
-    <defs>
-        <linearGradient id="metrora-ribbon" x1="8" x2="39" y1="35" y2="10" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#91A8FF"/>
-            <stop offset="1" stop-color="#6FE2D3"/>
-        </linearGradient>
-    </defs>
-    <rect x="1" y="1" width="46" height="46" rx="14" fill="#0E1522" stroke="#2B3A51"/>
-    <path d="M9 32.5H39" fill="none" stroke="#EAF0FA" stroke-linecap="round" stroke-width="1.6" opacity=".25"/>
-    <path d="M10 29.5 17.2 20 23.5 27.6 33.8 13 39 19.3"
-        fill="none" stroke="url(#metrora-ribbon)" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.25"/>
-    <path d="M10 29.5 17.2 20 23.5 27.6" fill="none" stroke="#EAF0FA"
-        stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" opacity=".58"/>
-    <circle cx="33.8" cy="13" r="3" fill="#0E1522" stroke="#6FE2D3" stroke-width="1.6"/>
+<svg class="metrora-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Costavow logo">
+  <rect x="1" y="1" width="46" height="46" rx="13" fill="#142421"/>
+  <path d="M32 11H18a7 7 0 0 0-7 7v12a7 7 0 0 0 7 7h14" fill="none" stroke="#E8E3D7" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M20 19h10M20 25h8M20 31h10" fill="none" stroke="#78C8B0" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="m36 19 5 5-5 5-5-5z" fill="#EABD78"/>
 </svg>
 """
 
@@ -97,7 +88,7 @@ h1, h2, h3, h4, h5, h6 {
     background: transparent;
 }
 
-/* Metrora supplies its own navigation and appearance controls. */
+/* Costavow supplies its own navigation and appearance controls. */
 [data-testid="stToolbar"],
 [data-testid="stStatusWidget"],
 #MainMenu {
@@ -1440,7 +1431,7 @@ div[data-testid="stDataFrame"] {
 }
 
 div[data-testid="stDataFrame"] .stDataFrameGlideDataEditor {
-    --gdg-accent-color: #8c82ff !important;
+    --gdg-accent-color: #eabd78 !important;
     --gdg-accent-fg: #ffffff !important;
     --gdg-bg-cell: #111a2b !important;
     --gdg-bg-cell-medium: #162338 !important;
@@ -1462,8 +1453,8 @@ div[data-testid="stDataFrame"] .stDataFrameGlideDataEditor {
     --gdg-border-color: #2a3850 !important;
     --gdg-horizontal-border-color: #2a3850 !important;
     --gdg-drilldown-border: #53627a !important;
-    --gdg-link-color: #9abaff !important;
-    --gdg-resize-indicator-color: #8c82ff !important;
+    --gdg-link-color: #eabd78 !important;
+    --gdg-resize-indicator-color: #eabd78 !important;
 }
 
 [data-testid="stJson"] .react-json-view {
@@ -1678,12 +1669,12 @@ METRORA_REFINED_CSS = """
     --metrora-ink: #f2f5fb;
     --metrora-muted: #9eaabd;
     --metrora-line: #273347;
-    --metrora-paper: #080c13;
+    --metrora-paper: #0c1513;
     --metrora-white: #101722;
-    --metrora-violet: #8faeff;
-    --metrora-blue: #9bb8ff;
-    --metrora-mint: #7ee0d0;
-    --metrora-lime: #b9cbff;
+    --metrora-violet: #eabd78;
+    --metrora-blue: #eabd78;
+    --metrora-mint: #78c8b0;
+    --metrora-lime: #e5d9b8;
     --metrora-coral: #f2c58e;
 }
 
@@ -1697,7 +1688,7 @@ html, body, [class*="css"] {
     background:
         radial-gradient(circle at 84% -8%, rgba(95, 125, 190, .15), transparent 33rem),
         radial-gradient(circle at 8% 15%, rgba(74, 193, 180, .06), transparent 28rem),
-        #080c13 !important;
+        #0c1513 !important;
     color: var(--metrora-ink) !important;
 }
 
@@ -1761,8 +1752,8 @@ html, body, [class*="css"] {
 [data-testid="stMain"] [data-testid="stButton"] button[kind="primary"],
 [data-testid="stMain"] [data-testid="stFormSubmitButton"] button,
 [data-testid="stFileUploaderDropzone"] button {
-    border-color: #9bb8ff !important;
-    background: #9bb8ff !important;
+    border-color: #eabd78 !important;
+    background: #eabd78 !important;
     color: #08101d !important;
     box-shadow: 0 9px 24px rgba(117, 150, 223, .18) !important;
 }
@@ -1846,7 +1837,7 @@ div[data-testid="stDataFrame"] {
 }
 
 div[data-testid="stDataFrame"] .stDataFrameGlideDataEditor {
-    --gdg-accent-color: #9bb8ff !important;
+    --gdg-accent-color: #eabd78 !important;
     --gdg-accent-fg: #08101d !important;
     --gdg-bg-cell: #101722 !important;
     --gdg-bg-cell-medium: #141e2d !important;
@@ -1867,7 +1858,7 @@ div[data-testid="stDataFrame"] .stDataFrameGlideDataEditor {
     --gdg-horizontal-border-color: #273347 !important;
     --gdg-drilldown-border: #52647e !important;
     --gdg-link-color: #a9c1ff !important;
-    --gdg-resize-indicator-color: #9bb8ff !important;
+    --gdg-resize-indicator-color: #eabd78 !important;
 }
 
 [data-testid="stJson"] .react-json-view {
@@ -2014,8 +2005,8 @@ METRORA_WORKSPACE_V2_CSS = """
     --metrora-line: #232e3a;
     --metrora-paper: #080b10;
     --metrora-white: #0e141c;
-    --metrora-violet: #7da7ff;
-    --metrora-blue: #7da7ff;
+    --metrora-violet: #eabd78;
+    --metrora-blue: #eabd78;
     --metrora-mint: #55d6c7;
     --metrora-lime: #a8c5ff;
     --metrora-coral: #efbd7f;
@@ -2355,7 +2346,7 @@ html, body, [class*="css"] {
 .metrora-report-decision {
     margin: 1rem 0 1.25rem;
     padding: 1.45rem 1.55rem 1.35rem;
-    border-left: 3px solid #7da7ff;
+    border-left: 3px solid #eabd78;
     background: linear-gradient(90deg, rgba(125,167,255,.09), rgba(125,167,255,.015));
 }
 .metrora-report-decision.positive {
@@ -2477,9 +2468,9 @@ html, body, [class*="css"] {
 /* Keep keyboard navigation visible and every icon-sized action large enough to
    operate without changing Streamlit or Plotly's visual density. */
 :where(button, a, input, textarea, select, summary, [role="tab"]):focus-visible {
-    outline: 3px solid #8faeff !important;
+    outline: 3px solid #eabd78 !important;
     outline-offset: 3px !important;
-    box-shadow: 0 0 0 2px #080c13 !important;
+    box-shadow: 0 0 0 2px #0c1513 !important;
 }
 
 button[aria-label^="Help for"],
@@ -2549,7 +2540,7 @@ button[aria-label^="Help for"],
 
 
 def inject_styles() -> None:
-    """Inject Metrora's single dark application theme."""
+    """Inject Costavow's single dark application theme."""
     import streamlit as st
 
     # A style-only st.html block takes up no layout space. Keeping the theme in one
@@ -2830,7 +2821,7 @@ TOP_NAVIGATION_CSS = """
 }
 
 .metrora-governance-row.met span {
-    color: #6fe2d3;
+    color: #78c8b0;
     background: rgba(85,214,199,.1);
 }
 
@@ -3017,8 +3008,8 @@ def render_top_navigation(settings: Settings) -> None:
             <div class="metrora-topbar-brand">
                 <span class="metrora-topbar-mark">{METRORA_LOGO_SVG}</span>
                 <div>
-                    <div class="metrora-topbar-name">Metrora</div>
-                    <div class="metrora-topbar-subtitle">Cloud FinOps intelligence</div>
+                    <div class="metrora-topbar-name">Costavow</div>
+                    <div class="metrora-topbar-subtitle">FinOps decision evidence</div>
                 </div>
             </div>
             <div class="metrora-topbar-context">{context}</div>
@@ -3111,7 +3102,7 @@ def render_top_navigation(settings: Settings) -> None:
                     "Exit demo",
                     key="top_workspace_back_to_product",
                     width="stretch",
-                    help="Return to the Metrora demo scenarios.",
+                    help="Return to the Costavow demo scenarios.",
                 ):
                     reset_workspace_state()
                     for key in (
@@ -3127,7 +3118,7 @@ def render_top_navigation(settings: Settings) -> None:
 
 
 def apply_plotly_theme(figure):
-    """Apply Metrora's fixed dark chart palette."""
+    """Apply Costavow's fixed dark chart palette."""
     text = "#edf2f7"
     muted = "#8794a4"
     grid = "rgba(135,148,164,.14)"

@@ -430,7 +430,7 @@ def _render_summary(fact_pack, summary) -> None:
         st.markdown("### What moved the bill")
         st.caption(
             "These are observed billing mechanisms. Where the source cannot prove an operational "
-            "root cause, Metrora says so instead of guessing."
+            "root cause, Costavow says so instead of guessing."
         )
         _render_service_movers(movers)
 
@@ -530,7 +530,7 @@ def render_report_view(
         primary_exports[0].download_button(
             "Download decision brief",
             data=executive_report_html(fact_pack, summary).encode("utf-8"),
-            file_name="metrora_executive_brief.html",
+            file_name="costavow_executive_brief.html",
             mime="text/html",
             key=f"download_report_{source_key}",
             type="primary",
@@ -539,7 +539,7 @@ def render_report_view(
     primary_exports[1].download_button(
         "Download cleaned data (CSV)",
         data=cleaned_csv_bytes(normalized),
-        file_name="metrora_canonical_cloud_cost.csv",
+        file_name="costavow_canonical_cloud_cost.csv",
         mime="text/csv",
         key=f"download_csv_{source_key}",
         width="stretch",
@@ -552,7 +552,7 @@ def render_report_view(
         technical_exports[0].download_button(
             "Cleaned Parquet",
             data=cleaned_parquet_bytes(normalized),
-            file_name="metrora_canonical_cloud_cost.parquet",
+            file_name="costavow_canonical_cloud_cost.parquet",
             mime="application/octet-stream",
             key=f"download_parquet_{source_key}",
             width="stretch",
@@ -560,7 +560,7 @@ def render_report_view(
         technical_exports[1].download_button(
             "Calculated fact pack",
             data=fact_pack_json_bytes(fact_pack),
-            file_name="metrora_fact_pack.json",
+            file_name="costavow_fact_pack.json",
             mime="application/json",
             key=f"download_fact_pack_{source_key}",
             width="stretch",
@@ -568,7 +568,7 @@ def render_report_view(
         technical_exports[2].download_button(
             "Quality report",
             data=quality_report_json_bytes(quality_report),
-            file_name="metrora_quality_report.json",
+            file_name="costavow_quality_report.json",
             mime="application/json",
             key=f"download_quality_{source_key}",
             width="stretch",

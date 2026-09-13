@@ -509,7 +509,7 @@ def render_home_view(
     if not drivers.empty:
         st.markdown("### What is moving spend")
         st.caption(
-            "Billing-observed explanation only. Metrora labels operational root cause as "
+            "Billing-observed explanation only. Costavow labels operational root cause as "
             "unconfirmed until usage, pricing, or deployment evidence supports it."
         )
         _render_driver_rows(drivers, summary.currency)

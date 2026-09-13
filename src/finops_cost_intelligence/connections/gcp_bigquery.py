@@ -68,7 +68,7 @@ class GcpBigQueryBillingConnector:
             except ImportError as exc:
                 raise CloudDependencyError(
                     'Google Cloud connections require the cloud extras. Install with "pip '
-                    'install -e .[cloud]" or use the packaged Metrora desktop release.'
+                    'install -e .[cloud]" or use the packaged Costavow desktop release.'
                 ) from exc
             self._client = bigquery.Client(project=self.config.project_id.strip())
         return self._client

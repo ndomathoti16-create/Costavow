@@ -26,7 +26,7 @@ def _decision(**updates) -> DecisionRecord:
         "title": "Review compute movement",
         "category": "Cost change",
         "status": "Proposed",
-        "source_kind": "Metrora calculated signal",
+        "source_kind": "Costavow calculated signal",
         "source_reference": "recent_spend_increase_review",
         "evidence_summary": "Compute increased by a calculated amount.",
         "evidence_strength": "verified",
@@ -216,3 +216,54 @@ def test_aws_optimization_connector_imports_bounded_pages() -> None:
     assert [item.resource_id for item in decisions] == ["i-idle", "db-1"]
     assert decisions[0].effort == "Low"
     assert decisions[1].effort == "High"
+
+
+def test_receipt_escapes_fields_and_keeps_estimates_separate_from_actuals() -> None:
+    from finops_cost_intelligence.decisions.receipt import decision_receipt_html
+
+    record = _decision(
+        title='<script>alert("x")</script>',
+        owner="<img src=x onerror=alert(1)>",
+        impact_kind="provider_estimated_monthly_savings",
+        impact_amount=950,
+        metadata={"source_name": "<billing>", "private_token": "must-not-export"},
+    )
+    receipt = decision_receipt_html(record)
+    assert "<script>" not in receipt and "<img " not in receipt
+    assert "&lt;billing&gt;" in receipt
+    assert "must-not-export" not in receipt
+    assert "provider estimated monthly savings" in receipt
+    assert "USD 950.00" in receipt
+    assert "Not supplied" in receipt
+    assert "not independently verify" in receipt
+    assert "default-src 'none'" in receipt
+
+
+def test_receipt_preserves_negative_observed_outcomes() -> None:
+    from finops_cost_intelligence.decisions.receipt import decision_receipt_html
+
+    receipt = decision_receipt_html(
+        _decision(
+            status="Verified",
+            baseline_cost=100,
+            post_change_cost=150,
+            baseline_period="2026-06",
+            measurement_period="2026-07",
+        )
+    )
+    assert "USD -50.00" in receipt
+    assert "2026-06" in receipt and "2026-07" in receipt
+    assert "not a signed or immutable audit log" in receipt
+
+
+@pytest.mark.parametrize(
+    "currencies", [("USD", "EUR"), ("USD", "Unspecified"), ("Mixed", "Mixed"), ("", "")]
+)
+def test_outcome_summary_never_adds_unknown_or_mixed_currencies(currencies) -> None:
+    from finops_cost_intelligence.ui.decision_view import _summary_value
+
+    records = [
+        _decision(currency=currency, status="Verified", baseline_cost=100, post_change_cost=50)
+        for currency in currencies
+    ]
+    assert _summary_value(records)[0] == "Review separately"

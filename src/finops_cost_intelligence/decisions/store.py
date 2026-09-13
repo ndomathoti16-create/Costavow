@@ -1,4 +1,4 @@
-"""Atomic local persistence for the Metrora decision register."""
+"""Atomic local persistence for the Costavow decision register."""
 
 from __future__ import annotations
 

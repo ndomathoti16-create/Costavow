@@ -1,4 +1,4 @@
-"""End-to-end smoke test for the simplified Metrora workspace."""
+"""End-to-end smoke test for the simplified Costavow workspace."""
 
 from pathlib import Path
 
@@ -83,7 +83,7 @@ def test_guided_workspace_pages_render_without_errors() -> None:
 
 def test_desktop_mode_opens_real_workspace_and_restores_data_sources(monkeypatch) -> None:
     """The packaged app should skip the product site and preserve its workspace route."""
-    monkeypatch.setenv("METRORA_DESKTOP", "1")
+    monkeypatch.setenv("COSTAVOW_DESKTOP", "1")
     app = AppTest.from_file(APP_PATH)
     app.query_params.update({"surface": "workspace", "page": "Connections"})
     app.run(timeout=30)

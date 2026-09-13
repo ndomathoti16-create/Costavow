@@ -32,7 +32,7 @@ def test_user_data_directory_honors_the_explicit_override(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    requested = tmp_path / "Metrora data"
+    requested = tmp_path / "Costavow data"
     monkeypatch.setenv("METRORA_USER_DATA_DIR", str(requested))
 
     assert desktop._user_data_directory() == requested.resolve()
@@ -57,9 +57,9 @@ def test_child_command_reuses_the_packaged_executable(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(sys, "frozen", True, raising=False)
-    monkeypatch.setattr(sys, "executable", "Metrora.exe")
+    monkeypatch.setattr(sys, "executable", "Costavow.exe")
 
-    assert desktop._child_command(8511) == ["Metrora.exe", "--streamlit-child", "8511"]
+    assert desktop._child_command(8511) == ["Costavow.exe", "--streamlit-child", "8511"]
 
 
 def test_wait_until_ready_accepts_a_healthy_local_service(
@@ -73,3 +73,14 @@ def test_wait_until_ready_accepts_a_healthy_local_service(
 def test_wait_until_ready_reports_an_early_child_exit() -> None:
     with pytest.raises(RuntimeError, match="stopped before the window opened"):
         desktop._wait_until_ready("http://127.0.0.1:8513", _Process(1), timeout=0.1)
+
+
+def test_rebrand_keeps_legacy_storage_and_supports_new_override(monkeypatch, tmp_path) -> None:
+    monkeypatch.delenv("COSTAVOW_USER_DATA_DIR", raising=False)
+    monkeypatch.delenv("METRORA_USER_DATA_DIR", raising=False)
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
+    assert desktop._user_data_directory() == tmp_path / "Metrora"
+    monkeypatch.setenv("METRORA_USER_DATA_DIR", str(tmp_path / "legacy"))
+    monkeypatch.setenv("COSTAVOW_USER_DATA_DIR", str(tmp_path / "current"))
+    assert desktop._user_data_directory() == (tmp_path / "current").resolve()

@@ -16,7 +16,7 @@ from ..contracts.profile import ColumnProfile, DataProfile
 
 MIN_SUGGESTION_SCORE = 0.55
 
-# FOCUS publishes several valid monetary bases. Metrora's canonical cost powers
+# FOCUS publishes several valid monetary bases. Costavow's canonical cost powers
 # trends, forecasts, anomaly detection, and unit economics, so EffectiveCost is
 # the safest automatic default when a FOCUS export contains multiple cost fields.
 # Users can still select BilledCost in Data settings for cash-basis or invoice work.

@@ -105,7 +105,7 @@ def _prepare_source_automatically(loaded_table, profile) -> str:
             "quality_source_key": source_key,
             "mapping_edit_mode": False,
             "auto_analysis_message": (
-                "Upload complete. Metrora detected the fields, normalized the source, "
+                "Upload complete. Costavow detected the fields, normalized the source, "
                 "and ran the financial quality checks automatically."
             ),
         }
@@ -165,7 +165,7 @@ def render_ingestion_view(settings: Settings, *, include_mapping: bool = True) -
 
     st.subheader("Billing source")
     st.write(
-        "Upload one billing export. Metrora will detect its fields, build a standard cost "
+        "Upload one billing export. Costavow will detect its fields, build a standard cost "
         "model, reconcile the totals, and open the results automatically."
     )
 
@@ -176,7 +176,7 @@ def render_ingestion_view(settings: Settings, *, include_mapping: bool = True) -
             key="billing_upload",
             help=(
                 f"CSV, Excel, or Parquet · maximum {settings.max_upload_mb:,} MB. "
-                "Only review the suggested mapping if Metrora flags an exception."
+                "Only review the suggested mapping if Costavow flags an exception."
             ),
         )
 
@@ -199,9 +199,9 @@ def render_ingestion_view(settings: Settings, *, include_mapping: bool = True) -
                 st.download_button(
                     "Download sample billing CSV",
                     data=demo_path.read_bytes(),
-                    file_name="metrora_sample_billing.csv",
+                    file_name="costavow_sample_billing.csv",
                     mime="text/csv",
-                    help="Synthetic data for learning the Metrora workflow.",
+                    help="Synthetic data for learning the Costavow workflow.",
                 )
             return
     else:
@@ -224,7 +224,7 @@ def render_ingestion_view(settings: Settings, *, include_mapping: bool = True) -
         st.success(message)
     if error:
         st.warning(
-            "Metrora could not safely finish the automatic model. Correct the required "
+            "Costavow could not safely finish the automatic model. Correct the required "
             f"field mapping below. Details: {error}"
         )
 

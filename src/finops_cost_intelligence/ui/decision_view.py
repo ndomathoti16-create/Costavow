@@ -26,6 +26,7 @@ from ..decisions import (
     ranked_decisions,
     recommendations_to_decisions,
 )
+from ..decisions.receipt import decision_receipt_html
 
 if TYPE_CHECKING:
     from ..config import Settings
@@ -129,14 +130,14 @@ def _impact_label(decision: DecisionRecord) -> str:
 
 def _summary_value(decisions: list[DecisionRecord]) -> tuple[str, str]:
     verified = [item for item in decisions if item.verified_value > 0]
-    currencies = {item.currency for item in verified if item.currency not in {"", "Unspecified"}}
     if not verified:
         return "0.00", "No outcome has been verified yet"
+    currencies = {item.currency.strip().upper() for item in verified}
+    if len(currencies) != 1 or currencies & {"", "UNSPECIFIED", "MIXED"}:
+        return "Review separately", "Values with mixed or unspecified currencies are not added"
     total = sum(item.verified_value for item in verified)
-    if len(currencies) == 1:
-        currency = next(iter(currencies))
-        return f"{currency} {total:,.2f}", "Measured from supplied before/after actuals"
-    return f"{total:,.2f}", "Mixed currencies; review records separately"
+    currency = next(iter(currencies))
+    return f"{currency} {total:,.2f}", "Measured from supplied before/after actuals"
 
 
 def _render_register_metrics(decisions: list[DecisionRecord]) -> None:
@@ -201,7 +202,7 @@ def _decision_options(decisions: list[DecisionRecord]) -> dict[str, DecisionReco
 def _render_update_form(settings: Settings, decisions: list[DecisionRecord]) -> None:
     st.markdown("### Assign and decide")
     st.caption(
-        "Record the human disposition. Metrora refreshes the evidence without overwriting "
+        "Record the human disposition. Costavow refreshes the evidence without overwriting "
         "the owner, decision note, or outcome."
     )
     if not decisions:
@@ -433,7 +434,7 @@ def _render_verification_form(settings: Settings, decisions: list[DecisionRecord
 def _render_aws_import(settings: Settings, decisions: list[DecisionRecord]) -> None:
     st.markdown("### Import AWS optimization recommendations")
     st.caption(
-        "Metrora reads Cost Optimization Hub recommendations and treats the returned savings "
+        "Costavow reads Cost Optimization Hub recommendations and treats the returned savings "
         "as provider estimates. It never resizes, stops, or deletes a resource."
     )
     try:
@@ -496,6 +497,19 @@ def _render_exports(decisions: list[DecisionRecord]) -> None:
     if not decisions:
         return
     st.markdown("### Export the operating record")
+    options = _decision_options(decisions)
+    selected = st.selectbox("Decision for receipt", list(options), key="decision_receipt_selection")
+    st.caption(
+        "A readable snapshot of the evidence, owner, decision, and supplied actuals. "
+        "Review sensitive details before sharing."
+    )
+    st.download_button(
+        "Download decision receipt (HTML)",
+        data=decision_receipt_html(options[selected]),
+        file_name="costavow_decision_receipt.html",
+        mime="text/html",
+        key="decision_receipt_download",
+    )
     st.caption(
         "Share the CSV with finance or the JSON with another system. Source type and impact "
         "basis remain explicit in both formats."
@@ -504,14 +518,14 @@ def _render_exports(decisions: list[DecisionRecord]) -> None:
     left.download_button(
         "Download decision register (CSV)",
         data=decisions_csv_bytes(decisions),
-        file_name="metrora_decision_register.csv",
+        file_name="costavow_decision_register.csv",
         mime="text/csv",
         width="stretch",
     )
     right.download_button(
-        "Download audit record (JSON)",
+        "Download decision register (JSON)",
         data=decisions_json_bytes(decisions),
-        file_name="metrora_decision_register.json",
+        file_name="costavow_decision_register.json",
         mime="application/json",
         width="stretch",
     )
@@ -531,7 +545,7 @@ def render_decision_view(
     st.markdown(
         """
         <div class="metrora-automation-note">
-            <strong>Native tools find opportunities. Metrora closes the loop.</strong>
+            <strong>Every cost claim needs a trail.</strong>
             <span>Calculated signals and provider recommendations become owned decisions with
             evidence, disposition, due dates, and measured outcomes.</span>
         </div>
@@ -541,6 +555,7 @@ def render_decision_view(
     _render_register_metrics(decisions)
     if not bool(st.session_state.get("desktop_mode", False)):
         _render_priority_queue(decisions)
+        _render_exports(decisions)
         st.info(
             "This hosted workspace is read-only and uses synthetic data. Download the "
             "Windows app to assign owners, import provider recommendations, record "

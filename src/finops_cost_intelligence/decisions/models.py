@@ -79,7 +79,7 @@ class DecisionRecord:
     post_change_cost: float | None = None
     baseline_period: str = ""
     measurement_period: str = ""
-    provider: str = "Metrora"
+    provider: str = "Costavow"
     account_id: str = ""
     region: str = ""
     resource_id: str = ""

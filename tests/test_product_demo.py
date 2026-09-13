@@ -11,7 +11,7 @@ from finops_cost_intelligence.ui.product_page import build_demo_artifacts
 
 
 def test_guided_demo_builds_a_ready_analysis_run() -> None:
-    """The product demo should provide a deterministic, usable Metrora run."""
+    """The product demo should provide a deterministic, usable Costavow run."""
     settings = Settings.from_environment(base_dir=Path.cwd())
 
     loaded, profile, mapping, normalized, report = build_demo_artifacts(settings)

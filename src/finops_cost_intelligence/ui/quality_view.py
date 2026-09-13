@@ -141,7 +141,7 @@ def render_quality_view(
             else:
                 st.session_state["warehouse_summary"] = summary
                 st.session_state["warehouse_source_key"] = source_key
-                st.success("Run saved to the Metrora local warehouse.")
+                st.success("Run saved to the Costavow local warehouse.")
 
         summary = st.session_state.get("warehouse_summary")
         if summary is not None and st.session_state.get("warehouse_source_key") == source_key:

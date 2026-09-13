@@ -1,6 +1,6 @@
 # Privacy
 
-Metrora has two deliberately different surfaces.
+Costavow has two deliberately different surfaces.
 
 ## Hosted product demo
 
@@ -16,12 +16,12 @@ project channels.
 
 The desktop app performs its analytical work locally. By default, application data is stored under
 `%LOCALAPPDATA%\Metrora` on Windows, including the DuckDB database, non-secret connection profiles,
-decision records, and local diagnostic logs. Closing Metrora and deleting that folder removes its
+decision records, and local diagnostic logs. Closing Costavow and deleting that folder removes its
 local application state.
 
-Metrora does not include application telemetry and does not store cloud passwords, access keys,
+Costavow does not include application telemetry and does not store cloud passwords, access keys,
 API tokens, or service-account files in its own connection profiles. Cloud SDKs and command-line
-tools may maintain authentication caches outside Metrora; those remain governed by the provider's
+tools may maintain authentication caches outside Costavow; those remain governed by the provider's
 tools and your operating-system account.
 
 Application-initiated external transfers require a user action or a previously enabled refresh-on-open setting:
@@ -49,3 +49,7 @@ single local writer; atomic file replacement is not a multi-user transaction sys
 
 This notice describes the current reference implementation and should be reviewed again before any
 multi-user or commercial deployment.
+
+Decision receipts include financial values, source and account/resource references, owner labels,
+and decision notes selected from the current record. They are generated locally and downloaded
+only on request. Review the file before sharing; it is not encrypted or an immutable audit log.

@@ -1,4 +1,4 @@
-"""Shared historical scope used by Metrora's anomaly surfaces."""
+"""Shared historical scope used by Costavow's anomaly surfaces."""
 
 from __future__ import annotations
 

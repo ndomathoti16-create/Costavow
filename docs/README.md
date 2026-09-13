@@ -6,7 +6,7 @@
 
 | Guide | Purpose |
 | --- | --- |
-| [Run and develop Metrora](DEVELOPMENT.md) | Source setup, demo/workspace modes, Docker, cloud identities, checks, and release builds. |
+| [Run and develop Costavow](DEVELOPMENT.md) | Source setup, demo/workspace modes, Docker, cloud identities, checks, and release builds. |
 | [Data dictionary](DATA_DICTIONARY.md) | Accepted files, canonical columns, and lineage. |
 | [Metric definitions](METRIC_DEFINITIONS.md) | Formulas, cost basis, currencies, and analytical caveats. |
 | [Synthetic demo data](../data/demo/README.md) | The three scenarios and their matching supporting files. |
@@ -23,6 +23,9 @@
 
 ## Research and background
 
+- [Current market review and product scope](PRODUCT_STRATEGY.md)
+- [Brand meaning, assets, and name checks](BRAND.md)
+
 These documents explain design decisions and proposed directions. They are not current setup
 instructions, release promises, or a continuously updated market comparison.
 
@@ -31,5 +34,5 @@ instructions, release promises, or a continuously updated market comparison.
 - [Differentiation strategy](DIFFERENTIATION_STRATEGY.md)
 - [Interview notes](INTERVIEW_NOTES.md)
 
-[Assets](assets/) contains the project mark. [Screenshots](screenshots/) contains v0.2.3 product and
-workspace captures; new source calculations may differ from those images.
+[Assets](assets/) contains the current identity and legacy mark. [Screenshots](screenshots/)
+contains current Costavow captures and historical Metrora v0.2.3 images.

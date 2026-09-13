@@ -1,4 +1,4 @@
-"""PyInstaller entry point for the Metrora desktop application."""
+"""PyInstaller entry point for the Costavow desktop application."""
 
 from finops_cost_intelligence.desktop import main
 

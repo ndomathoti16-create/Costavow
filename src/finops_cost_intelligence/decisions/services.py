@@ -82,7 +82,7 @@ def recommendation_to_decision(
         title=recommendation.title,
         category=CATEGORIES.get(recommendation.recommendation_id, "Operating review"),
         status="Proposed",
-        source_kind="Metrora calculated signal",
+        source_kind="Costavow calculated signal",
         source_reference=recommendation.recommendation_id,
         evidence_summary=f"{recommendation.rationale} {recommendation.action}".strip(),
         evidence_strength=recommendation.evidence_strength,
@@ -94,7 +94,7 @@ def recommendation_to_decision(
         effort="Unknown",
         operational_risk="Unknown",
         business_criticality=criticality,
-        provider="Metrora",
+        provider="Costavow",
         metadata={
             "ingestion_id": fact_pack.ingestion_id,
             "source_name": fact_pack.source_name,

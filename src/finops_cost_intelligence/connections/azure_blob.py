@@ -108,7 +108,7 @@ class AzureBlobBillingConnector:
             except ImportError as exc:
                 raise CloudDependencyError(
                     'Azure connections require the cloud extras. Install with "pip install '
-                    '-e .[cloud]" or use the packaged Metrora desktop release.'
+                    '-e .[cloud]" or use the packaged Costavow desktop release.'
                 ) from exc
             credential = DefaultAzureCredential(exclude_interactive_browser_credential=False)
             service = BlobServiceClient(

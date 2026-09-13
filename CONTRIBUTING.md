@@ -9,7 +9,7 @@ notices preserved.
 
 ## Bug reports
 
-Use the [bug report form](https://github.com/ndomathoti16-create/Metrora/issues/new/choose).
+Use the [bug report form](https://github.com/ndomathoti16-create/Costavow/issues/new/choose).
 Include the version or commit, operating system, demo/desktop/source mode, reproduction steps,
 and expected versus actual behavior. Use the bundled synthetic data or a minimal fictional sample.
 Do not attach credentials, real billing exports, customer identifiers, or unredacted logs.

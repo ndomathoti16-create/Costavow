@@ -63,7 +63,7 @@ def _license_texts(distribution: metadata.Distribution) -> list[tuple[str, str]]
 
 def build_license_bundle() -> str:
     sections = [
-        "Metrora third-party license inventory",
+        "Costavow third-party license inventory",
         "Generated from the exact Python environment used to build this application.",
         "Package metadata remains the authoritative source for each dependency.",
     ]
@@ -73,7 +73,7 @@ def build_license_bundle() -> str:
         name = distribution.metadata.get("Name", "Unknown package").strip()
         version = distribution.version
         identity = (name.casefold(), version)
-        if identity in seen or name.casefold() == "metrora":
+        if identity in seen or name.casefold() in {"metrora", "costavow"}:
             continue
         seen.add(identity)
         packages.append((name.casefold(), name, version, distribution))

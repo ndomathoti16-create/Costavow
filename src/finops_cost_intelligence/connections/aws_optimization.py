@@ -78,7 +78,7 @@ def _effort(value: object) -> str:
 
 
 def aws_recommendation_to_decision(item: dict[str, Any]) -> DecisionRecord:
-    """Normalize one provider estimate into Metrora's decision contract."""
+    """Normalize one provider estimate into Costavow's decision contract."""
     recommendation_id = _text(item.get("recommendationId"))
     if not recommendation_id:
         raise ValueError("AWS returned a recommendation without an ID.")

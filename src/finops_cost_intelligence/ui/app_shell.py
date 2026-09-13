@@ -1,4 +1,4 @@
-"""Streamlit application shell for the Metrora analytical workspace."""
+"""Streamlit application shell for the Costavow analytical workspace."""
 
 from __future__ import annotations
 
@@ -85,18 +85,20 @@ def render_app_shell(settings: Settings) -> None:
             "before starting the application."
         ) from exc
 
-    page_icon = resource_path("docs", "assets", "metrora-mark.svg")
+    page_icon = resource_path("docs", "assets", "costavow-mark.svg")
     st.set_page_config(
-        page_title="Metrora | Cloud FinOps Intelligence",
-        page_icon=str(page_icon) if page_icon.is_file() else "M",
+        page_title="Costavow | FinOps Decision Evidence",
+        page_icon=str(page_icon) if page_icon.is_file() else "C",
         layout="wide",
         initial_sidebar_state="collapsed",
     )
 
-    # Metrora has one intentional workspace appearance. Keeping the state true also
+    # Costavow has one intentional workspace appearance. Keeping the state true also
     # gives the analytical charts a single, deterministic visual palette.
     st.session_state["dark_mode"] = True
-    desktop_mode = os.environ.get("METRORA_DESKTOP", "").strip() == "1"
+    desktop_mode = (
+        os.environ.get("COSTAVOW_DESKTOP", os.environ.get("METRORA_DESKTOP", "")).strip() == "1"
+    )
     st.session_state["desktop_mode"] = desktop_mode
     if desktop_mode:
         st.session_state["demo_authenticated"] = True

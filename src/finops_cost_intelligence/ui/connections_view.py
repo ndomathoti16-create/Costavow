@@ -81,7 +81,7 @@ def _sync_profile(settings: Settings, profile: ConnectionProfile) -> bool:
     )
     st.success(
         f"{result.provider} sync complete: {row_count:,} rows imported and sent through "
-        "Metrora's mapping, reconciliation, and quality checks."
+        "Costavow's mapping, reconciliation, and quality checks."
     )
     return True
 
@@ -140,7 +140,7 @@ def _render_saved_connections(settings: Settings) -> None:
 
     st.markdown("### Saved connections")
     st.caption(
-        "Saved profiles contain locations and identity selectors only. Metrora never stores "
+        "Saved profiles contain locations and identity selectors only. Costavow never stores "
         "cloud passwords, access keys, tokens, or service-account files."
     )
     for profile in sorted(profiles, key=lambda item: item.updated_at, reverse=True):
@@ -196,7 +196,7 @@ def _render_aws_form(settings: Settings) -> None:
 
     st.markdown("### Connect AWS billing exports")
     st.write(
-        "Point Metrora at an AWS Data Exports or CUR 2.0 S3 prefix. It uses your current "
+        "Point Costavow at an AWS Data Exports or CUR 2.0 S3 prefix. It uses your current "
         "AWS SSO profile, environment credentials, or IAM role and never stores a secret."
     )
     with st.form("aws_connection_form"):
@@ -212,7 +212,7 @@ def _render_aws_form(settings: Settings) -> None:
                 placeholder="finops-readonly",
                 help="Leave blank for the default credential chain or an attached IAM role.",
             )
-            refresh = st.checkbox("Refresh this source when Metrora opens", value=True)
+            refresh = st.checkbox("Refresh this source when Costavow opens", value=True)
         with st.expander("Advanced security check", expanded=False):
             owner = st.text_input(
                 "Expected bucket owner (optional)",
@@ -247,7 +247,7 @@ def _render_azure_form(settings: Settings) -> None:
 
     st.markdown("### Connect Azure cost exports")
     st.write(
-        "Use a recurring Azure Cost Management export in Blob Storage. Metrora signs in "
+        "Use a recurring Azure Cost Management export in Blob Storage. Costavow signs in "
         "through Azure CLI, Visual Studio, or managed identity using Entra ID and RBAC."
     )
     with st.form("azure_connection_form"):
@@ -261,7 +261,7 @@ def _render_azure_form(settings: Settings) -> None:
         with right:
             container = st.text_input("Blob container", placeholder="cost-management")
             prefix = st.text_input("Export prefix", placeholder="daily/amortized")
-            refresh = st.checkbox("Refresh this source when Metrora opens", value=True)
+            refresh = st.checkbox("Refresh this source when Costavow opens", value=True)
         submitted = st.form_submit_button("Connect and import latest", type="primary")
     if submitted:
         try:
@@ -302,7 +302,7 @@ def _render_gcp_form(settings: Settings) -> None:
             lookback = st.number_input(
                 "History to import (days)", min_value=7, max_value=366, value=120
             )
-            refresh = st.checkbox("Refresh this source when Metrora opens", value=True)
+            refresh = st.checkbox("Refresh this source when Costavow opens", value=True)
         submitted = st.form_submit_button("Connect and import latest", type="primary")
     if submitted:
         try:
@@ -347,7 +347,7 @@ def maybe_refresh_active_connection(settings: Settings) -> None:
         _store(settings).record_sync(
             profile,
             status="Ready",
-            message=f"Automatically imported {row_count:,} rows when Metrora opened.",
+            message=f"Automatically imported {row_count:,} rows when Costavow opened.",
             source_uri=result.source_uri,
             row_count=row_count,
         )
@@ -368,7 +368,7 @@ def render_connections_view(settings: Settings) -> None:
         """
         <div class="metrora-automation-note">
             <strong>Exports stay provider-managed.</strong>
-            <span>AWS, Azure, or Google Cloud schedules the billing export. Metrora reads the
+            <span>AWS, Azure, or Google Cloud schedules the billing export. Costavow reads the
             latest complete result with a least-privilege identity and refreshes the trusted
             model without storing cloud credentials.</span>
         </div>
@@ -399,6 +399,6 @@ def render_connections_view(settings: Settings) -> None:
         - **Azure:** Storage Blob Data Reader on the export container.
         - **Google Cloud:** BigQuery Job User on the project and Data Viewer on the dataset.
 
-        Metrora is read-only. It does not create, resize, stop, or delete cloud resources.
+        Costavow is read-only. It does not create, resize, stop, or delete cloud resources.
         """
     )
