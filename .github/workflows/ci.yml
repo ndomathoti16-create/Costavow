@@ -35,3 +35,59 @@ jobs:
         run: python -m bandit -q -r src app.py
       - name: Audit installed dependencies
         run: python -m pip_audit --local
+      - name: Set up browser-test runtime
+        if: matrix.python-version == '3.12'
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install browser verification tools
+        if: matrix.python-version == '3.12'
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+      - name: Check responsive layouts and browser workflows
+        if: matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          python -m streamlit run app.py --server.address=127.0.0.1 --server.port=8527 --server.headless=true > /tmp/costavow-app.log 2>&1 &
+          app_pid=$!
+          python -m http.server 8528 --bind 127.0.0.1 --directory site > /tmp/costavow-site.log 2>&1 &
+          site_pid=$!
+          trap 'kill "$app_pid" "$site_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:8527/_stcore/health && curl -fsS http://127.0.0.1:8528/ > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run test:browser
+      - name: Preserve browser evidence on failure
+        if: failure() && matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v7
+        with:
+          name: browser-check-evidence
+          path: build/browser-checks/
+          if-no-files-found: ignore
+
+  website:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+      - name: Publish verified project website
+        id: deployment
+        uses: actions/deploy-pages@v5

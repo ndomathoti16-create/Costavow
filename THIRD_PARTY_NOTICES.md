@@ -29,3 +29,9 @@ from `packaging/licenses/`, each with an immutable upstream source URL. In parti
 `proxy_tools` 0.1.0 declares MIT in its metadata but supplies a BSD-style license in its upstream
 repository. The complete upstream notice is preserved; metadata alone is not treated as the grant.
 No new dependency is introduced by this supplement.
+
+Browser verification uses Playwright (Apache-2.0), pinned with its dependencies in `package-lock.json`.
+It is development tooling and is not included in the static site or Windows executable. The npm
+packages retain their own LICENSE and NOTICE files when installed. See
+[Playwright's license](https://github.com/microsoft/playwright/blob/v1.62.1/LICENSE) and
+[notices](https://github.com/microsoft/playwright/blob/v1.62.1/NOTICE).

@@ -3,6 +3,20 @@
 Source changes on `main` are listed here before they are packaged. Downloaded release ZIPs remain
 unchanged until a new version is published.
 
+## [0.3.1](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.1) — 2026-09-14
+
+- Move the public project website to GitHub Pages with original responsive HTML/CSS, editorial
+  typography, clear section spacing, real desktop/mobile demo previews, and native keyboard-accessible FAQs.
+- Focus the Streamlit entry on three synthetic scenarios; update the current demo address to
+  `costavow.streamlit.app` and remove the repeated marketing layouts.
+- Fix overlapping driver rows in Overview and Reports, run-together labels, report answer cards,
+  decision metadata, metric wrapping, and mobile chart legend/axis collisions.
+- Render escaped component HTML directly, retain the logo, and improve readability across the
+  shared web/desktop workspace. Keep secondary validation details available on demand.
+- Add real-browser regressions at six viewport widths. Publish the website only after Python and
+  browser checks pass; use Node 24 actions throughout.
+- Preserve existing financial calculations, hosted-demo boundaries, and legacy local data paths.
+
 ## [0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) — 2026-09-13
 
 - Ship the new `Costavow.exe` portable Windows application and matching icon.

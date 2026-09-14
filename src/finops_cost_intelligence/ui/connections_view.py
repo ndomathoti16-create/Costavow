@@ -160,14 +160,13 @@ def _render_saved_connections(settings: Settings) -> None:
             except ValueError:
                 last_sync = profile.last_sync_at
         refresh_label = "On open" if profile.refresh_on_open else "Manual"
-        st.markdown(
+        st.html(
             '<div class="metrora-connection-row">'
             f"<div><span>{escape(provider_label)}</span><strong>{escape(profile.name)}</strong>"
             f"<small>{escape(profile.last_status)} · {escape(last_sync)}</small></div>"
             f"<div><span>Refresh</span><strong>{refresh_label}</strong>"
             f"<small>{escape(profile.last_message or 'Ready to connect')}</small></div>"
-            "</div>",
-            unsafe_allow_html=True,
+            "</div>"
         )
         sync_column, remove_column, spacer = st.columns([1, 1, 3.5])
         with sync_column:
@@ -364,17 +363,14 @@ def render_connections_view(settings: Settings) -> None:
     """Render one source hub for files and secure provider-managed exports."""
     import streamlit as st
 
-    st.markdown(
-        """
+    st.html("""
         <div class="metrora-automation-note">
             <strong>Exports stay provider-managed.</strong>
             <span>AWS, Azure, or Google Cloud schedules the billing export. Costavow reads the
             latest complete result with a least-privilege identity and refreshes the trusted
             model without storing cloud credentials.</span>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
     if error := st.session_state.pop("connection_refresh_error", None):
         st.warning(f"Automatic refresh needs attention: {error}")
 

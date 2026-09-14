@@ -114,14 +114,6 @@ def _render_page_header(page: str) -> None:
     profile = st.session_state.get("data_profile")
     quality = st.session_state.get("quality_report")
     if loaded is None or profile is None:
-        status = "Waiting for data"
-    elif quality is None:
-        status = "Preparing analysis"
-    elif quality.ready_for_analysis:
-        status = "Analysis ready"
-    else:
-        status = "Review needed"
-    if loaded is None or profile is None:
         context = (
             '<span class="metrora-workspace-context-item"><small>Source</small>'
             "<strong>None loaded</strong></span>"
@@ -147,13 +139,8 @@ def _render_page_header(page: str) -> None:
             f"<strong>{verification}</strong></span>"
             f"{connection_context}"
         )
-    st.markdown(
-        f"""
+    st.html(f"""
         <header class="metrora-workspace-topbar">
-            <div class="metrora-workspace-location">
-                <span>Costavow</span><i>/</i><strong>{escape(title)}</strong>
-                <span class="metrora-workspace-state">{escape(status)}</span>
-            </div>
             <div class="metrora-workspace-title-row">
                 <div class="metrora-workspace-title-copy">
                     <div class="metrora-workspace-page-title" id="{escape(heading_id)}"
@@ -165,9 +152,7 @@ def _render_page_header(page: str) -> None:
                 </div>
             </div>
         </header>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
 
 
 def _render_analysis_flow() -> None:
@@ -214,21 +199,19 @@ def _render_analysis_flow() -> None:
         )
         if index < len(steps) - 1:
             nodes.append('<div class="metrora-flow-link"><i></i></div>')
-    st.markdown(
+    st.html(
         '<section class="metrora-analysis-flow" aria-label="Analysis workflow">'
         '<div class="metrora-flow-heading"><span>Analysis flow</span>'
         "<small>Automated path</small></div>"
         f'<div class="metrora-flow-track">{"".join(nodes)}</div>'
-        "</section>",
-        unsafe_allow_html=True,
+        "</section>"
     )
 
 
 def _render_empty_state(title: str, message: str, next_step: str) -> None:
     import streamlit as st
 
-    st.markdown(
-        f"""
+    st.html(f"""
         <div class="metrora-empty-state">
             <div class="metrora-empty-icon">+</div>
             <div>
@@ -237,9 +220,7 @@ def _render_empty_state(title: str, message: str, next_step: str) -> None:
                 <span class="metrora-next-step">{escape(next_step)}</span>
             </div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
 
 
 def _current_analysis_table(normalized, source_key: str):
@@ -253,23 +234,24 @@ def _current_analysis_table(normalized, source_key: str):
 
 def _render_home(settings: Settings) -> None:
     normalized, source_key = _context()
-    _render_analysis_flow()
     if normalized is None or source_key is None:
+        _render_analysis_flow()
         import streamlit as st
 
-        st.markdown(
-            """
+        st.html("""
             <div class="metrora-automation-note">
                 <strong>Drop in one billing export.</strong>
                 <span>Costavow detects the fields, builds the cost model, reconciles the total,
                 and opens the completed analysis automatically.</span>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            """)
         render_ingestion_view(settings, include_mapping=False)
         return
     render_home_view(settings, normalized, source_key)
+    import streamlit as st
+
+    with st.expander("Source and validation workflow"):
+        _render_analysis_flow()
 
 
 def _render_cost_explorer(settings: Settings) -> None:
@@ -314,13 +296,12 @@ def _render_plans(settings: Settings) -> None:
     business_status = (
         "Connected" if st.session_state.get("business_metrics_table") is not None else "Optional"
     )
-    st.markdown(
+    st.html(
         '<div class="metrora-planning-strip">'
         f"<div><span>Analysis scope</span><strong>{escape(selected_scope)}</strong></div>"
         f"<div><span>Budget</span><strong>{budget_status}</strong></div>"
         f"<div><span>Business metrics</span><strong>{business_status}</strong></div>"
-        "<small>Model tuning lives in Data settings.</small></div>",
-        unsafe_allow_html=True,
+        "<small>Model tuning lives in Data settings.</small></div>"
     )
     forecast_tab, anomaly_tab, budget_tab, ownership_tab, unit_tab, governance_tab = st.tabs(
         [
@@ -456,15 +437,12 @@ def _render_advanced(settings: Settings) -> None:
         else "Review how the preloaded source was mapped, normalized, and checked. "
         "Uploads and mapping changes are available in the Windows app."
     )
-    st.markdown(
-        f"""
+    st.html(f"""
         <div class="metrora-advanced-note">
             <strong>{escape(area_title)}</strong>
             <span>{escape(area_copy)}</span>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
     if not desktop_mode:
         loaded_table = st.session_state.get("loaded_table")
         profile = st.session_state.get("data_profile")

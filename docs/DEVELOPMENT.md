@@ -53,71 +53,58 @@ This opens the synthetic product demo. It does not enable real-data uploads. On 
 
 ### Deploy the public Costavow website
 
-In [Streamlit Community Cloud](https://share.streamlit.io/), choose **Create app** and deploy
-from GitHub using these settings:
+The public project website is plain HTML/CSS in `site/`, published to
+`https://ndomathoti16-create.github.io/Costavow/`. GitHub Pages must use **GitHub Actions**
+as its build source. The `website` job in CI publishes only after both Python jobs pass,
+including real-browser checks on Python 3.12. It uploads only `site/`; no Python runtime,
+configuration secrets, or local analysis data are published with the static page.
+
+The interactive demo remains at `https://costavow.streamlit.app/`. Its Community Cloud settings are:
 
 | Setting | Value |
 | --- | --- |
 | Repository | `ndomathoti16-create/Costavow` |
 | Branch | `main` |
 | Main file | `app.py` |
-| Python version (Advanced settings) | `3.12` |
-| Preferred app URL | `costavow.streamlit.app`, subject to availability |
+| Python | `3.12` |
+| App URL | `costavow.streamlit.app` |
 
-No secrets are required for the synthetic demo. Leave `COSTAVOW_DESKTOP` and
-`METRORA_DESKTOP` unset so personal uploads and cloud connections remain unavailable.
-`requirements.txt` installs the project and verified Streamlit version.
+Leave `COSTAVOW_DESKTOP` and `METRORA_DESKTOP` unset. The public demo needs no cloud or AI secrets.
+It opens the scenario chooser; existing workspace query URLs continue to work.
 
-After deployment, confirm the Costavow name, white cards, cobalt actions, and teal sample chart.
-Open a demo scenario and download a decision receipt. Update the README links to the verified new
-URL before retiring the old deployment.
+Community Cloud deployment coordinates do not automatically follow every repository rename.
+If the app stops receiving updates after a rename, inspect its repository, branch, and entrypoint;
+follow [Streamlit's rename/redeployment guidance](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/rename-your-app).
+Re-pushing code or changing only the subdomain does not repair stale repository coordinates.
 
-Streamlit binds each deployment to its GitHub owner, repository, branch, and entrypoint. Renaming
-a repository can leave its existing app disconnected or view-only; pushing another commit or
-changing the app URL alone does not repair those coordinates. See Streamlit's
-[rename and recovery instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/rename-your-app).
-A new deployment from the renamed repository is required. If an orphaned app cannot be managed,
-use the documented recovery process or ask Streamlit support to remove it.
+### Preview and check the design
 
-### Real-data browser workspace
-
-PowerShell:
-
-```powershell
-$env:COSTAVOW_DESKTOP = "1"
-python -m streamlit run app.py --server.address=127.0.0.1
-```
-
-macOS or Linux:
-
-```bash
-COSTAVOW_DESKTOP=1 python -m streamlit run app.py --server.address=127.0.0.1
-```
-
-Open the local URL printed by Streamlit. `COSTAVOW_DESKTOP=1` enables file uploads and local workflow
-controls; it is a mode selector, not authentication. Keep this workspace on a trusted local device.
-Unset that variable to return to the product preview.
-
-### Native Windows window
-
-```powershell
-python -m pip install -r requirements.txt -e ".[cloud,desktop,dev]"
-costavow-desktop
-```
-
-The native launcher chooses a loopback port and sets up per-user storage. Unlike a plain Streamlit
-launch, it normally uses `%LOCALAPPDATA%\Metrora` rather than the repository's `data/` directory.
-
-### Docker workspace
+Use three terminals from the repository root, with the Python environment active:
 
 ```text
-docker compose up --build
+python -m streamlit run app.py --server.address=127.0.0.1 --server.port=8527
 ```
 
-Open [localhost:8501](http://localhost:8501). Compose enables the real-data workspace, binds the host
-port to loopback, and stores application state in a named volume. The container runs as a non-root
-user. Stop it with `docker compose down`; the volume remains. The default image supports file
-analysis and AWS through boto3; Azure/GCP need the optional cloud SDKs and approved identity setup.
+```text
+python -m http.server 8528 --bind 127.0.0.1 --directory site
+```
+
+```text
+npm ci --ignore-scripts
+npx playwright install chromium
+npm run test:browser
+```
+
+The browser check visits the website and every workspace destination at 320, 390, 768, 1024,
+1440, and 1920 pixels. It checks page overflow, metric truncation, evidence-row overlap, chart
+labels and legends, keyboard entry, native FAQs, image loading, hosted upload restrictions,
+and an actual receipt download. Screenshots are saved under ignored `build/browser-checks/`.
+For an existing Edge installation, set `COSTAVOW_BROWSER_PATH` to its executable path.
+Playwright is a development dependency only; the public website ships no JavaScript.
+
+The website screenshots are authentic synthetic workspace captures. Refresh both desktop and
+mobile images when their represented UI changes; keep the image dimensions in `site/index.html`
+accurate. Desktop screenshots should stop at a complete component, not crop text or controls.
 
 ## Configuration and external services
 
@@ -175,7 +162,7 @@ Use the **Windows desktop release** workflow's manual dispatch to build a test a
 published release, first update the package version and changelog, verify CI, then publish a matching
 version tag. A new commit on `main` does not replace an existing release ZIP.
 
-The workflow generates third-party notices, builds with [metrora.spec](../packaging/costavow.spec),
+The workflow generates third-party notices, builds with [costavow.spec](../packaging/costavow.spec),
 and packages `Costavow-Windows-x64.zip` with `SHA256SUMS.txt`. Review license texts, missing-license
 markers, launch behavior, checksums, and unsigned-executable handling before distribution.
 
@@ -189,14 +176,15 @@ and model uncertainty are documented in [metric definitions](METRIC_DEFINITIONS.
 ## Rebrand compatibility
 
 Costavow replaces the visible Metrora identity in current source. Existing v0.2.3 downloads and
-screenshots retain their original name. The hosted preview still uses `metrora.streamlit.app`.
+screenshots retain their original name. The current interactive demo is `costavow.streamlit.app`;
+the static project website is `https://ndomathoti16-create.github.io/Costavow/`.
 Legacy `METRORA_DESKTOP`, `METRORA_USER_DATA_DIR`, `metrora-desktop`, `metrora-check`, and
 `run-metrora.cmd` remain supported; the new environment names take precedence. Existing database
 filenames, desktop data directories, Docker volume names, and decision IDs remain unchanged so a
 rename does not orphan user data. Internal CSS selectors retain their old prefix.
 
 Future release builds use `packaging/costavow.spec`, `Costavow.exe`, and
-`Costavow-Windows-x64.zip`. The current release is `v0.3.0`; historical Metrora packages remain available in older releases.
+`Costavow-Windows-x64.zip`. The current release is `v0.3.1`; historical Metrora packages remain available in older releases.
 
 
 ### Release verification

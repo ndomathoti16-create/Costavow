@@ -11,15 +11,15 @@ APP_PATH = PROJECT_ROOT / "app.py"
 DEMO_BILLING_PATH = PROJECT_ROOT / "data" / "demo" / "cloud_billing_demo.csv"
 
 
-def test_public_product_page_renders_the_complete_scrolling_story() -> None:
-    """The public site should combine the overview, workflow, and trust story."""
+def test_public_entry_opens_three_synthetic_scenarios() -> None:
     app = AppTest.from_file(APP_PATH).run(timeout=30)
     assert not app.exception
-
-    rendered_copy = " ".join(item.value for item in app.markdown)
-    assert "One defensible path from raw export to recommendation." in rendered_copy
-    assert "Numbers first. Narrative second." in rendered_copy
-    assert app.button(key="product_demo_hero")
+    assert {item.key for item in app.button} >= {
+        "product_demo_scenario_healthy",
+        "product_demo_scenario_quality_risk",
+        "product_demo_scenario_forecast_risk",
+    }
+    assert not app.file_uploader
 
 
 def test_shared_theme_exposes_keyboard_focus_and_accessible_icon_targets() -> None:
@@ -47,8 +47,6 @@ def test_guided_workspace_pages_render_without_errors() -> None:
     app = AppTest.from_file(APP_PATH).run(timeout=30)
     assert not app.exception
 
-    app.button(key="product_demo_hero").click().run(timeout=30)
-    assert app.session_state["product_page"] == "Demo"
     app.button(key="product_demo_scenario_forecast_risk").click().run(timeout=30)
     assert not app.exception
     # The product and workspace intentionally share one light visual system.
@@ -99,7 +97,6 @@ def test_desktop_mode_opens_real_workspace_and_restores_data_sources(monkeypatch
 def test_hosted_demo_has_no_data_ingestion_or_mutation_controls() -> None:
     """The public deployment must remain synthetic and read-only."""
     app = AppTest.from_file(APP_PATH).run(timeout=30)
-    app.button(key="product_demo_hero").click().run(timeout=30)
     app.button(key="product_demo_scenario_forecast_risk").click().run(timeout=30)
 
     button_keys = {item.key for item in app.button}
@@ -184,10 +181,7 @@ def test_hero_opens_the_scenario_chooser_not_a_preselected_workspace() -> None:
     """The public CTA must let visitors choose their own demo story first."""
     app = AppTest.from_file(APP_PATH).run(timeout=30)
 
-    app.button(key="product_demo_hero").click().run(timeout=30)
-
     assert not app.exception
-    assert app.session_state["product_page"] == "Demo"
     assert "demo_authenticated" not in app.session_state
     assert {
         "product_demo_scenario_healthy",

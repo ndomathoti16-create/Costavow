@@ -12,7 +12,8 @@ It turns billing exports into reconciled cost analysis, connects findings to bud
 volume, and records who owns each decision and what happened afterward. A portable decision receipt
 keeps the source, financial basis, human disposition, and supplied actuals together.
 
-[**Explore the synthetic demo**](https://metrora.streamlit.app/) ·
+[**Visit the project website**](https://ndomathoti16-create.github.io/Costavow/) ·
+[**Explore the synthetic demo**](https://costavow.streamlit.app/) ·
 [**Download for Windows**](https://github.com/ndomathoti16-create/Costavow/releases/latest) ·
 [Documentation](docs/README.md) · [Run from source](docs/DEVELOPMENT.md) · [Changelog](CHANGELOG.md)
 
@@ -20,16 +21,16 @@ keeps the source, financial basis, human disposition, and supplied actuals toget
 
 | Surface | What you can do | Data and requirements |
 | --- | --- | --- |
+| Project website | Read the product story, inspect the code, and open the demo or release. | Static HTML/CSS on GitHub Pages; no application data collection. |
 | Hosted demo | Explore three prepared scenarios and download their reports. | Synthetic data only; no sign-in, uploads, cloud connections, or external AI requests. |
 | Windows app | Upload your files, connect billing exports, manage decisions, and export results. | Local processing and storage; the portable ZIP includes Python and optional cloud SDKs. |
 | Source or Docker | Run the demo or local workspace and work on the code. | Python 3.11+ or Docker; see the [developer guide](docs/DEVELOPMENT.md). |
 
-[Costavow v0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) introduces
-a light analytical workspace, the Costavow desktop identity, and portable decision receipts.
-The old hosted address currently serves the previous styling while the renamed repository is
-being redeployed. The Windows release and current source include the new design. See the
-[deployment settings](docs/DEVELOPMENT.md#deploy-the-public-costavow-website),
-[changelog](CHANGELOG.md), and [design rationale](docs/DESIGN.md).
+The public website runs on GitHub Pages; the interactive synthetic workspace runs on Streamlit.
+The shared workspace layout has been rebuilt for readable evidence, properly spaced controls,
+and phone-to-desktop use. These fixes are included in v0.3.1; older release ZIPs stay unchanged.
+See the [changelog](CHANGELOG.md), [design rationale](docs/DESIGN.md), and
+[deployment settings](docs/DEVELOPMENT.md#deploy-the-public-costavow-website).
 
 ## What it does
 
@@ -89,7 +90,7 @@ preparation flags an exception or you want to change the accepted cost basis.
 
 ![Costavow product overview](docs/screenshots/costavow-product.png)
 
-The [guided demo](https://metrora.streamlit.app/?surface=product&page=Demo) includes:
+The [guided demo](https://costavow.streamlit.app/?surface=product&page=Demo) includes:
 
 - **Healthy baseline:** clean, stable spend with ownership and budget context.
 - **Data needs review:** deliberately invalid values and mixed currencies that block analysis.

@@ -49,3 +49,6 @@ data/*.json
 *.swp
 .DS_Store
 Thumbs.db
+
+# Browser verification tooling (not part of the product runtime).
+node_modules/

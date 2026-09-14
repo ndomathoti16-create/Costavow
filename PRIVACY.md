@@ -1,10 +1,18 @@
 # Privacy
 
-Costavow has two deliberately different surfaces.
+Costavow has a static project website, a hosted synthetic demo, and a local desktop workspace.
+
+## Public project website
+
+The GitHub Pages website serves static HTML, CSS, the project logo, and synthetic screenshots.
+It includes no analytics, tracking scripts, third-party fonts, forms, or application storage.
+GitHub may process connection logs under its own privacy practices. Following a demo or download
+link opens Streamlit or GitHub, whose service terms and privacy practices apply.
 
 ## Hosted product demo
 
-The public Streamlit deployment is a read-only demonstration. It uses bundled synthetic data and
+The public Streamlit deployment uses synthetic demonstration data. Demo decision edits remain
+in browser-session state and do not update a shared decision store. It uses bundled synthetic data and
 does not expose file upload, cloud connection, mapping changes, provider recommendation import, or
 external AI controls. The hosting provider may still process normal service information such as IP
 addresses, browser details, and operational logs under its own terms and privacy practices.

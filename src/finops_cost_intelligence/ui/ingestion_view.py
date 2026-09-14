@@ -36,8 +36,7 @@ def _render_source_summary(loaded_table, profile) -> None:
     source_name = escape(str(profile.source_name))
     source_format = escape(str(profile.file_format).upper())
     source_size = escape(_format_bytes(profile.source_size_bytes))
-    st.markdown(
-        f"""
+    st.html(f"""
         <div class="metrora-source-strip">
             <div><small>Source</small><strong>{source_name}</strong></div>
             <div><small>Format</small><strong>{source_format}</strong></div>
@@ -45,9 +44,7 @@ def _render_source_summary(loaded_table, profile) -> None:
             <div><small>Columns</small><strong>{profile.column_count:,}</strong></div>
             <div><small>File size</small><strong>{source_size}</strong></div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
     with st.expander("Inspect source details", expanded=False):
         column_frame = pd.DataFrame(profile.column_records())
         column_frame["sample_values"] = column_frame["sample_values"].map(

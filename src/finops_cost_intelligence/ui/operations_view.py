@@ -107,8 +107,8 @@ def _render_budget_view(actual: pd.DataFrame, source_key: str) -> None:
         render_compact_table(display, max_rows=30)
     chart_data = comparison.assign(
         label=comparison["period_start"].dt.strftime("%Y-%m-%d")
-        + " · "
-        + comparison["scope_value"].astype(str),
+        + "<br>"
+        + comparison["scope_value"].astype(str).map(escape),
     )
     chart_data = chart_data.melt(
         id_vars=["label"],
@@ -116,21 +116,26 @@ def _render_budget_view(actual: pd.DataFrame, source_key: str) -> None:
         var_name="series",
         value_name="amount",
     )
+    chart_data["series"] = chart_data["series"].replace(
+        {"budget_amount": "Budget", "actual_cost": "Actual"}
+    )
     figure = px.bar(
         chart_data,
-        x="label",
-        y="amount",
+        x="amount",
+        y="label",
+        orientation="h",
         color="series",
         barmode="group",
-        color_discrete_map={"budget_amount": PALETTE["muted"], "actual_cost": PALETTE["observed"]},
+        color_discrete_map={"Budget": PALETTE["muted"], "Actual": PALETTE["observed"]},
         labels={"label": "Budget row", "amount": "Amount", "series": "Series"},
         title="Actual versus budget",
     )
     figure.update_layout(
         title={"text": "Actual versus budget", "x": 0, "xanchor": "left"},
-        height=410,
-        xaxis={"automargin": True},
-        yaxis={"tickformat": ",.0f", "automargin": True},
+        # ponytail: row-height sizing; add a period filter if plans routinely exceed 30 rows.
+        height=max(410, len(comparison) * 46 + 140),
+        xaxis={"tickformat": ",.0f", "automargin": True},
+        yaxis={"title": None, "automargin": True, "autorange": "reversed"},
         margin={"l": 82, "r": 28, "t": 72, "b": 90},
     )
     apply_plotly_theme(figure)
@@ -466,10 +471,7 @@ def render_governance_panel(actual: pd.DataFrame, source_key: str) -> None:
         "Default ownership target: "
         f"{allocation_target:.0%}. Change it under Data settings → Analysis defaults."
     )
-    st.markdown(
-        f'<section class="metrora-governance-list">{"".join(rows)}</section>',
-        unsafe_allow_html=True,
-    )
+    st.html(f'<section class="metrora-governance-list">{"".join(rows)}</section>')
 
 
 def render_operations_view(

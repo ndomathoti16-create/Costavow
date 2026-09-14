@@ -126,7 +126,7 @@ def _render_home_kpis(
         f"{summary.change_pct:+.1%}" if summary.change_pct is not None else "No comparison"
     )
     with st.container(key="workspace-kpi-strip"):
-        columns = st.columns(4, gap=None)
+        columns = st.columns(4, gap="small")
         columns[0].metric(
             "Current window spend",
             _format_cost(summary.total_cost, summary.currency),
@@ -212,8 +212,7 @@ def _render_decision_snapshot(
         if anomaly_count in {None, 0}
         else "Historical days exceeded the configured rolling baseline and remain reviewable."
     )
-    st.markdown(
-        f"""
+    st.html(f"""
         <section class="metrora-decision-snapshot" aria-label="Calculated decision snapshot">
             <div class="metrora-snapshot-lead">
                 <span>Decision snapshot</span>
@@ -236,9 +235,7 @@ def _render_decision_snapshot(
                 <p>{escape(anomaly_copy)}</p>
             </div>
         </section>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
 
 
 def _render_trend(
@@ -364,24 +361,18 @@ def _render_driver_rows(drivers: pd.DataFrame, currency: str) -> None:
             f"<div><small>Evidence</small><strong>{evidence}</strong></div>"
             "</div></article>"
         )
-    st.markdown(
-        f'<div class="metrora-driver-list">{"".join(rows)}</div>',
-        unsafe_allow_html=True,
-    )
+    st.html(f'<div class="metrora-driver-list">{"".join(rows)}</div>')
 
 
 def _render_attention_item(title: str, detail: str, tone: str = "neutral") -> None:
     import streamlit as st
 
-    st.markdown(
-        f"""
+    st.html(f"""
         <div class="metrora-attention-item {escape(tone)}">
             <span></span>
             <div><strong>{escape(title)}</strong><p>{escape(detail)}</p></div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
 
 
 def _navigate_button(label: str, page: str, key: str) -> None:
@@ -425,13 +416,12 @@ def render_home_view(
         st.error(f"The workspace could not calculate a spend overview: {exc}")
         return
 
-    st.markdown(
+    st.html(
         '<div class="metrora-period-context">'
         f"<span>Latest {window_days}-day window</span>"
         f"<strong>{escape(str(summary.date_start))} — {escape(str(summary.date_end))}</strong>"
         f"<small>{summary.row_count:,} cost rows · {escape(summary.currency)} · "
-        f"{escape(normalized.source_name)}</small></div>",
-        unsafe_allow_html=True,
+        f"{escape(normalized.source_name)}</small></div>"
     )
 
     drivers = pd.DataFrame()
@@ -450,17 +440,13 @@ def render_home_view(
             pass
 
     _render_decision_snapshot(summary, drivers, anomaly_count, forecast_summary)
-    st.markdown(
-        '<div class="metrora-subsection-label">Operating view</div>',
-        unsafe_allow_html=True,
-    )
+    st.html('<div class="metrora-subsection-label">Operating view</div>')
     chart_column, attention_column = st.columns([1.55, 0.78], gap="large")
     with chart_column:
         with st.container(key="home-trend-surface"):
-            st.markdown(
+            st.html(
                 '<div class="metrora-panel-heading"><span>Cost pulse</span>'
-                "<small>Daily spend and 7-day baseline</small></div>",
-                unsafe_allow_html=True,
+                "<small>Daily spend and 7-day baseline</small></div>"
             )
             _render_trend(
                 daily,
@@ -469,10 +455,9 @@ def render_home_view(
             )
     with attention_column:
         with st.container(key="home-attention-surface"):
-            st.markdown(
+            st.html(
                 '<div class="metrora-panel-heading"><span>Attention queue</span>'
-                "<small>Recommended next review</small></div>",
-                unsafe_allow_html=True,
+                "<small>Recommended next review</small></div>"
             )
             if not drivers.empty:
                 mover = drivers.iloc[0]
@@ -552,10 +537,9 @@ def render_cost_explorer_view(
     available_dimensions = _available_dimensions(dataframe)
     default_start = max(minimum_date, maximum_date - timedelta(days=29))
     with st.container(key="explorer-control-bar"):
-        st.markdown(
+        st.html(
             '<div class="metrora-panel-heading"><span>View controls</span>'
-            "<small>Choose a period and comparison lens</small></div>",
-            unsafe_allow_html=True,
+            "<small>Choose a period and comparison lens</small></div>"
         )
         controls = st.columns([1.15, 0.85])
         with controls[0]:
@@ -645,7 +629,7 @@ def render_cost_explorer_view(
     top_share = summary.top_dimension_share
     change_label = "No prior period" if summary.change_pct is None else f"{summary.change_pct:+.1%}"
     with st.container(key="explorer-kpi-strip"):
-        kpis = st.columns(4, gap=None)
+        kpis = st.columns(4, gap="small")
         kpis[0].metric("Total spend", _format_cost(summary.total_cost, summary.currency))
         kpis[1].metric(
             "Period change",

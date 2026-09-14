@@ -186,10 +186,7 @@ def _render_priority_queue(decisions: list[DecisionRecord]) -> None:
             f"<span>{escape(item.evidence_strength.replace('_', ' ').title())}</span></div>"
             "</div></article>"
         )
-    st.markdown(
-        f'<div class="metrora-decision-list">{"".join(rows)}</div>',
-        unsafe_allow_html=True,
-    )
+    st.html(f'<div class="metrora-decision-list">{"".join(rows)}</div>')
 
 
 def _decision_options(decisions: list[DecisionRecord]) -> dict[str, DecisionRecord]:
@@ -542,16 +539,13 @@ def render_decision_view(
     except ValueError as exc:
         st.error(str(exc))
         decisions = []
-    st.markdown(
-        """
+    st.html("""
         <div class="metrora-automation-note">
             <strong>Every cost claim needs a trail.</strong>
             <span>Calculated signals and provider recommendations become owned decisions with
             evidence, disposition, due dates, and measured outcomes.</span>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
     _render_register_metrics(decisions)
     if not bool(st.session_state.get("desktop_mode", False)):
         _render_priority_queue(decisions)

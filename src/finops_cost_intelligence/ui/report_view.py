@@ -236,8 +236,7 @@ def _plain_language_brief(fact_pack, summary) -> dict[str, str]:
 
 def _render_decision_brief(fact_pack, summary) -> None:
     brief = _plain_language_brief(fact_pack, summary)
-    st.markdown(
-        f"""
+    st.html(f"""
         <section class="metrora-report-decision {escape(brief["tone"])}">
             <span>{escape(brief["status"])}</span>
             <h2>{escape(brief["headline"])}</h2>
@@ -258,9 +257,7 @@ def _render_decision_brief(fact_pack, summary) -> None:
                 <p>{escape(brief["next"])}</p>
             </article>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
 
 
 def _service_mover_frame(fact_pack) -> pd.DataFrame:
@@ -331,10 +328,7 @@ def _render_service_movers(movers: pd.DataFrame) -> None:
             f"<div><small>Evidence</small><strong>{escape(str(mover['Evidence']))}</strong></div>"
             "</div></article>"
         )
-    st.markdown(
-        f'<div class="metrora-driver-list">{"".join(rows)}</div>',
-        unsafe_allow_html=True,
-    )
+    st.html(f'<div class="metrora-driver-list">{"".join(rows)}</div>')
 
 
 def _render_actions(fact_pack) -> None:
@@ -345,8 +339,7 @@ def _render_actions(fact_pack) -> None:
     )
     for recommendation in fact_pack.recommendations:
         priority = recommendation.priority.lower()
-        st.markdown(
-            f"""
+        st.html(f"""
             <div class="metrora-report-action">
                 <span class="metrora-report-priority {escape(priority)}">
                     {escape(priority.upper())}
@@ -359,9 +352,7 @@ def _render_actions(fact_pack) -> None:
                     <small><strong>Why now:</strong> {escape(recommendation.rationale)}</small>
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            """)
 
 
 def _review_questions(fact_pack) -> list[str]:
@@ -413,17 +404,14 @@ def _render_evidence(fact_pack, summary) -> None:
 
 
 def _render_summary(fact_pack, summary) -> None:
-    st.markdown(
-        '<div class="metrora-section-kicker">Executive decision brief</div>',
-        unsafe_allow_html=True,
-    )
+    st.html('<div class="metrora-section-kicker">Executive decision brief</div>')
     st.subheader("The decision in one minute")
     st.caption(
         "Plain-language answers first. Supporting calculations and audit detail remain attached."
     )
     _render_decision_brief(fact_pack, summary)
     st.markdown("### Key numbers")
-    st.markdown(_kpi_html(fact_pack), unsafe_allow_html=True)
+    st.html(_kpi_html(fact_pack))
 
     movers = _service_mover_frame(fact_pack)
     if not movers.empty:

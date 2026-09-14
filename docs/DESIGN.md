@@ -1,33 +1,42 @@
 # Costavow visual design
 
-Reviewed 2026-09-13 for v0.3.0. The direction is a light analytical workspace: keep the data
-legible, the next action visible, and the evidence easy to inspect. This is an original
-implementation in the existing Streamlit, CSS, and Plotly stack; no design-system library,
-remote font, copied component, or new service is introduced.
+Reviewed 2026-09-14 for v0.3.1. The public site uses an editorial product layout; the analytical
+workspace uses the same slate, cobalt, and neutral roles with a more functional type hierarchy.
+This revision fixes measured component failures rather than adding another layer of theme overrides.
 
-## Research and decisions
+## Reference study and original direction
 
-- [Fluent 2 color](https://fluent2.microsoft.design/color) separates neutral surfaces, brand
-  emphasis, and semantic feedback. Costavow uses neutral paper and white surfaces, a restrained
-  cobalt action color, and explicit status labels. Large saturated panels and decorative glow
-  have been removed. Blue is a project choice, not a universal psychological guarantee of trust.
-- [Material color theming](https://github.com/material-components/material-components-android/blob/master/docs/theming/Color.md)
-  describes named roles and foreground/background relationships. The palette is assigned by
-  function across native controls, custom components, exports, and charts. We adopt the principle,
-  not Material's component implementation or dynamic theme machinery.
-- [Carbon color](https://carbondesignsystem.com/elements/color/overview/) uses neutral layering
-  to organize working surfaces. Costavow uses white cards against a pale page, thin separators,
-  compact tables, and typography to organize dense financial information.
-- [Carbon chart guidance](https://carbondesignsystem.com/data-visualization/chart-types/) starts
-  with the comparison the chart needs to support. In forecast charts, actuals use solid teal lines, forecasts use
-  dashed amber lines, and anomalies use red diamonds. Legends, hover values, and detail tables
-  provide additional cues. Cobalt is also used for labeled category comparisons; it does not
-  denote a good or bad financial outcome.
-- [WCAG text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) calls
-  for 4.5:1 for normal text, or 3:1 for large text.
-  [Non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) requires
-  3:1 where visual information is necessary to identify controls or understand graphics.
-  These measurements inform the palette; they are not an accessibility certification.
+- [Kairo](https://getkairo.xyz/) gives a single message room to lead, separates sections clearly,
+  and presents a short numbered process. Costavow adopts the spacing and hierarchy principles.
+  Its security claims, content, assets, animations, and dark visual identity are not reused.
+- [Cluely](https://cluely.com/) pairs a large serif headline with a prominent product demonstration
+  and focused supporting sections. Costavow uses a system serif for public display headings,
+  a real synthetic workspace capture, and native expandable answers. No competitor imagery,
+  source code, testimonials, metrics, or logos are copied.
+- [Fluent color roles](https://fluent2.microsoft.design/color) and
+  [Carbon color](https://carbondesignsystem.com/elements/color/overview/) inform neutral working
+  surfaces and restrained semantic accents. Color is assigned by function; blue is not a claim
+  of psychological trust. [WCAG contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+  and [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+  inform legibility and control cues.
+
+The public page has one primary demo action, a Windows download, three workflow steps, the
+portable receipt distinction, inspectable engineering choices, and a short FAQ. Repeated process
+maps, generic evidence bars, and overlapping product explanations were removed. The receipt
+schematic is explicitly labeled as an illustration; financial screenshots use the bundled synthetic data.
+
+## Root causes repaired
+
+| Observed problem | Repair |
+| --- | --- |
+| Driver heading constrained to 48 pixels, overlapping the explanation and amount | Full-width heading followed by a separate evidence grid; shared by Overview and Reports. |
+| Labels and values ran together in source strips, flow nodes, and snapshots | Explicit block/grid relationships matching the actual child tags. |
+| Report answers lacked card spacing | Style the actual `article` children. |
+| Metadata squeezed beside decision descriptions | Move metadata to its own row; stack fields on small screens. |
+| Markdown rewrote custom HTML headings and children | Use sanitized `st.html` with existing escaping and JavaScript disabled; embed the logo as an image. |
+| Four metrics wrapped into an accidental three-plus-one layout | A deliberate grid with responsive breakpoints. |
+| Chart legends crossed mobile axis labels | Use Plotly's native container-referenced legend positioning and automatic margin growth. |
+| Dense setup detail displaced the primary overview | Keep source/model workflow available in an expander below the analysis. |
 
 ## Palette and measured contrast
 
@@ -52,19 +61,38 @@ White button text on cobalt uses the same contrast ratio as cobalt on white.
 
 ## Layout and interaction
 
-- System fonts, including Segoe UI on Windows; tabular numerals in metrics and data tables.
-- A small spacing scale, 6–10 px corner radii, thin borders, and minimal shadow.
-- A single light theme for the public preview, workspace, native desktop startup, and charts.
-- Navigation above the work; stacked content and a two-column navigation grid on narrow screens.
-- Visible keyboard focus, at least 24 px icon targets, and 44 px main button targets.
-- No decorative orbit animation or scroll-reveal dependency. Content is visible immediately.
-- Actual and modeled financial values remain explicitly labeled. Color never establishes savings
-  verification or causal attribution.
+The static site has a 1200-pixel content ceiling, 100-pixel desktop section spacing, 64-pixel mobile
+section spacing, 16–19-pixel body copy, and large Georgia display headings. Native links, anchors,
+and `details` work without scripts. Visible focus, skip navigation, reduced-motion behavior, and
+at least 44-pixel primary targets are included. Dedicated mobile screenshots avoid shrinking a
+whole desktop dashboard into an unreadable phone image.
+
+The workspace has a 1280-pixel outer ceiling, 14–16-pixel supporting text, generous row padding,
+and one shared component stylesheet. The palette remains consistent with desktop and exports.
+Forecast actuals use solid teal; estimates use dashed amber; bounds are dotted; anomalies have
+red diamond markers. Labels and line styles carry meaning in addition to color.
+
+## Hosting decision
+
+The public project website is ordinary HTML/CSS on GitHub Pages. It requires no Python session,
+client JavaScript, remote fonts, analytics, cookies, or build framework. Its metadata and responsive
+layout are independent of Streamlit's application shell. Pages is appropriate for this independent
+project showcase; it is not selected as a commercial SaaS host. See
+[GitHub's usage limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
+
+[Cloudflare Pages](https://developers.cloudflare.com/pages/framework-guides/deploy-anything/) can
+also host these exact static files and remains a straightforward future move if a separate hosting
+account or domain workflow is needed. It provides no immediate product benefit that requires an
+additional account for this release. A full frontend/API rewrite would duplicate a functioning
+Python analytical workflow and expand authentication and data-handling scope. Streamlit therefore
+remains the synthetic interactive demo and local desktop UI, with its actual layout defects repaired.
 
 ## Verification and limits
 
-The regression suite checks intended text, control, and action color pairs and all primary
-workspace routes. Browser review covers the product, decisions, forecast chart, receipt download,
-and narrow-screen overflow using synthetic data. Native Streamlit widgets retain their semantics.
-A full screen-reader, high-contrast Windows, zoom, and color-vision accessibility audit remains a
-human review task; automated palette checks do not cover every rendered state.
+`tests/browser_check.cjs` checks six viewport widths and every main workspace page, plus planning
+tabs, the HTML receipt download, keyboard entry, image loading, and actual component geometry.
+Python AppTests retain route restoration, quality blockers, financial boundaries, and hosted-demo
+restrictions. Automated checks complement visual inspection; passing checks are not an accessibility
+certification. Browser rendering and system fonts vary by operating system. Custom Streamlit selectors
+must be checked again when upgrading the framework. The hosted demo can still have Community Cloud
+startup delays; the public static website does not depend on that session.

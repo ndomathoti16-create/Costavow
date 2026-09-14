@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from html import escape
 from typing import TYPE_CHECKING
+from urllib.parse import quote
 
 if TYPE_CHECKING:
     from ..config import Settings
@@ -45,26 +46,17 @@ WORKSPACE_CSS = """
 <style>
 :root {
     color-scheme: light;
-    --page: #f4f6f8;
-    --surface: #ffffff;
-    --ink: #192a3c;
-    --muted: #53647a;
-    --line: #d5dde7;
-    --control: #788899;
-    --primary: #3159d9;
-    --observed: #137562;
-    --warning: #946000;
-    --danger: #b4233b;
+    --page: #f4f6f8; --surface: #ffffff; --ink: #192a3c; --muted: #53647a;
+    --line: #d5dde7; --control: #788899; --primary: #3159d9;
+    --observed: #137562; --warning: #946000; --danger: #b4233b;
 }
 html, body, [data-testid="stApp"] { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--ink); }
-[data-testid="stAppViewContainer"], [data-testid="stApp"] { background: var(--page); }
-[data-testid="stHeader"] { background: var(--page); }
+[data-testid="stAppViewContainer"], [data-testid="stApp"], [data-testid="stHeader"] { background: var(--page); }
 [data-testid="stSidebar"], [data-testid="collapsedControl"] { display: none; }
-.block-container { max-width: 1440px; padding: 4.5rem 3rem 4rem; }
-h1, h2, h3, h4 { color: var(--ink); font-family: inherit; font-weight: 650; letter-spacing: -.025em; }
-h1 { font-size: 2.1rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.15rem; }
-p { line-height: 1.6; }
-small, [data-testid="stCaptionContainer"] { color: var(--muted); }
+.block-container { max-width: 1280px; padding: 4.5rem 2.5rem 5rem; }
+h1, h2, h3, h4 { color: var(--ink); font-weight: 650; letter-spacing: -.025em; }
+p { line-height: 1.65; }
+small, [data-testid="stCaptionContainer"] { color: var(--muted); font-size: .875rem; line-height: 1.6; }
 a { color: var(--primary); text-underline-offset: .2em; }
 button, input, select, textarea { font: inherit; }
 :where(button, a, input, textarea, select, [tabindex]):focus-visible {
@@ -75,148 +67,198 @@ button, input, select, textarea { font: inherit; }
 [data-testid="stTabsScrollRight"], [data-testid="stTabsScrollLeft"] {
     min-width: 1.5rem; min-height: 1.5rem;
 }
-[data-testid="stButton"] button, [data-testid="stDownloadButton"] button,
-[data-testid="stLinkButton"] a {
-    min-height: 2.75rem; border-radius: 6px; box-shadow: none; font-weight: 600;
+[data-testid="stButton"] button, [data-testid="stDownloadButton"] button, [data-testid="stLinkButton"] a {
+    min-height: 2.875rem; border-radius: 9px; padding: .65rem 1rem; box-shadow: none; font-weight: 600;
 }
 [data-testid="stButton"] button[kind="secondary"], [data-testid="stDownloadButton"] button {
     border-color: var(--control); background: var(--surface); color: var(--ink);
 }
-[data-testid="stButton"] button[kind="primary"] {
-    background: var(--primary); border-color: var(--primary); color: white;
-}
+[data-testid="stButton"] button[kind="primary"] { background: var(--primary); border-color: var(--primary); color: white; }
 [data-testid="stButton"] button:disabled { opacity: .55; }
 [data-testid="stTextInputRootElement"], [data-baseweb="select"] > div,
 [data-testid="stNumberInputContainer"], [data-testid="stTextArea"] textarea {
-    background: var(--surface); border-color: var(--control); border-radius: 6px;
+    background: var(--surface); border-color: var(--control); border-radius: 8px;
 }
-[data-testid="stFileUploaderDropzone"], [data-testid="stExpander"] {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+[data-testid="stFileUploaderDropzone"], [data-testid="stExpander"], [data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
 }
 [data-testid="stFileUploaderDropzone"] { border: 1px dashed var(--control); }
-[data-testid="stMetric"] {
-    padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
-}
-[data-testid="stMetricValue"] { font-size: clamp(1.5rem, 2.3vw, 2.2rem); font-variant-numeric: tabular-nums; }
+[data-testid="stMetric"] { height: 100%; padding: 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+[data-testid="stMetricValue"] { font-size: clamp(1.4rem, 2.15vw, 2rem); font-variant-numeric: tabular-nums; }
 [data-testid="stMetricLabel"] { color: var(--muted); }
-[data-testid="stPlotlyChart"] { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-[data-baseweb="tab-list"] { gap: 1rem; border-bottom: 1px solid var(--line); }
-[data-baseweb="tab"] { min-height: 2.75rem; color: var(--muted); }
+.st-key-workspace-kpi-strip [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.st-key-workspace-kpi-strip [data-testid="stColumn"] { width: 100%; min-width: 0; }
+[data-testid="stPlotlyChart"] { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+[data-baseweb="tab-list"] { gap: 1.25rem; border-bottom: 1px solid var(--line); }
+[data-baseweb="tab"] { min-height: 3rem; color: var(--muted); }
 [data-baseweb="tab"][aria-selected="true"] { color: var(--primary); font-weight: 700; }
-.metrora-topbar, .metrora-topbar-brand, .metrora-topbar-context {
-    display: flex; align-items: center; gap: .75rem;
-}
-.metrora-topbar { justify-content: space-between; padding: .25rem 0 1rem; border-bottom: 1px solid var(--line); }
-.metrora-topbar-mark { display: flex; width: 40px; height: 40px; flex: 0 0 40px; }
+.metrora-topbar, .metrora-topbar-brand, .metrora-topbar-context { display: flex; align-items: center; gap: .875rem; }
+.metrora-topbar { justify-content: space-between; padding: .25rem 0 1.25rem; border-bottom: 1px solid var(--line); }
+.metrora-topbar-mark { display: flex; width: 42px; height: 42px; flex: 0 0 42px; }
 .metrora-logo { width: 100%; height: 100%; }
-.metrora-topbar-name { font-size: 1.15rem; font-weight: 750; letter-spacing: -.03em; }
-.metrora-topbar-subtitle, .metrora-topbar-context { font-size: .75rem; color: var(--muted); }
-.metrora-topbar-context i, .metrora-visual-status i { width: 7px; height: 7px; background: var(--observed); border-radius: 50%; }
-.metrora-product-top-links { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .5rem; padding: .75rem 0; }
-.metrora-product-top-links a { padding: .7rem .9rem; font-size: .85rem; font-weight: 600; text-decoration: none; border-radius: 6px; }
-.metrora-product-top-links a:hover { background: #e8eefb; }
-.metrora-product-demo-link { border: 1px solid var(--primary); }
-.st-key-metrora_top_nav { margin: .7rem 0 1.5rem; }
-.st-key-metrora_top_nav [data-testid="stButton"] button { font-size: .8rem; padding: .5rem .4rem; }
-.st-key-metrora_top_nav [data-testid="stHorizontalBlock"] { gap: .3rem; }
-.metrora-workspace-title-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .8rem; }
-.metrora-workspace-topbar { display: block; margin: .5rem 0 1rem; }
-.metrora-workspace-location { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin-bottom: .8rem; }
-.metrora-workspace-context-item { display: grid; gap: .25rem; }
-.metrora-workspace-page-title { font-size: 2rem; font-weight: 700; letter-spacing: -.035em; }
-.metrora-workspace-title-copy p { margin: .4rem 0; color: var(--muted); max-width: 70ch; }
-.metrora-workspace-location, .metrora-workspace-command-meta, .metrora-workspace-state,
-.metrora-workspace-context-item { font-size: .8rem; color: var(--muted); }
-.metrora-workspace-command-meta { display: flex; gap: 1rem; flex-wrap: wrap; }
-.metrora-workspace-state { padding: .35rem .6rem; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
-.metrora-panel-heading, .metrora-driver-head, .metrora-flow-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-.metrora-panel-heading { margin: 1rem 0 .6rem; }
+.metrora-topbar-name { font-size: 1.375rem; font-weight: 750; letter-spacing: -.04em; }
+.metrora-topbar-subtitle, .metrora-topbar-context { font-size: .875rem; color: var(--muted); }
+.metrora-topbar-context { max-width: 50%; text-align: right; }
+.metrora-topbar-context i { width: 8px; height: 8px; background: var(--observed); border-radius: 50%; flex-shrink: 0; }
+.metrora-product-top-links { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 1.5rem; }
+.metrora-product-top-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: .9375rem; text-decoration: none; }
+.metrora-product-top-links a:hover { text-decoration: underline; }
+.st-key-metrora_top_nav { margin: .25rem 0 1.5rem; }
+.st-key-metrora_top_nav [data-testid="stHorizontalBlock"] { display: flex; flex-wrap: wrap; gap: .375rem; }
+.st-key-metrora_top_nav [data-testid="stColumn"] { flex: 1 0 auto; width: auto; min-width: 0; }
+.st-key-metrora_top_nav [data-testid="stButton"] button { padding: .65rem .75rem; }
+.st-key-metrora_top_nav [data-testid="stButton"] button p { font-size: .9375rem; white-space: nowrap; }
+.metrora-workspace-topbar { margin: .5rem 0 1.5rem; }
+.metrora-workspace-location { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.25rem; font-size: .875rem; color: var(--muted); }
+.metrora-workspace-state { padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.metrora-workspace-title-row { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: center; gap: 2.5rem; }
+.metrora-workspace-page-title { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.2; font-weight: 650; letter-spacing: -.04em; }
+.metrora-workspace-title-copy p { margin: .75rem 0 0; color: var(--muted); max-width: 72ch; }
+.metrora-workspace-command-meta { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding-left: 1.5rem; border-left: 1px solid var(--line); }
+.metrora-workspace-context-item { display: grid; gap: .25rem; min-width: 0; }
+.metrora-workspace-context-item strong { font-size: .9375rem; font-weight: 600; overflow-wrap: anywhere; }
+.metrora-panel-heading { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin: 1rem 0 .75rem; }
+.metrora-panel-heading > span { font-size: 1.125rem; font-weight: 650; }
 .metrora-panel-heading h3 { margin: 0; }
-.metrora-panel-heading span, .metrora-period-context, .metrora-subsection-label { color: var(--muted); font-size: .8rem; }
-.metrora-analysis-flow, .metrora-decision-snapshot, .metrora-empty-state,
-.metrora-report-decision, .metrora-advanced-note { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem; margin: .8rem 0 1.2rem; }
-.metrora-flow-heading { font-size: .8rem; color: var(--muted); margin-bottom: 1rem; }
-.metrora-flow-track { display: flex; align-items: center; gap: .5rem; }
-.metrora-flow-node { display: grid; flex: 1; grid-template-columns: 1.5rem 1fr; gap: .2rem .5rem; min-width: 0; }
-.metrora-flow-node i { grid-row: span 2; font-style: normal; font-size: .8rem; color: var(--primary); }
-.metrora-flow-node span { font-size: .8rem; font-weight: 650; }
-.metrora-flow-node b, .metrora-flow-node small { grid-column: 2; color: var(--muted); font-size: .75rem; font-weight: 400; }
-.metrora-flow-link { width: 1.5rem; height: 1px; background: var(--line); }
-.metrora-automation-note, .metrora-source-strip, .metrora-planning-strip {
-    display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1.5rem; padding: 1rem 1.2rem;
-    background: #edf2fc; border-left: 3px solid var(--primary); margin: 1rem 0;
+.metrora-period-context { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .875rem; margin: .5rem 0 1.5rem; }
+.metrora-period-context strong { color: var(--ink); }
+.metrora-section-kicker, .metrora-subsection-label { color: var(--primary); font-size: .875rem; font-weight: 650; letter-spacing: .06em; }
+.metrora-analysis-flow, .metrora-decision-snapshot, .metrora-empty-state, .metrora-report-decision,
+.metrora-advanced-note { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; margin: .25rem 0 1.5rem; }
+.metrora-flow-heading { display: flex; justify-content: space-between; gap: 1rem; font-size: .9375rem; color: var(--muted); margin-bottom: 1.25rem; }
+.metrora-flow-track { display: flex; align-items: center; gap: 1rem; }
+.metrora-flow-node { display: flex; align-items: flex-start; flex: 1; gap: .75rem; min-width: 0; }
+.metrora-flow-node > span { color: var(--primary); font-size: .875rem; padding-top: .1rem; }
+.metrora-flow-node > div { display: grid; gap: .25rem; }
+.metrora-flow-node strong { font-size: .9375rem; }
+.metrora-flow-link { width: 1rem; height: 1px; background: var(--line); }
+.metrora-automation-note, .metrora-planning-strip, .metrora-source-strip {
+    display: flex; flex-wrap: wrap; align-items: start; gap: 1rem 2rem; padding: 1.5rem;
+    background: #edf2fc; border-left: 3px solid var(--primary); border-radius: 0 10px 10px 0; margin: 1rem 0 1.5rem;
 }
-.metrora-automation-note span, .metrora-planning-strip small, .metrora-source-strip span { color: var(--muted); font-size: .85rem; }
-.metrora-planning-strip > div { display: grid; gap: .2rem; }
-.metrora-planning-strip span { font-size: .75rem; color: var(--muted); }
-.metrora-planning-strip strong { font-size: .85rem; }
-.metrora-snapshot-lead { padding-bottom: .8rem; border-bottom: 1px solid var(--line); }
-.metrora-snapshot-lead p { margin: .5rem 0; }
-.metrora-snapshot-signal, .metrora-attention-item { padding: .8rem 0; border-bottom: 1px solid var(--line); }
-.metrora-snapshot-signal span, .metrora-snapshot-signal small { color: var(--muted); font-size: .85rem; }
-.metrora-driver-list, .metrora-governance-list, .metrora-decision-list { display: grid; gap: .75rem; margin: 1rem 0; }
+.metrora-automation-note { display: grid; gap: .5rem; }
+.metrora-automation-note span, .metrora-advanced-note span { display: block; color: var(--muted); line-height: 1.65; }
+.metrora-source-strip > div, .metrora-planning-strip > div { display: grid; gap: .375rem; min-width: 0; }
+.metrora-source-strip strong { overflow-wrap: anywhere; }
+.metrora-planning-strip span { font-size: .875rem; color: var(--muted); }
+.metrora-decision-snapshot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+.metrora-snapshot-lead { grid-column: 1 / -1; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+.metrora-snapshot-lead > span, .metrora-snapshot-signal > span { display: block; font-size: .875rem; color: var(--muted); margin-bottom: .5rem; }
+.metrora-snapshot-lead > strong { display: block; font-size: 1.5rem; letter-spacing: -.025em; }
+.metrora-snapshot-signal > strong { display: block; font-size: 1.125rem; }
+.metrora-snapshot-lead p, .metrora-snapshot-signal p { margin: .5rem 0 0; color: var(--muted); font-size: .9375rem; }
+.metrora-attention-item { padding: 1.25rem 0; border-top: 1px solid var(--line); }
+.metrora-attention-item p { margin: .5rem 0 0; color: var(--muted); font-size: .9375rem; }
+.metrora-driver-list, .metrora-governance-list, .metrora-decision-list { display: grid; gap: 1.25rem; margin: 1rem 0 2rem; }
 .metrora-driver-row, .metrora-governance-row, .metrora-decision-row, .metrora-connection-row {
-    display: grid; gap: 1rem; padding: 1.1rem; border: 1px solid var(--line); background: var(--surface); border-radius: 8px;
+    display: grid; gap: 1.5rem; padding: 1.75rem; border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
 }
-.metrora-driver-row { grid-template-columns: 3rem minmax(0, 1fr); }
-.metrora-driver-head strong { color: var(--ink); }
-.metrora-driver-head span, .metrora-driver-why, .metrora-driver-body p { color: var(--muted); font-size: .85rem; }
-.metrora-driver-body p { margin: .4rem 0; }
-.metrora-governance-row { grid-template-columns: 1fr 1.3fr 1fr; }
-.metrora-governance-row > div, .metrora-connection-row > div { display: grid; gap: .35rem; }
-.metrora-governance-row p { margin: 0; font-size: .85rem; }
-.metrora-governance-row span { font-weight: 650; font-size: .8rem; }
+.metrora-driver-row { grid-template-columns: minmax(0, 1fr); }
+.metrora-driver-head { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: start; gap: 1rem; }
+.metrora-driver-head > div { display: grid; gap: .4rem; }
+.metrora-driver-head strong, .metrora-driver-head b { font-size: 1.125rem; }
+.metrora-driver-head span { color: var(--muted); font-size: .9375rem; }
+.metrora-driver-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem 2rem; border-top: 1px solid var(--line); padding-top: 1.25rem; }
+.metrora-driver-body > div { display: grid; align-content: start; gap: .375rem; min-width: 0; }
+.metrora-driver-why { grid-column: 1 / -1; }
+.metrora-driver-body p { margin: 0; color: var(--muted); font-size: .9375rem; max-width: 90ch; }
+.metrora-driver-body strong { font-size: .9375rem; font-weight: 600; overflow-wrap: anywhere; }
+.metrora-governance-row { grid-template-columns: 1fr 1.4fr 1.3fr; align-items: start; }
+.metrora-governance-row > div, .metrora-connection-row > div { display: grid; gap: .5rem; }
+.metrora-governance-row p { margin: 0; font-size: .9375rem; }
+.metrora-governance-row span { font-weight: 650; font-size: .875rem; }
 .metrora-governance-row.met span { color: var(--observed); }
 .metrora-governance-row.attention span { color: var(--danger); }
 .metrora-connection-row { grid-template-columns: 1fr 1fr; }
-.metrora-connection-row span { color: var(--primary); font-size: .8rem; }
-.metrora-decision-row { grid-template-columns: 3.5rem minmax(0, 1.2fr) minmax(0, 1fr); align-items: center; }
-.metrora-decision-score { display: grid; text-align: center; gap: .2rem; border-right: 1px solid var(--line); }
-.metrora-decision-score span { color: var(--ink); font-size: 1.5rem; font-weight: 700; }
-.metrora-decision-score small, .metrora-decision-meta small { font-size: .7rem; }
-.metrora-decision-main { display: grid; gap: .4rem; min-width: 0; }
-.metrora-decision-main > span { color: var(--primary); font-size: .75rem; font-weight: 650; }
-.metrora-decision-main p { margin: 0; font-size: .85rem; color: var(--muted); }
-.metrora-decision-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
-.metrora-decision-meta > div { display: grid; gap: .3rem; padding-left: .7rem; border-left: 1px solid var(--line); min-width: 0; }
-.metrora-decision-meta strong, .metrora-decision-meta span { overflow-wrap: anywhere; font-size: .75rem; }
+.metrora-connection-row span { color: var(--primary); font-size: .875rem; }
+.metrora-decision-row { grid-template-columns: 4rem minmax(0, 1fr); align-items: start; }
+.metrora-decision-score { display: grid; text-align: center; gap: .25rem; padding: .75rem .25rem; background: var(--page); border-radius: 8px; }
+.metrora-decision-score span { font-size: 1.75rem; font-weight: 650; }
+.metrora-decision-score small { font-size: .875rem; }
+.metrora-decision-main { display: grid; gap: .625rem; min-width: 0; }
+.metrora-decision-main > span { color: var(--primary); font-size: .875rem; }
+.metrora-decision-main > strong { font-size: 1.125rem; }
+.metrora-decision-main p { margin: 0; font-size: .9375rem; color: var(--muted); max-width: 85ch; }
+.metrora-decision-meta { grid-column: 2; display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.metrora-decision-meta > div { display: grid; align-content: start; gap: .375rem; min-width: 0; }
+.metrora-decision-meta strong, .metrora-decision-meta span { overflow-wrap: anywhere; font-size: .9375rem; }
 .metrora-decision-meta span { color: var(--muted); }
-.metrora-table-shell { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); margin: .75rem 0; }
-.metrora-data-table { border-collapse: collapse; width: 100%; font-size: .85rem; font-variant-numeric: tabular-nums; }
-.metrora-data-table th, .metrora-data-table td { padding: .7rem .9rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
-.metrora-data-table th { background: #edf1f5; color: var(--ink); font-weight: 650; }
+.metrora-table-shell { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin: 1rem 0; }
+.metrora-data-table { border-collapse: collapse; width: 100%; font-size: .9375rem; font-variant-numeric: tabular-nums; }
+.metrora-data-table th, .metrora-data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.metrora-data-table th { background: #edf1f5; font-weight: 650; }
 .metrora-data-table tr:last-child td { border-bottom: 0; }
-.metrora-data-table tbody tr:hover { background: #f4f6f8; }
-.metrora-report-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
-.metrora-report-kpi { display: grid; gap: .4rem; padding: 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
-.metrora-report-kpi strong { font-size: 1.35rem; }
-.metrora-report-kpi span, .metrora-report-kpi small { font-size: .8rem; color: var(--muted); }
-.metrora-report-answers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.metrora-report-answers > div, .metrora-report-action { padding: 1rem; border-left: 3px solid var(--primary); background: var(--surface); }
-.metrora-report-priority, .metrora-section-kicker { color: var(--primary); font-size: .8rem; font-weight: 700; }
-.metrora-empty-state { display: flex; gap: 1rem; padding: 2rem; }
+.metrora-data-table tbody tr:hover { background: var(--page); }
+.metrora-report-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.metrora-report-kpi { display: grid; align-content: start; gap: .625rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.metrora-report-kpi strong { font-size: 1.6rem; }
+.metrora-report-kpi span { font-size: .9375rem; color: var(--muted); }
+.metrora-report-answers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+.metrora-report-answers > article, .metrora-report-action { padding: 1.5rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.metrora-report-answers > article p { margin: .75rem 0 0; }
+.metrora-report-action { display: grid; gap: 1rem; margin: 1rem 0; }
+.metrora-report-action small { display: block; margin-top: .5rem; }
+.metrora-report-priority { color: var(--primary); font-size: .875rem; font-weight: 650; }
+.metrora-report-decision h2 { margin: .75rem 0; font-size: 1.75rem; }
+.metrora-report-decision p { color: var(--muted); margin-bottom: 0; }
+.metrora-empty-state { display: flex; align-items: start; gap: 1.5rem; padding: 2rem; }
 .metrora-empty-icon { font-size: 2rem; color: var(--primary); }
 .metrora-next-step { color: var(--primary); font-weight: 600; }
+.costavow-demo-intro { max-width: 760px; margin: 3rem auto; text-align: center; }
+.costavow-demo-intro h1 { font-family: Georgia, serif; font-weight: 400; font-size: clamp(2.75rem, 5vw, 4.5rem); line-height: 1.1; margin: 1rem 0 1.5rem; }
+.costavow-demo-intro p { font-size: 1.125rem; color: var(--muted); max-width: 60ch; margin: auto; }
+.st-key-demo-scenarios [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+.st-key-demo-scenarios [data-testid="stColumn"] { width: 100%; min-width: 0; }
+.st-key-demo-scenarios [class*="st-key-scenario-"] { padding: 1.5rem; background: var(--surface); border-color: var(--line); border-radius: 12px; }
+.costavow-scenario { min-height: 19rem; }
+.costavow-scenario h2 { font-size: 1.5rem; line-height: 1.25; margin: 1.25rem 0; }
+.costavow-scenario p { font-size: 1rem; color: var(--muted); }
+.costavow-scenario-lesson { border-top: 1px solid var(--line); padding-top: 1rem; }
+.costavow-demo-boundary { max-width: 760px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid var(--line); text-align: center; }
+.costavow-demo-boundary p { color: var(--muted); }
+.costavow-demo-boundary a { display: inline-flex; min-height: 44px; align-items: center; }
+@media (max-width: 1100px) {
+    .block-container { padding-inline: 1.5rem; }
+    [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] [data-testid="stMetric"]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] [data-testid="stMetric"]) > [data-testid="stColumn"] { width: 100%; min-width: 0; }
+    .costavow-scenario { min-height: 23rem; }
+}
 @media (max-width: 900px) {
-    .block-container { padding: 4.5rem 1.25rem 3rem; }
-    .metrora-decision-row { grid-template-columns: 3.5rem minmax(0, 1fr); }
-    .metrora-decision-meta { grid-column: 1 / -1; }
-    .metrora-report-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .metrora-topbar-context { max-width: 12rem; text-align: right; }
+    .metrora-workspace-title-row { grid-template-columns: 1fr; gap: 1.25rem; }
+    .metrora-workspace-command-meta { border-left: 0; border-top: 1px solid var(--line); padding: 1rem 0 0; }
+    [data-testid="stHorizontalBlock"]:has(.st-key-home-trend-surface),
+    .st-key-demo-scenarios [data-testid="stHorizontalBlock"] { flex-direction: column; grid-template-columns: 1fr; }
+    [data-testid="stHorizontalBlock"]:has(.st-key-home-trend-surface) > [data-testid="stColumn"],
+    .st-key-demo-scenarios [data-testid="stColumn"] { width: 100%; }
+    .metrora-flow-track { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .metrora-flow-link { display: none; }
+    .metrora-report-answers { grid-template-columns: 1fr; }
+    .costavow-scenario { min-height: 0; }
 }
 @media (max-width: 600px) {
-    .block-container { padding: 4.5rem 1rem 2rem; }
+    .block-container { padding: 4.5rem 1rem 3rem; }
     .metrora-topbar-context { display: none; }
-    .metrora-product-top-links { justify-content: flex-start; gap: .2rem; }
-    .metrora-product-top-links a { padding: .7rem .5rem; font-size: .8rem; }
-    .st-key-metrora_top_nav [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .st-key-metrora_top_nav [data-testid="stColumn"] { width: 100%; min-width: 0; }
-    .metrora-workspace-title-row, .metrora-workspace-topbar { align-items: flex-start; flex-direction: column; }
-    .metrora-flow-track { flex-direction: column; align-items: stretch; }
-    .metrora-flow-link { display: none; }
-    .metrora-flow-node { padding: .4rem 0; }
-    .metrora-report-answers, .metrora-governance-row, .metrora-connection-row { grid-template-columns: 1fr; }
-    .metrora-panel-heading, .metrora-driver-head { flex-wrap: wrap; gap: .4rem; }
+    .metrora-topbar-subtitle { font-size: .875rem; }
+    .metrora-product-top-links { justify-content: start; gap: 1rem; }
+    .st-key-metrora_top_nav [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: 1fr 1fr; }
+    .st-key-metrora_top_nav [data-testid="stColumn"] { width: 100%; }
+    .st-key-metrora_top_nav [data-testid="stButton"] button { padding-inline: .5rem; }
+    .metrora-decision-snapshot, .metrora-driver-body, .metrora-governance-row,
+    .metrora-connection-row, .metrora-report-kpis { grid-template-columns: 1fr; }
+    .metrora-driver-row, .metrora-decision-row { padding: 1.25rem; gap: 1.25rem; }
+    .metrora-decision-row { grid-template-columns: 3.5rem minmax(0, 1fr); }
+    .metrora-decision-meta { grid-column: 1 / -1; grid-template-columns: 1fr; gap: 1.25rem; }
+    .metrora-driver-head strong, .metrora-driver-head b { overflow-wrap: anywhere; }
+    .metrora-analysis-flow { padding: 1.25rem; }
+    [data-testid="stMetric"] { padding: 1rem; }
+    [data-testid="stMetricValue"] { font-size: 1.4rem; }
+    .costavow-demo-intro { margin: 2rem 0; text-align: left; }
+    .costavow-demo-boundary { text-align: left; }
+    .st-key-demo-scenarios [class*="st-key-scenario-"] { padding: 1.25rem; }
+}
+@media (max-width: 380px) {
+    [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] [data-testid="stMetric"]) { grid-template-columns: 1fr; }
+    .metrora-flow-track { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 </style>
@@ -249,13 +291,12 @@ def render_top_navigation(settings: Settings) -> None:
         status_label = "Analysis ready" if analysis_ready else "Review needed"
         context = f"<i></i>{escape(str(workspace_label))} / {status_label}"
     else:
-        context = "Local product preview / no sign-in required"
+        context = "Interactive demo / synthetic data"
 
-    st.markdown(
-        f"""
+    st.html(f"""
         <header class="metrora-topbar">
             <div class="metrora-topbar-brand">
-                <span class="metrora-topbar-mark">{METRORA_LOGO_SVG}</span>
+                <span class="metrora-topbar-mark"><img class="metrora-logo" alt="" src="data:image/svg+xml,{quote(METRORA_LOGO_SVG)}"></span>
                 <div>
                     <div class="metrora-topbar-name">Costavow</div>
                     <div class="metrora-topbar-subtitle">FinOps decision evidence</div>
@@ -263,32 +304,15 @@ def render_top_navigation(settings: Settings) -> None:
             </div>
             <div class="metrora-topbar-context">{context}</div>
         </header>
-        """,
-        unsafe_allow_html=True,
-    )
+        """)
 
     if not is_workspace:
-        if st.session_state.get("product_page", "Product") == "Demo":
-            st.markdown(
-                """
-                <nav class="metrora-product-top-links" aria-label="Product navigation">
-                    <a class="metrora-product-demo-link" href="?surface=product&amp;page=Product" target="_self">Back to product</a>
-                </nav>
-                """,
-                unsafe_allow_html=True,
-            )
-            return
-        st.markdown(
-            """
-            <nav class="metrora-product-top-links" aria-label="Product sections">
-                <a href="#metrora-overview">Overview</a>
-                <a href="#metrora-workflow">How it works</a>
-                <a href="#metrora-evidence">Trust &amp; evidence</a>
-                <a class="metrora-product-demo-link" href="?surface=product&amp;page=Demo" target="_self">Explore demos</a>
+        st.html("""
+            <nav class="metrora-product-top-links" aria-label="Project links">
+                <a href="https://ndomathoti16-create.github.io/Costavow/" target="_top">Product website ↗</a>
+                <a href="https://github.com/ndomathoti16-create/Costavow" target="_blank" rel="noopener noreferrer">View the code ↗</a>
             </nav>
-            """,
-            unsafe_allow_html=True,
-        )
+        """)
         return
 
     desktop_mode = bool(st.session_state.get("desktop_mode", False))
@@ -373,11 +397,25 @@ def apply_plotly_theme(figure):
     grid = PALETTE["line"]
     line = PALETTE["line"]
     figure.update_layout(
+        margin={"l": 64, "r": 36, "t": 72, "b": 112},
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font={"color": text, "family": "Segoe UI, sans-serif"},
-        title_font={"color": text, "family": "Segoe UI, sans-serif"},
-        legend={"font": {"color": muted}},
+        font={"color": text, "family": "Segoe UI, sans-serif", "size": 14},
+        title={
+            "x": 0.04,
+            "xanchor": "left",
+            "font": {"color": text, "family": "Segoe UI, sans-serif", "size": 16},
+        },
+        legend={
+            "font": {"color": muted, "size": 13},
+            "orientation": "h",
+            "y": 0.02,
+            "x": 0.04,
+            "yref": "container",
+            "xref": "container",
+            "yanchor": "bottom",
+            "title_text": None,
+        },
         hoverlabel={
             "bgcolor": PALETTE["surface"],
             "bordercolor": PALETTE["control"],
@@ -386,7 +424,7 @@ def apply_plotly_theme(figure):
         xaxis={
             "gridcolor": grid,
             "linecolor": line,
-            "tickfont": {"color": muted},
+            "tickfont": {"color": muted, "size": 12},
             "title_font": {"color": muted},
             "automargin": True,
             "zeroline": False,
@@ -394,7 +432,7 @@ def apply_plotly_theme(figure):
         yaxis={
             "gridcolor": grid,
             "linecolor": line,
-            "tickfont": {"color": muted},
+            "tickfont": {"color": muted, "size": 12},
             "title_font": {"color": muted},
             "automargin": True,
             "zeroline": False,
@@ -418,10 +456,7 @@ def render_compact_table(dataframe, *, max_rows: int = 20) -> None:
         escape=True,
         na_rep="-",
     )
-    st.markdown(
-        f'<div class="metrora-table-shell">{table_html}</div>',
-        unsafe_allow_html=True,
-    )
+    st.html(f'<div class="metrora-table-shell">{table_html}</div>')
     if len(dataframe) > max_rows:
         st.caption(f"Showing the first {max_rows:,} of {len(dataframe):,} rows.")
 
