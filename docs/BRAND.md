@@ -13,8 +13,10 @@ Use the [mark](assets/costavow-mark.svg) for the application and favicon and the
 [lockup](assets/costavow-lockup.svg) for repository presentation. The desktop icon uses the same
 geometry. No stock mark, third-party logo, or competitor implementation was copied.
 
-The palette uses forest ink (`#142421`), warm paper (`#E8E3D7`), jade (`#78C8B0`), and brass
-(`#EABD78`). Retain contrast, focus visibility, and text labels alongside status colors.
+The current palette uses paper (`#F4F6F8`), slate (`#192A3C`), cobalt (`#3159D9`), and
+observed-data teal (`#137562`). Amber and red have explicit forecast, caution, and anomaly roles.
+The mark is white on cobalt, with a simpler corner radius. See [design rationale](DESIGN.md)
+for research, measured contrast, chart encodings, and responsive behavior.
 
 ## Preliminary screening — 2026-09-13
 

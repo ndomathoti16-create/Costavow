@@ -168,4 +168,13 @@ filenames, desktop data directories, Docker volume names, and decision IDs remai
 rename does not orphan user data. Internal CSS selectors retain their old prefix.
 
 Future release builds use `packaging/costavow.spec`, `Costavow.exe`, and
-`Costavow-Windows-x64.zip`. Current source is version `0.3.0.dev0`, not a published binary release.
+`Costavow-Windows-x64.zip`. The current release is `v0.3.0`; historical Metrora packages remain available in older releases.
+
+
+### Release verification
+
+A `v*` tag runs the Windows release workflow and prepares a **draft** release with the ZIP and
+SHA-256 checksum. Before publishing the draft, download and verify the checksum, extract all files,
+and test `Costavow.exe` on Windows with a synthetic billing export. Check automatic analysis,
+navigation, forecast traces, and receipt/report downloads. Publish the verified draft from GitHub
+Releases; retain earlier release assets unchanged.

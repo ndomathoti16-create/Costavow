@@ -24,9 +24,10 @@ keeps the source, financial basis, human disposition, and supplied actuals toget
 | Windows app | Upload your files, connect billing exports, manage decisions, and export results. | Local processing and storage; the portable ZIP includes Python and optional cloud SDKs. |
 | Source or Docker | Run the demo or local workspace and work on the code. | Python 3.11+ or Docker; see the [developer guide](docs/DEVELOPMENT.md). |
 
-The latest packaged release still uses the **Metrora** name: [v0.2.3](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.2.3).
-Costavow branding and decision receipts are available from current source and listed under
-**Unreleased** in the [changelog](CHANGELOG.md). The hosted demo keeps its existing URL.
+[Costavow v0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) introduces
+a light analytical workspace, the Costavow desktop identity, and portable decision receipts.
+The hosted demo keeps its existing URL. See the [changelog](CHANGELOG.md) and
+[design rationale](docs/DESIGN.md).
 
 ## What it does
 
@@ -100,11 +101,11 @@ in `docs/screenshots`. See the [demo data guide](data/demo/README.md).
 ## Start on Windows
 
 1. Open the [latest release](https://github.com/ndomathoti16-create/Costavow/releases/latest).
-2. Download `Metrora-Windows-x64.zip` and `SHA256SUMS.txt`.
-3. Compare the ZIP's SHA-256 hash with the checksum, extract it, and run `Metrora.exe`.
+2. Download `Costavow-Windows-x64.zip` and `SHA256SUMS.txt`.
+3. Compare the ZIP's SHA-256 hash with the checksum, extract it, and run `Costavow.exe`.
 
 ```powershell
-Get-FileHash .\Metrora-Windows-x64.zip -Algorithm SHA256
+Get-FileHash .\Costavow-Windows-x64.zip -Algorithm SHA256
 ```
 
 Python is not required for the portable app. The native launcher binds its service to `127.0.0.1`

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
-from finops_cost_intelligence.ui.branding import METRORA_WORKSPACE_V2_CSS
+from finops_cost_intelligence.ui.branding import PALETTE, WORKSPACE_CSS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 APP_PATH = PROJECT_ROOT / "app.py"
@@ -24,11 +24,11 @@ def test_public_product_page_renders_the_complete_scrolling_story() -> None:
 
 def test_shared_theme_exposes_keyboard_focus_and_accessible_icon_targets() -> None:
     """Regression guard for controls that Streamlit and Plotly render very small."""
-    assert ":focus-visible" in METRORA_WORKSPACE_V2_CSS
-    assert '[data-testid="stHeaderActionElements"] a' in METRORA_WORKSPACE_V2_CSS
-    assert '[data-testid="stPlotlyChart"] .modebar-btn' in METRORA_WORKSPACE_V2_CSS
-    assert '[data-testid="stTabsScrollRight"]' in METRORA_WORKSPACE_V2_CSS
-    assert "min-height: 1.5rem" in METRORA_WORKSPACE_V2_CSS
+    assert ":focus-visible" in WORKSPACE_CSS
+    assert '[data-testid="stHeaderActionElements"] a' in WORKSPACE_CSS
+    assert '[data-testid="stPlotlyChart"] .modebar-btn' in WORKSPACE_CSS
+    assert '[data-testid="stTabsScrollRight"]' in WORKSPACE_CSS
+    assert "min-height: 1.5rem" in WORKSPACE_CSS
 
 
 def test_workspace_headings_use_page_specific_anchors() -> None:
@@ -51,8 +51,8 @@ def test_guided_workspace_pages_render_without_errors() -> None:
     assert app.session_state["product_page"] == "Demo"
     app.button(key="product_demo_scenario_forecast_risk").click().run(timeout=30)
     assert not app.exception
-    # The product and workspace intentionally share one dark visual system.
-    assert app.session_state["dark_mode"] is True
+    # The product and workspace intentionally share one light visual system.
+    assert app.session_state["dark_mode"] is False
     assert app.session_state["budget_table"] is not None
     assert app.session_state["business_metrics_table"] is not None
     assert {metric.label for metric in app.metric} >= {
@@ -194,3 +194,26 @@ def test_hero_opens_the_scenario_chooser_not_a_preselected_workspace() -> None:
         "product_demo_scenario_quality_risk",
         "product_demo_scenario_forecast_risk",
     } <= {item.key for item in app.button}
+
+
+def test_theme_roles_keep_text_and_controls_legible() -> None:
+    """Check intended color pairs, not a claim of complete WCAG conformance."""
+
+    def luminance(color: str) -> float:
+        rgb = [int(color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
+        linear = [
+            value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in rgb
+        ]
+        return sum(
+            value * weight for value, weight in zip(linear, (0.2126, 0.7152, 0.0722), strict=True)
+        )
+
+    def contrast(first: str, second: str) -> float:
+        high, low = sorted((luminance(first), luminance(second)), reverse=True)
+        return (high + 0.05) / (low + 0.05)
+
+    for background in ("page", "surface"):
+        for role in ("ink", "muted", "primary", "observed", "warning", "danger"):
+            assert contrast(PALETTE[role], PALETTE[background]) >= 4.5, (role, background)
+        assert contrast(PALETTE["control"], PALETTE[background]) >= 3
+    assert contrast(PALETTE["surface"], PALETTE["primary"]) >= 4.5

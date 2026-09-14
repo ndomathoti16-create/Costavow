@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -60,7 +61,10 @@ class SettingsTests(unittest.TestCase):
 
 class FoundationTests(unittest.TestCase):
     def test_package_version_is_defined(self) -> None:
-        self.assertEqual(__version__, "0.2.3")
+        metadata = tomllib.loads(
+            (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
+        )
+        self.assertEqual(__version__, metadata["project"]["version"])
 
     def test_logging_configuration_returns_project_logger(self) -> None:
         settings = Settings.from_environment({"LOG_LEVEL": "DEBUG"})

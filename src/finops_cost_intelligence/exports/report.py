@@ -177,39 +177,39 @@ Usage and effective-rate evidence is used only when the source supports it.</p>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Costavow Executive Brief</title>
 <style>
-:root {{ color-scheme: light; font-family: Inter, system-ui, sans-serif; color: #142033; }}
+:root {{ color-scheme: light; font-family: Inter, system-ui, sans-serif; color: #192a3c; }}
 body {{
     max-width: 1120px; margin: 0 auto; padding: 3rem 2rem 5rem;
-    line-height: 1.55; background: #f7f9fc;
+    line-height: 1.55; background: #f4f6f8;
 }}
 h1, h2, h3 {{ letter-spacing: -.035em; }}
 h1 {{ max-width: 820px; font-size: 2.7rem; line-height: 1.08; }}
 section {{ margin-top: 3rem; }}
 .eyebrow {{
-    color: #245fba; font-size: .76rem; font-weight: 800;
+    color: #3159d9; font-size: .76rem; font-weight: 800;
     letter-spacing: .1em; text-transform: uppercase;
 }}
-.meta {{ color: #64748b; }}
+.meta {{ color: #53647a; }}
 .kpis {{
     display: grid; grid-template-columns: repeat(4, 1fr);
-    margin: 2rem 0; border-block: 1px solid #dbe3ef;
+    margin: 2rem 0; border-block: 1px solid #d5dde7;
 }}
-.kpis div {{ padding: 1rem; border-left: 1px solid #dbe3ef; }}
+.kpis div {{ padding: 1rem; border-left: 1px solid #d5dde7; }}
 .kpis div:first-child {{ border-left: 0; }}
 .kpis span, .kpis small, .kpis strong {{ display: block; }}
 .kpis span {{
-    color: #64748b; font-size: .7rem; font-weight: 700;
+    color: #53647a; font-size: .7rem; font-weight: 700;
     letter-spacing: .07em; text-transform: uppercase;
 }}
 .kpis strong {{ margin: .35rem 0; font-size: 1.35rem; }}
-.kpis small {{ color: #64748b; }}
-.bottom-line {{ padding: .3rem 0 .3rem 1.1rem; border-left: 4px solid #2878f0; }}
+.kpis small {{ color: #53647a; }}
+.bottom-line {{ padding: .3rem 0 .3rem 1.1rem; border-left: 4px solid #3159d9; }}
 .bottom-line p {{ margin: 0; font-size: 1.3rem; font-weight: 650; }}
-.section-copy {{ color: #64748b; }}
+.section-copy {{ color: #53647a; }}
 table {{ border-collapse: collapse; width: 100%; margin: .75rem 0 1.5rem; background: #fff; }}
-th, td {{ border-bottom: 1px solid #dbe3ef; padding: .75rem; vertical-align: top; }}
+th, td {{ border-bottom: 1px solid #d5dde7; padding: .75rem; vertical-align: top; }}
 th {{ font-weight: 700; text-align: left; }}
-small {{ color: #64748b; }}
+small {{ color: #53647a; }}
 @media (max-width: 760px) {{
     .kpis {{ grid-template-columns: 1fr 1fr; }}
     body {{ padding: 1.5rem 1rem 3rem; }}

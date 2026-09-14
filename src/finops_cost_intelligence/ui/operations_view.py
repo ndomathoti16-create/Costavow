@@ -19,7 +19,7 @@ from ..contracts.normalization import NormalizedTable
 from ..ingestion.readers import IngestionError, load_table
 from ..normalization.budgets import normalize_budget_dataframe
 from ..normalization.business_metrics import normalize_business_metrics
-from .branding import apply_plotly_theme, render_compact_table
+from .branding import PALETTE, apply_plotly_theme, render_compact_table
 
 
 def _format_amount(value: float | None, currency: str = "Unspecified") -> str:
@@ -122,7 +122,7 @@ def _render_budget_view(actual: pd.DataFrame, source_key: str) -> None:
         y="amount",
         color="series",
         barmode="group",
-        color_discrete_map={"budget_amount": "#6E7E95", "actual_cost": "#91A8FF"},
+        color_discrete_map={"budget_amount": PALETTE["muted"], "actual_cost": PALETTE["observed"]},
         labels={"label": "Budget row", "amount": "Amount", "series": "Series"},
         title="Actual versus budget",
     )
@@ -242,7 +242,7 @@ def _render_business_metric_view(actual: pd.DataFrame, source_key: str) -> None:
         x="usage_date",
         y="cost_per_unit",
         markers=True,
-        color_discrete_sequence=["#6FE2D3"],
+        color_discrete_sequence=[PALETTE["observed"]],
         labels={"usage_date": "Metric date", "cost_per_unit": "Cost per unit"},
         title=f"Cost per unit over time · {metric_name}",
     )

@@ -3,7 +3,14 @@
 Source changes on `main` are listed here before they are packaged. Downloaded release ZIPs remain
 unchanged until a new version is published.
 
-## Unreleased
+## [0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) — 2026-09-13
+
+- Ship the new `Costavow.exe` portable Windows application and matching icon.
+- Replace accumulated dark theme overrides with one light workspace theme and one product
+  stylesheet: paper surfaces, slate text, cobalt actions, and teal actuals.
+- Distinguish forecasts with dashed amber lines and anomalies with red diamonds.
+- Retain keyboard focus, readable tables, responsive layouts, and measured color-contrast guards.
+- Document the Fluent, Material, Carbon, and WCAG research behind the design.
 
 - Rebrand current source as **Costavow**, with an original vector mark and evidence-led messaging.
 - Add a portable decision receipt with source references, ownership, financial basis, supplied

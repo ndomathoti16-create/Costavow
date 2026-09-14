@@ -22,14 +22,14 @@ from ..contracts.analytics import AnalyticsInputError
 from ..contracts.forecasting import ForecastInputError
 from ..contracts.normalization import NormalizedTable
 from ..forecasting import forecast_daily_spend
-from .branding import apply_plotly_theme, render_compact_table
+from .branding import PALETTE, apply_plotly_theme, render_compact_table
 
 if TYPE_CHECKING:
     from ..config import Settings
 
 
-VIOLET = "#7DA7FF"
-MINT = "#55D6C7"
+BLUE = PALETTE["primary"]
+TEAL = PALETTE["observed"]
 
 
 def _format_cost(value: float | None, currency: str) -> str:
@@ -258,8 +258,8 @@ def _render_trend(
             y=daily["cost"],
             mode="lines+markers",
             name="Daily spend",
-            line={"color": VIOLET, "width": 2.5},
-            marker={"color": VIOLET, "size": 5},
+            line={"color": BLUE, "width": 2.5},
+            marker={"color": BLUE, "size": 5},
             hovertemplate="%{x|%b %d, %Y}<br>Cost: %{y:,.2f}<extra></extra>",
         )
     )
@@ -271,7 +271,7 @@ def _render_trend(
             y=working["rolling_7_day"],
             mode="lines",
             name="7-day average",
-            line={"color": MINT, "width": 2, "dash": "dash"},
+            line={"color": TEAL, "width": 2, "dash": "dash"},
             hovertemplate="%{x|%b %d, %Y}<br>Average: %{y:,.2f}<extra></extra>",
         )
     )
@@ -312,7 +312,7 @@ def _render_breakdown(
         x="cost",
         y="value",
         orientation="h",
-        color_discrete_sequence=[VIOLET],
+        color_discrete_sequence=[BLUE],
         labels={"cost": cost_label, "value": dimension_label},
         title=f"Spend by {dimension_label}",
     )

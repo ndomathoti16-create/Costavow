@@ -51,7 +51,7 @@ jobs:
             dist/Costavow-Windows-x64.zip
             dist/SHA256SUMS.txt
           if-no-files-found: error
-      - name: Publish tagged GitHub release
+      - name: Prepare tagged GitHub release for verification
         if: startsWith(github.ref, 'refs/tags/')
         shell: powershell
         env:
@@ -61,4 +61,5 @@ jobs:
           gh release create $tag "dist\Costavow-Windows-x64.zip#Costavow-Windows-x64.zip" "dist\SHA256SUMS.txt#SHA256SUMS.txt" `
             --title "Costavow $tag" `
             --generate-notes `
+            --draft `
             --verify-tag

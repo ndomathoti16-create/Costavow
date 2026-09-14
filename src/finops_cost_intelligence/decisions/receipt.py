@@ -57,9 +57,9 @@ def decision_receipt_html(decision: DecisionRecord) -> str:
 'unsafe-inline'; base-uri 'none'; form-action 'none'">
 <title>Costavow decision receipt</title>
 <style>
-body{{margin:0;background:#f4f1e9;color:#142421;font:16px/1.6 system-ui,sans-serif}}
-main{{max-width:880px;margin:32px auto;padding:32px;background:#fff;border-top:6px solid #b57e34}}
-small{{letter-spacing:.12em;text-transform:uppercase;color:#466257}}
+body{{margin:0;background:#f4f6f8;color:#192a3c;font:16px/1.6 system-ui,sans-serif}}
+main{{max-width:880px;margin:32px auto;padding:32px;background:#fff;border-top:6px solid #3159d9}}
+small{{letter-spacing:.12em;text-transform:uppercase;color:#53647a}}
 h1{{font-size:clamp(24px,5vw,36px);line-height:1.2;overflow-wrap:anywhere}}
 table{{width:100%;border-collapse:collapse}}th,td{{padding:12px;text-align:left;vertical-align:top;border-bottom:1px
 solid #ddd;overflow-wrap:anywhere}}

@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 from ..ingestion import IngestionError
 from ..runtime import resource_path
 from .branding import (
-    enable_scroll_reveals,
     inject_styles,
     render_top_navigation,
 )
@@ -93,9 +92,8 @@ def render_app_shell(settings: Settings) -> None:
         initial_sidebar_state="collapsed",
     )
 
-    # Costavow has one intentional workspace appearance. Keeping the state true also
-    # gives the analytical charts a single, deterministic visual palette.
-    st.session_state["dark_mode"] = True
+    # Keep native controls, custom surfaces, and charts on one light palette.
+    st.session_state["dark_mode"] = False
     desktop_mode = (
         os.environ.get("COSTAVOW_DESKTOP", os.environ.get("METRORA_DESKTOP", "")).strip() == "1"
     )
@@ -105,7 +103,6 @@ def render_app_shell(settings: Settings) -> None:
         st.session_state["demo_mode"] = False
         st.session_state.setdefault("demo_workspace", "Desktop workspace")
     inject_styles()
-    enable_scroll_reveals()
     _restore_route(settings)
 
     if not st.session_state.get("demo_authenticated", False):

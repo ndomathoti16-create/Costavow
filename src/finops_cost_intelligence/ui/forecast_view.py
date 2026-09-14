@@ -9,10 +9,10 @@ from ..anomalies import detect_spend_anomalies
 from ..contracts.analytics import AnalyticsInputError
 from ..contracts.forecasting import ForecastInputError
 from ..forecasting import forecast_daily_spend
-from .branding import apply_plotly_theme, render_compact_table
+from .branding import PALETTE, apply_plotly_theme, render_compact_table
 
-BLUE = "#9BB8FF"
-RED = "#F2C58E"
+ACTUAL = PALETTE["observed"]
+ANOMALY = PALETTE["danger"]
 
 
 def _render_forecast(
@@ -24,8 +24,8 @@ def _render_forecast(
     import plotly.graph_objects as go
     import streamlit as st
 
-    forecast_color = "#7EE0D0"
-    forecast_fill = "rgba(126,224,208,0.14)"
+    forecast_color = PALETTE["warning"]
+    forecast_fill = "rgba(148,96,0,0.10)"
 
     if show_settings:
         with st.expander("Forecast settings", expanded=False):
@@ -60,7 +60,7 @@ def _render_forecast(
             y=history["cost"],
             mode="lines+markers",
             name="Actual daily spend",
-            line={"color": BLUE, "width": 2},
+            line={"color": ACTUAL, "width": 2},
             marker={"size": 5},
         )
     )
@@ -90,7 +90,7 @@ def _render_forecast(
             y=forecast["forecast_cost"],
             mode="lines+markers",
             name="Forecast",
-            line={"color": forecast_color, "width": 2.5},
+            line={"color": forecast_color, "width": 2.5, "dash": "dash"},
             marker={"size": 5},
         )
     )
@@ -154,7 +154,7 @@ def _render_anomalies(
             y=diagnostics["cost"],
             mode="lines",
             name="Daily spend",
-            line={"color": BLUE, "width": 2},
+            line={"color": ACTUAL, "width": 2},
         )
     )
     anomalies = diagnostics.loc[diagnostics["is_anomaly"]]
@@ -164,7 +164,7 @@ def _render_anomalies(
             y=anomalies["cost"],
             mode="markers",
             name="Anomaly",
-            marker={"color": RED, "size": 10, "symbol": "diamond"},
+            marker={"color": ANOMALY, "size": 10, "symbol": "diamond"},
             text=anomalies["direction"],
             hovertemplate="%{x|%Y-%m-%d}<br>Cost: %{y:,.2f}<br>%{text}<extra></extra>",
         )

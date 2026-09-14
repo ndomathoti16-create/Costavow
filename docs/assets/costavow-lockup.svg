@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 180" role="img" aria-label="Costavow. Every cost claim needs a trail.">
-<rect width="700" height="180" rx="20" fill="#0c1513"/>
-<g transform="translate(34 38) scale(2.1)">  <rect x="1" y="1" width="46" height="46" rx="13" fill="#142421"/>
-  <path d="M32 11H18a7 7 0 0 0-7 7v12a7 7 0 0 0 7 7h14" fill="none" stroke="#E8E3D7" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M20 19h10M20 25h8M20 31h10" fill="none" stroke="#78C8B0" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="m36 19 5 5-5 5-5-5z" fill="#EABD78"/>
+<rect width="700" height="180" rx="12" fill="#f4f6f8"/>
+<g transform="translate(34 38) scale(2.1)">  <rect x="1" y="1" width="46" height="46" rx="8" fill="#3159D9"/>
+  <path d="M32 11H18a7 7 0 0 0-7 7v12a7 7 0 0 0 7 7h14" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M20 19h10M20 25h8M20 31h10" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="m36 19 5 5-5 5-5-5z" fill="#FFFFFF"/>
 </g>
-<text x="161" y="91" fill="#e8e3d7" font-family="Segoe UI,Arial,sans-serif" font-size="48" font-weight="650" letter-spacing="-1.5">Costavow</text>
-<text x="164" y="126" fill="#78c8b0" font-family="Segoe UI,Arial,sans-serif" font-size="20">Every cost claim needs a trail.</text>
+<text x="161" y="91" fill="#192a3c" font-family="Segoe UI,Arial,sans-serif" font-size="48" font-weight="650" letter-spacing="-1.5">Costavow</text>
+<text x="164" y="126" fill="#53647a" font-family="Segoe UI,Arial,sans-serif" font-size="20">Every cost claim needs a trail.</text>
 </svg>

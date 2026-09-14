@@ -117,6 +117,12 @@ def _run_streamlit_child(port: int) -> None:
         "server_headless": True,
         "server_fileWatcherType": "none",
         "browser_gatherUsageStats": False,
+        "theme_base": "light",
+        "theme_primaryColor": "#3159D9",
+        "theme_backgroundColor": "#F4F6F8",
+        "theme_secondaryBackgroundColor": "#FFFFFF",
+        "theme_textColor": "#192A3C",
+        "theme_font": "sans-serif",
     }
     bootstrap.load_config_options(flag_options=flags)
     bootstrap.run(str(app_path), False, [], flags)
@@ -184,7 +190,7 @@ def _launch_desktop() -> None:
                 width=1500,
                 height=960,
                 min_size=(1100, 720),
-                background_color="#080d13",
+                background_color="#f4f6f8",
             )
             webview.start(debug=False, private_mode=True)
         finally:

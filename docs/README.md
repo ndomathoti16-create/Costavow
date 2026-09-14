@@ -25,6 +25,7 @@
 
 - [Current market review and product scope](PRODUCT_STRATEGY.md)
 - [Brand meaning, assets, and name checks](BRAND.md)
+- [Visual design and color research](DESIGN.md): role palette, contrast, typography, and chart conventions.
 
 These documents explain design decisions and proposed directions. They are not current setup
 instructions, release promises, or a continuously updated market comparison.
