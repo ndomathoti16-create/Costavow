@@ -37,7 +37,10 @@ jobs:
         run: python -m PyInstaller packaging/costavow.spec --noconfirm --clean
       - name: Package Windows download
         shell: powershell
-        run: Compress-Archive -Path dist\Costavow\* -DestinationPath dist\Costavow-Windows-x64.zip
+        run: Compress-Archive -Path dist\Costavow.exe,PRIVACY.md,SECURITY.md,THIRD_PARTY_NOTICES.md,THIRD_PARTY_LICENSES.txt -DestinationPath dist\Costavow-Windows-x64.zip
+      - name: Verify a Windows-marked download starts natively
+        shell: powershell
+        run: ./packaging/check_windows_release.ps1
       - name: Create release checksum
         shell: powershell
         run: |

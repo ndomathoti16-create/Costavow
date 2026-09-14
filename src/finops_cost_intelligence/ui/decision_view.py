@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from datetime import date
-from html import escape
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
@@ -165,28 +164,59 @@ def _render_priority_queue(decisions: list[DecisionRecord]) -> None:
     if not ranked:
         st.success("No open decision requires action in the current register.")
         return
-    rows: list[str] = []
-    for item, score in ranked:
-        due = item.due_date or item.target_timing
-        owner = item.owner or "Unassigned"
-        amount = _format_amount(item.impact_amount, item.currency, signed=True)
-        rows.append(
-            '<article class="metrora-decision-row">'
-            f'<div class="metrora-decision-score"><span>{score}</span><small>Priority</small></div>'
-            '<div class="metrora-decision-main">'
-            f"<span>{escape(item.category)} / {escape(item.provider)}</span>"
-            f"<strong>{escape(item.title)}</strong>"
-            f"<p>{escape(item.evidence_summary)}</p></div>"
-            '<div class="metrora-decision-meta">'
-            f"<div><small>Impact basis</small><strong>{escape(_impact_label(item))}</strong>"
-            f"<span>{escape(amount)}</span></div>"
-            f"<div><small>Owner / due</small><strong>{escape(owner)}</strong>"
-            f"<span>{escape(due)}</span></div>"
-            f"<div><small>Status</small><strong>{escape(item.status)}</strong>"
-            f"<span>{escape(item.evidence_strength.replace('_', ' ').title())}</span></div>"
-            "</div></article>"
+    query = (
+        st.text_input(
+            "Find a decision",
+            placeholder="Search title, owner, or provider",
+            key="decision_queue_search",
         )
-    st.html(f'<div class="metrora-decision-list">{"".join(rows)}</div>')
+        .strip()
+        .casefold()
+    )
+    ranked = [
+        (item, score)
+        for item, score in ranked
+        if query in f"{item.title} {item.owner} {item.provider}".casefold()
+    ]
+    if not ranked:
+        st.info("No open decisions match this search.")
+        return
+    desktop_mode = bool(st.session_state.get("desktop_mode", False))
+
+    def open_selected() -> None:
+        selected = st.session_state["decision_queue"].selection.rows
+        if selected:
+            item = ranked[selected[0]][0]
+            st.session_state["decision_update_selection"] = next(
+                label
+                for label, option in _decision_options(decisions).items()
+                if option.decision_id == item.decision_id
+            )
+            st.session_state["decision_tab"] = "Assign & decide"
+
+    st.dataframe(
+        [
+            {
+                "Decision": item.title,
+                "Priority": score,
+                "Status": item.status,
+                "Owner": item.owner,
+                "Impact": _format_amount(item.impact_amount, item.currency),
+                "Basis": _impact_label(item),
+                "Due": item.due_date or item.target_timing,
+            }
+            for item, score in ranked
+        ],
+        hide_index=True,
+        width="stretch",
+        height=min(440, 38 + len(ranked) * 35),
+        key="decision_queue",
+        on_select=open_selected if desktop_mode else "ignore",
+        selection_mode="single-row",
+        column_config={"Decision": st.column_config.TextColumn(width="large")},
+    )
+    if desktop_mode:
+        st.caption("Select a row to review its evidence and update the decision.")
 
 
 def _decision_options(decisions: list[DecisionRecord]) -> dict[str, DecisionRecord]:
@@ -539,13 +569,6 @@ def render_decision_view(
     except ValueError as exc:
         st.error(str(exc))
         decisions = []
-    st.html("""
-        <div class="metrora-automation-note">
-            <strong>Every cost claim needs a trail.</strong>
-            <span>Calculated signals and provider recommendations become owned decisions with
-            evidence, disposition, due dates, and measured outcomes.</span>
-        </div>
-        """)
     _render_register_metrics(decisions)
     if not bool(st.session_state.get("desktop_mode", False)):
         _render_priority_queue(decisions)
@@ -563,17 +586,24 @@ def render_decision_view(
             "Add decision",
             "Verify outcome",
             "Import AWS",
-        ]
+        ],
+        key="decision_tab",
+        on_change="rerun",
     )
-    with queue_tab:
-        _render_priority_queue(decisions)
-    with update_tab:
-        _render_update_form(settings, decisions)
-    with new_tab:
-        _render_new_decision_form(settings, decisions)
-    with verify_tab:
-        _render_verification_form(settings, decisions)
-    with import_tab:
-        _render_aws_import(settings, decisions)
+    if queue_tab.open:
+        with queue_tab:
+            _render_priority_queue(decisions)
+    if update_tab.open:
+        with update_tab:
+            _render_update_form(settings, decisions)
+    if new_tab.open:
+        with new_tab:
+            _render_new_decision_form(settings, decisions)
+    if verify_tab.open:
+        with verify_tab:
+            _render_verification_form(settings, decisions)
+    if import_tab.open:
+        with import_tab:
+            _render_aws_import(settings, decisions)
     st.divider()
     _render_exports(decisions)

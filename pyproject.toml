@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "costavow"
-version = "0.3.1"
+version = "0.4.0"
 description = "Costavow: a local-first cloud FinOps analytics platform."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -21,7 +21,7 @@ dependencies = [
     "plotly>=5.24,<7",
     "pyarrow>=23.0.1,<24",
     "statsmodels>=0.14,<1",
-    "streamlit>=1.50,<2",
+    "streamlit>=1.59.2,<2",
     "xlrd>=2.0,<3",
 ]
 

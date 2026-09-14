@@ -114,30 +114,15 @@ def _render_page_header(page: str) -> None:
     profile = st.session_state.get("data_profile")
     quality = st.session_state.get("quality_report")
     if loaded is None or profile is None:
-        context = (
-            '<span class="metrora-workspace-context-item"><small>Source</small>'
-            "<strong>None loaded</strong></span>"
-        )
+        context = "<span>No source loaded</span>"
     else:
-        verification = (
-            "Verified" if quality is not None and quality.ready_for_analysis else "In review"
-        )
-        sync = st.session_state.get("connection_sync") or {}
-        provider = sync.get("provider")
-        connection_context = (
-            '<span class="metrora-workspace-context-item"><small>Connection</small>'
-            f"<strong>{escape(str(provider))}</strong></span>"
-            if provider
-            else ""
-        )
+        ready = quality is not None and quality.ready_for_analysis
         context = (
-            '<span class="metrora-workspace-context-item"><small>Source</small>'
-            f"<strong>{escape(loaded.source_name)}</strong></span>"
-            '<span class="metrora-workspace-context-item"><small>Rows</small>'
-            f"<strong>{profile.row_count:,}</strong></span>"
-            '<span class="metrora-workspace-context-item"><small>Model</small>'
-            f"<strong>{verification}</strong></span>"
-            f"{connection_context}"
+            f'<span class="costavow-source-name" title="{escape(loaded.source_name)}">'
+            f"{escape(loaded.source_name)}</span>"
+            f"<span>{profile.row_count:,} rows</span>"
+            f'<span class="costavow-model-status {"" if ready else "review"}">'
+            f"{'Reconciled' if ready else 'Review needed'}</span>"
         )
     st.html(f"""
         <header class="metrora-workspace-topbar">
@@ -235,16 +220,6 @@ def _current_analysis_table(normalized, source_key: str):
 def _render_home(settings: Settings) -> None:
     normalized, source_key = _context()
     if normalized is None or source_key is None:
-        _render_analysis_flow()
-        import streamlit as st
-
-        st.html("""
-            <div class="metrora-automation-note">
-                <strong>Drop in one billing export.</strong>
-                <span>Costavow detects the fields, builds the cost model, reconciles the total,
-                and opens the completed analysis automatically.</span>
-            </div>
-            """)
         render_ingestion_view(settings, include_mapping=False)
         return
     render_home_view(settings, normalized, source_key)
@@ -286,7 +261,6 @@ def _render_plans(settings: Settings) -> None:
         return
 
     actual = _current_analysis_table(normalized, source_key)
-    anomaly_history = select_comparable_anomaly_history(normalized.dataframe)
     selected_scope = (
         "Spend explorer selection"
         if st.session_state.get("analytics_source_key") == source_key
@@ -311,20 +285,30 @@ def _render_plans(settings: Settings) -> None:
             "Ownership",
             "Unit economics",
             "Governance",
-        ]
+        ],
+        key="planning_tab",
+        on_change="rerun",
     )
-    with forecast_tab:
-        render_forecast_panel(actual, source_key)
-    with anomaly_tab:
-        render_anomaly_panel(anomaly_history, source_key)
-    with budget_tab:
-        render_budget_panel(actual, source_key)
-    with ownership_tab:
-        render_allocation_panel(actual)
-    with unit_tab:
-        render_business_metric_panel(actual, source_key)
-    with governance_tab:
-        render_governance_panel(actual, source_key)
+    if forecast_tab.open:
+        with forecast_tab:
+            render_forecast_panel(actual, source_key)
+    if anomaly_tab.open:
+        with anomaly_tab:
+            render_anomaly_panel(
+                select_comparable_anomaly_history(normalized.dataframe), source_key
+            )
+    if budget_tab.open:
+        with budget_tab:
+            render_budget_panel(actual, source_key)
+    if ownership_tab.open:
+        with ownership_tab:
+            render_allocation_panel(actual)
+    if unit_tab.open:
+        with unit_tab:
+            render_business_metric_panel(actual, source_key)
+    if governance_tab.open:
+        with governance_tab:
+            render_governance_panel(actual, source_key)
 
 
 def _render_reports(settings: Settings) -> None:

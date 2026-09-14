@@ -187,12 +187,20 @@ def render_ingestion_view(settings: Settings, *, include_mapping: bool = True) -
         loaded_table = existing_loaded
         profile = existing_profile
         if loaded_table is None or profile is None:
-            st.info(
-                "No billing source is loaded. Upload your own file, or open the guided demo "
-                "from the product page."
+            st.caption(
+                "Files stay on this computer. Start with an export or try the synthetic sample."
             )
             demo_path = resource_path("data", "demo", "cloud_billing_demo.csv")
             if demo_path.is_file():
+                if st.button("Try sample data", icon=":material/science:", key="try_sample_data"):
+                    try:
+                        activate_loaded_table(
+                            load_table(demo_path, max_bytes=settings.max_upload_mb * 1024 * 1024)
+                        )
+                    except IngestionError as exc:
+                        st.error(str(exc))
+                    else:
+                        st.rerun()
                 st.download_button(
                     "Download sample billing CSV",
                     data=demo_path.read_bytes(),

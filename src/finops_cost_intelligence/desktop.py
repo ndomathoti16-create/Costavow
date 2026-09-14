@@ -15,6 +15,7 @@ from pathlib import Path
 from urllib.error import URLError
 from urllib.request import urlopen
 
+from . import __version__
 from .runtime import resource_path
 
 _DESKTOP_STREAMS: list[object] = []
@@ -76,7 +77,9 @@ def _write_crash_report(exc: BaseException) -> Path | None:
         log_directory.mkdir(parents=True, exist_ok=True)
         report_path = log_directory / "desktop-crash.log"
         with report_path.open("a", encoding="utf-8") as report:
-            report.write(f"\n[{datetime.now(UTC).isoformat()}] {type(exc).__name__}\n")
+            report.write(
+                f"\n[{datetime.now(UTC).isoformat()}] Costavow {__version__} {type(exc).__name__}\n"
+            )
             for frame in traceback.extract_tb(exc.__traceback__):
                 report.write(f"  {Path(frame.filename).name}:{frame.lineno} in {frame.name}\n")
         return report_path
@@ -115,6 +118,7 @@ def _run_streamlit_child(port: int) -> None:
         "server_address": "127.0.0.1",
         "server_port": int(port),
         "server_headless": True,
+        "client_toolbarMode": "minimal",
         "server_fileWatcherType": "none",
         "browser_gatherUsageStats": False,
         "theme_base": "light",
@@ -187,9 +191,9 @@ def _launch_desktop() -> None:
             webview.create_window(
                 "Costavow · FinOps Decision Evidence",
                 workspace_url,
-                width=1500,
-                height=960,
-                min_size=(1100, 720),
+                width=1360,
+                height=900,
+                min_size=(860, 620),
                 background_color="#f4f6f8",
             )
             webview.start(debug=False, private_mode=True)

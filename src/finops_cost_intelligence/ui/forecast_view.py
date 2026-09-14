@@ -59,7 +59,7 @@ def _render_forecast(
             x=history["usage_date"],
             y=history["cost"],
             mode="lines+markers",
-            name="Actual daily spend",
+            name="Actual",
             line={"color": ACTUAL, "width": 2},
             marker={"size": 5},
         )
@@ -97,7 +97,7 @@ def _render_forecast(
     figure.update_layout(
         title={"text": "Daily spend forecast", "x": 0, "xanchor": "left"},
         height=410,
-        xaxis={"title": "Usage date", "automargin": True},
+        xaxis={"title": None, "automargin": True},
         yaxis={"title": "Cost", "tickformat": ",.0f", "automargin": True},
         hovermode="x unified",
         margin={"l": 82, "r": 28, "t": 72, "b": 62},
@@ -172,7 +172,7 @@ def _render_anomalies(
     figure.update_layout(
         title={"text": "Historical daily spend anomalies", "x": 0, "xanchor": "left"},
         height=410,
-        xaxis={"title": "Usage date", "automargin": True},
+        xaxis={"title": None, "automargin": True},
         yaxis={"title": "Cost", "tickformat": ",.0f", "automargin": True},
         hovermode="x unified",
         margin={"l": 82, "r": 28, "t": 72, "b": 62},

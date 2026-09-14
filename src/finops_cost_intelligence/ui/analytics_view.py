@@ -156,88 +156,6 @@ def _render_home_kpis(
     return summary, anomaly_count, forecast_summary
 
 
-def _render_decision_snapshot(
-    summary,
-    drivers: pd.DataFrame,
-    anomaly_count: int | None,
-    forecast_summary,
-) -> None:
-    """Render an evidence-backed, scan-friendly view of the current cost decision."""
-    import streamlit as st
-
-    if summary.change_amount is None or summary.change_pct is None:
-        movement_title = "Comparison is building"
-        movement_copy = "A prior equal window is not yet available for a period-over-period read."
-    elif summary.change_amount > 0:
-        movement_title = f"Spend increased {summary.change_pct:+.1%}"
-        movement_copy = (
-            f"The current window is {_format_cost(abs(summary.change_amount), summary.currency)} "
-            "above the immediately preceding equal window."
-        )
-    elif summary.change_amount < 0:
-        movement_title = f"Spend decreased {abs(summary.change_pct):.1%}"
-        movement_copy = (
-            f"The current window is {_format_cost(abs(summary.change_amount), summary.currency)} "
-            "below the immediately preceding equal window."
-        )
-    else:
-        movement_title = "Spend is flat"
-        movement_copy = "The current and prior equal windows have the same calculated total."
-
-    if drivers.empty:
-        driver_title = "No service driver ranked"
-        driver_copy = "There is not enough comparable service movement to identify a lead driver."
-    else:
-        mover = drivers.iloc[0]
-        driver_title = escape(str(mover.get("service", "Unallocated service")))
-        driver_copy = (
-            "Largest observed service movement: "
-            f"{escape(_format_cost(float(mover['change_amount']), summary.currency))}."
-        )
-
-    if forecast_summary is None:
-        forecast_title = "Outlook unavailable"
-        forecast_copy = (
-            "More daily history is needed before the baseline forecast can be calculated."
-        )
-    else:
-        forecast_title = _format_cost(forecast_summary.forecast_total, summary.currency)
-        forecast_copy = "Deterministic 14-day outlook from the available daily history."
-
-    anomaly_title = (
-        "No anomaly signal" if anomaly_count in {None, 0} else f"{anomaly_count:,} to review"
-    )
-    anomaly_copy = (
-        "No historical days exceeded the configured rolling baseline."
-        if anomaly_count in {None, 0}
-        else "Historical days exceeded the configured rolling baseline and remain reviewable."
-    )
-    st.html(f"""
-        <section class="metrora-decision-snapshot" aria-label="Calculated decision snapshot">
-            <div class="metrora-snapshot-lead">
-                <span>Decision snapshot</span>
-                <strong>{escape(movement_title)}</strong>
-                <p>{escape(movement_copy)}</p>
-            </div>
-            <div class="metrora-snapshot-signal">
-                <span>Why it moved</span>
-                <strong>{driver_title}</strong>
-                <p>{driver_copy}</p>
-            </div>
-            <div class="metrora-snapshot-signal">
-                <span>14-day outlook</span>
-                <strong>{escape(forecast_title)}</strong>
-                <p>{escape(forecast_copy)}</p>
-            </div>
-            <div class="metrora-snapshot-signal">
-                <span>Exceptions</span>
-                <strong>{escape(anomaly_title)}</strong>
-                <p>{escape(anomaly_copy)}</p>
-            </div>
-        </section>
-        """)
-
-
 def _render_trend(
     daily: pd.DataFrame,
     currency: str,
@@ -348,18 +266,18 @@ def _render_driver_rows(drivers: pd.DataFrame, currency: str) -> None:
         rate_signal = escape(_driver_signal(driver["effective_rate_change_pct"]))
         evidence = escape(str(driver["evidence_level"]))
         rows.append(
-            f'<article class="metrora-driver-row">'
-            f'<div class="metrora-driver-head"><div>'
+            f'<details class="metrora-driver-row">'
+            f'<summary class="metrora-driver-head"><div>'
             f"<strong>{escape(str(driver['service']))}</strong>"
             f"<span>{escape(str(driver['driver_type']))}</span>"
-            f"</div><b>{escape(change)}</b></div>"
+            f"</div><b>{escape(change)}</b></summary>"
             f'<div class="metrora-driver-body">'
             f'<div class="metrora-driver-why"><small>Why this moved</small>'
             f"<p>{escape(str(driver['explanation']))}</p></div>"
             f"<div><small>Usage signal</small><strong>{usage_signal}</strong></div>"
             f"<div><small>Rate / mix</small><strong>{rate_signal}</strong></div>"
             f"<div><small>Evidence</small><strong>{evidence}</strong></div>"
-            "</div></article>"
+            "</div></details>"
         )
     st.html(f'<div class="metrora-driver-list">{"".join(rows)}</div>')
 
@@ -375,14 +293,17 @@ def _render_attention_item(title: str, detail: str, tone: str = "neutral") -> No
         """)
 
 
-def _navigate_button(label: str, page: str, key: str) -> None:
+def _navigate_button(label: str, page: str, key: str, *, tab: str | None = None) -> None:
     import streamlit as st
 
     from .navigation import set_workspace_route
 
-    if st.button(label, key=key, width="stretch"):
+    def navigate() -> None:
+        if tab is not None:
+            st.session_state["planning_tab"] = tab
         set_workspace_route(page)
-        st.rerun()
+
+    st.button(label, key=key, width="stretch", on_click=navigate)
 
 
 def render_home_view(
@@ -400,11 +321,11 @@ def render_home_view(
         _navigate_button("Review data quality", "Advanced", "home_review_quality")
         return
 
-    dataframe = normalized.dataframe.copy()
+    dataframe = normalized.dataframe
     try:
         current, prior, bounds, window_days = _equal_periods(dataframe)
         anomaly_history = select_comparable_anomaly_history(dataframe)
-        summary, anomaly_count, forecast_summary = _render_home_kpis(
+        summary, anomaly_count, _ = _render_home_kpis(
             current,
             prior,
             window_days=window_days,
@@ -439,8 +360,6 @@ def render_home_view(
         except (AnalyticsInputError, KeyError, ValueError):
             pass
 
-    _render_decision_snapshot(summary, drivers, anomaly_count, forecast_summary)
-    st.html('<div class="metrora-subsection-label">Operating view</div>')
     chart_column, attention_column = st.columns([1.55, 0.78], gap="large")
     with chart_column:
         with st.container(key="home-trend-surface"):
@@ -476,13 +395,17 @@ def render_home_view(
                     f"{anomaly_count:,} historical day(s) exceeded the rolling baseline.",
                     "attention",
                 )
-                _navigate_button("Review anomalies", "Plans & alerts", "home_open_anomalies")
+                _navigate_button(
+                    "Review anomalies", "Plans & alerts", "home_open_anomalies", tab="Anomalies"
+                )
             if st.session_state.get("budget_table") is None:
                 _render_attention_item(
                     "Add plan context",
                     "No budget is connected, so forecast-to-plan risk is not yet available.",
                 )
-                _navigate_button("Connect a budget", "Plans & alerts", "home_open_budget")
+                _navigate_button(
+                    "Connect a budget", "Plans & alerts", "home_open_budget", tab="Budgets"
+                )
             if drivers.empty and not anomaly_count:
                 st.success("No material movement or anomaly requires immediate review.")
             _navigate_button(
@@ -516,7 +439,7 @@ def render_cost_explorer_view(
         st.warning("Analysis is paused until the blocking quality checks are resolved in Advanced.")
         return
 
-    dataframe = normalized.dataframe.copy()
+    dataframe = normalized.dataframe
     try:
         dates = pd.to_datetime(dataframe["usage_date"], errors="coerce").dropna()
         if dates.empty:

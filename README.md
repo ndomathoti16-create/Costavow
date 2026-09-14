@@ -28,7 +28,7 @@ keeps the source, financial basis, human disposition, and supplied actuals toget
 
 The public website runs on GitHub Pages; the interactive synthetic workspace runs on Streamlit.
 The shared workspace layout has been rebuilt for readable evidence, properly spaced controls,
-and phone-to-desktop use. These fixes are included in v0.3.1; older release ZIPs stay unchanged.
+and phone-to-desktop use. The current v0.4.0 app adds a persistent sidebar, keyboard navigation, searchable decisions, and lazy analytical panels; older release ZIPs stay unchanged.
 See the [changelog](CHANGELOG.md), [design rationale](docs/DESIGN.md), and
 [deployment settings](docs/DEVELOPMENT.md#deploy-the-public-costavow-website).
 
@@ -88,7 +88,7 @@ preparation flags an exception or you want to change the accepted cost basis.
 
 ## See the product
 
-![Costavow product overview](docs/screenshots/costavow-product.png)
+![Costavow application workspace](docs/screenshots/costavow-workspace.png)
 
 The [guided demo](https://costavow.streamlit.app/?surface=product&page=Demo) includes:
 
@@ -106,12 +106,15 @@ in `docs/screenshots`. See the [demo data guide](data/demo/README.md).
 1. Open the [latest release](https://github.com/ndomathoti16-create/Costavow/releases/latest).
 2. Download `Costavow-Windows-x64.zip` and `SHA256SUMS.txt`.
 3. Compare the ZIP's SHA-256 hash with the checksum, extract it, and run `Costavow.exe`.
+   v0.4.0 contains one executable plus readable notices; no `_internal` folder is needed.
 
 ```powershell
 Get-FileHash .\Costavow-Windows-x64.zip -Algorithm SHA256
 ```
 
-Python is not required for the portable app. The native launcher binds its service to `127.0.0.1`
+Python is not required for the portable app. Windows 10/11 x64 with .NET Framework and the
+Microsoft Edge WebView2 runtime is required. Run as your normal user, without administrator privileges.
+The single executable unpacks its runtime on launch, which can take a few seconds. The native launcher binds its service to `127.0.0.1`
 and normally stores local state under `%LOCALAPPDATA%\Metrora`. The executable is unsigned;
 Windows may show a SmartScreen warning. Check the source and checksum before deciding to run it.
 

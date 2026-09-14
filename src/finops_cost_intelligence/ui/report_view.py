@@ -315,18 +315,18 @@ def _render_service_movers(movers: pd.DataFrame) -> None:
             f"{escape(str(mover['Usage signal']))} / {escape(str(mover['Effective rate / mix']))}"
         )
         rows.append(
-            f'<article class="metrora-driver-row">'
-            f'<div class="metrora-driver-head"><div>'
+            f'<details class="metrora-driver-row">'
+            f'<summary class="metrora-driver-head"><div>'
             f"<strong>{escape(str(mover['Service']))}</strong>"
             f"<span>{escape(str(mover['Observed mechanism']))}</span>"
-            f"</div><b>{escape(str(mover['Change']))}</b></div>"
+            f"</div><b>{escape(str(mover['Change']))}</b></summary>"
             f'<div class="metrora-driver-body report">'
             f'<div class="metrora-driver-why"><small>Why this moved</small>'
             f"<p>{escape(str(mover['Why']))}</p></div>"
             f"<div><small>Window comparison</small><strong>{escape(comparison)}</strong></div>"
             f"<div><small>Usage / rate-mix</small><strong>{usage_rate}</strong></div>"
             f"<div><small>Evidence</small><strong>{escape(str(mover['Evidence']))}</strong></div>"
-            "</div></article>"
+            "</div></details>"
         )
     st.html(f'<div class="metrora-driver-list">{"".join(rows)}</div>')
 
@@ -504,11 +504,7 @@ def render_report_view(
                     client=client,
                 )
     summary = st.session_state.get("summary_result")
-    if summary is not None:
-        _render_summary(fact_pack, summary)
-
-    st.divider()
-    st.subheader("Share or continue the analysis")
+    st.subheader("Export files")
     st.caption(
         "Choose the human-readable brief for a review meeting or the cleaned CSV for further "
         "analysis. Technical audit files are available below."
@@ -517,7 +513,8 @@ def render_report_view(
     if summary is not None:
         primary_exports[0].download_button(
             "Download decision brief",
-            data=executive_report_html(fact_pack, summary).encode("utf-8"),
+            data=lambda: executive_report_html(fact_pack, summary).encode("utf-8"),
+            on_click="ignore",
             file_name="costavow_executive_brief.html",
             mime="text/html",
             key=f"download_report_{source_key}",
@@ -526,7 +523,8 @@ def render_report_view(
         )
     primary_exports[1].download_button(
         "Download cleaned data (CSV)",
-        data=cleaned_csv_bytes(normalized),
+        data=lambda: cleaned_csv_bytes(normalized),
+        on_click="ignore",
         file_name="costavow_canonical_cloud_cost.csv",
         mime="text/csv",
         key=f"download_csv_{source_key}",
@@ -539,7 +537,8 @@ def render_report_view(
         technical_exports = st.columns(3)
         technical_exports[0].download_button(
             "Cleaned Parquet",
-            data=cleaned_parquet_bytes(normalized),
+            data=lambda: cleaned_parquet_bytes(normalized),
+            on_click="ignore",
             file_name="costavow_canonical_cloud_cost.parquet",
             mime="application/octet-stream",
             key=f"download_parquet_{source_key}",
@@ -547,7 +546,8 @@ def render_report_view(
         )
         technical_exports[1].download_button(
             "Calculated fact pack",
-            data=fact_pack_json_bytes(fact_pack),
+            data=lambda: fact_pack_json_bytes(fact_pack),
+            on_click="ignore",
             file_name="costavow_fact_pack.json",
             mime="application/json",
             key=f"download_fact_pack_{source_key}",
@@ -555,12 +555,16 @@ def render_report_view(
         )
         technical_exports[2].download_button(
             "Quality report",
-            data=quality_report_json_bytes(quality_report),
+            data=lambda: quality_report_json_bytes(quality_report),
+            on_click="ignore",
             file_name="costavow_quality_report.json",
             mime="application/json",
             key=f"download_quality_{source_key}",
             width="stretch",
         )
+    if summary is not None:
+        _render_summary(fact_pack, summary)
+
     if settings.s3_bucket and st.session_state.get("desktop_mode", False):
         with st.expander("AWS export", expanded=False):
             st.caption(

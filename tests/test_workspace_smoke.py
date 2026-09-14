@@ -211,3 +211,41 @@ def test_theme_roles_keep_text_and_controls_legible() -> None:
             assert contrast(PALETTE[role], PALETTE[background]) >= 4.5, (role, background)
         assert contrast(PALETTE["control"], PALETTE[background]) >= 3
     assert contrast(PALETTE["surface"], PALETTE["primary"]) >= 4.5
+
+
+def test_planning_runs_only_the_selected_panel(monkeypatch) -> None:
+    from finops_cost_intelligence.ui import workspace_view
+
+    def unexpected_panel(*args, **kwargs):
+        raise AssertionError("A hidden planning panel ran")
+
+    for name in (
+        "render_anomaly_panel",
+        "render_budget_panel",
+        "render_allocation_panel",
+        "render_business_metric_panel",
+        "render_governance_panel",
+    ):
+        monkeypatch.setattr(workspace_view, name, unexpected_panel)
+    app = AppTest.from_file(APP_PATH)
+    app.query_params.update(
+        {"surface": "workspace", "page": "Plans & alerts", "scenario": "forecast_risk"}
+    )
+    app.run(timeout=30)
+    assert not app.exception
+    assert len(app.get("plotly_chart")) == 1
+    assert {metric.label for metric in app.metric} == {
+        "Forecast total",
+        "Forecast days",
+        "Residual standard deviation",
+    }
+
+
+def test_desktop_sample_opens_analysis_without_an_upload(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("COSTAVOW_DESKTOP", "1")
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    app = AppTest.from_file(APP_PATH).run(timeout=30)
+    app.button(key="try_sample_data").click().run(timeout=30)
+    assert not app.exception
+    assert "Current window spend" in {metric.label for metric in app.metric}
+    assert app.session_state["quality_report"].ready_for_analysis

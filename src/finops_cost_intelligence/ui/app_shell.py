@@ -89,7 +89,7 @@ def render_app_shell(settings: Settings) -> None:
         page_title="Costavow | FinOps Decision Evidence",
         page_icon=str(page_icon) if page_icon.is_file() else "C",
         layout="wide",
-        initial_sidebar_state="collapsed",
+        initial_sidebar_state="auto",
     )
 
     # Keep native controls, custom surfaces, and charts on one light palette.

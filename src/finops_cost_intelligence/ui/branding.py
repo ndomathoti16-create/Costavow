@@ -4,9 +4,10 @@
 
 from __future__ import annotations
 
-from html import escape
 from typing import TYPE_CHECKING
 from urllib.parse import quote
+
+from .. import __version__
 
 if TYPE_CHECKING:
     from ..config import Settings
@@ -52,10 +53,26 @@ WORKSPACE_CSS = """
 }
 html, body, [data-testid="stApp"] { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--ink); }
 [data-testid="stAppViewContainer"], [data-testid="stApp"], [data-testid="stHeader"] { background: var(--page); }
-[data-testid="stSidebar"], [data-testid="collapsedControl"] { display: none; }
-.block-container { max-width: 1280px; padding: 4.5rem 2.5rem 5rem; }
+[data-testid="stSidebar"] { background: #edf0f5; border-right: 1px solid var(--line); }
+[data-testid="stSidebarUserContent"] { padding: .5rem 0 1.5rem; }
+[data-testid="stSidebar"] .metrora-topbar { border: 0; padding: 0 0 .75rem; }
+[data-testid="stSidebar"] .metrora-topbar-name { font-size: 1.125rem; }
+[data-testid="stSidebar"] .metrora-topbar-mark { width: 32px; height: 32px; flex-basis: 32px; }
+[data-testid="stSidebar"] .metrora-topbar-subtitle { font-size: .75rem; }
+.costavow-nav-group { margin: .875rem .5rem .25rem; color: var(--muted); font-size: .75rem; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+.st-key-workspace-navigation { gap: .25rem; }
+.st-key-workspace-navigation [data-testid="stButton"] button { justify-content: flex-start; min-height: 40px; padding: .5rem .65rem; font-weight: 500; border: 1px solid transparent; }
+.st-key-workspace-navigation [data-testid="stButton"] button[kind="primary"] { background: #dfe7fc; color: #2448b6; border-color: #c8d5fa; }
+.st-key-workspace-navigation [data-testid="stButton"] button:hover { background: #e0e5ee; }
+.st-key-workspace-navigation [data-testid="stButton"] button p { font-size: .875rem; }
+[data-testid="stSidebar"] hr { margin: .75rem 0; }
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] { font-size: .75rem; }
+.st-key-workspace-navigation kbd { display: none; }
+.st-key-workspace-navigation button > div, .st-key-workspace-navigation [data-has-shortcut] { width: 100%; justify-content: flex-start; }
+.st-key-workspace-navigation [data-testid="stMarkdownContainer"] { flex: 1; text-align: left; }
+.block-container { max-width: 1440px; padding: 3.5rem 2rem 3rem; }
 h1, h2, h3, h4 { color: var(--ink); font-weight: 650; letter-spacing: -.025em; }
-p { line-height: 1.65; }
+p { line-height: 1.5; }
 small, [data-testid="stCaptionContainer"] { color: var(--muted); font-size: .875rem; line-height: 1.6; }
 a { color: var(--primary); text-underline-offset: .2em; }
 button, input, select, textarea { font: inherit; }
@@ -68,7 +85,7 @@ button, input, select, textarea { font: inherit; }
     min-width: 1.5rem; min-height: 1.5rem;
 }
 [data-testid="stButton"] button, [data-testid="stDownloadButton"] button, [data-testid="stLinkButton"] a {
-    min-height: 2.875rem; border-radius: 9px; padding: .65rem 1rem; box-shadow: none; font-weight: 600;
+    min-height: 2.5rem; border-radius: 7px; padding: .45rem .875rem; box-shadow: none; font-weight: 600;
 }
 [data-testid="stButton"] button[kind="secondary"], [data-testid="stDownloadButton"] button {
     border-color: var(--control); background: var(--surface); color: var(--ink);
@@ -83,9 +100,11 @@ button, input, select, textarea { font: inherit; }
     background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
 }
 [data-testid="stFileUploaderDropzone"] { border: 1px dashed var(--control); }
-[data-testid="stMetric"] { height: 100%; padding: 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
-[data-testid="stMetricValue"] { font-size: clamp(1.4rem, 2.15vw, 2rem); font-variant-numeric: tabular-nums; }
-[data-testid="stMetricLabel"] { color: var(--muted); }
+[data-testid="stMetric"] { min-height: 144px; height: 100%; padding: 1.125rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+[data-testid="stMetricValue"] { font-size: clamp(1.3rem, 1.85vw, 1.75rem); font-variant-numeric: tabular-nums; }
+[data-testid="stMetricLabel"] { color: var(--muted); height: auto; }
+[data-testid="stMetricLabel"] [data-testid="stMarkdownContainer"] { white-space: normal; overflow: visible; text-overflow: clip; }
+[data-testid="stMetricLabel"] p { white-space: normal; }
 .st-key-workspace-kpi-strip [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
 .st-key-workspace-kpi-strip [data-testid="stColumn"] { width: 100%; min-width: 0; }
 [data-testid="stPlotlyChart"] { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
@@ -103,27 +122,21 @@ button, input, select, textarea { font: inherit; }
 .metrora-product-top-links { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 1.5rem; }
 .metrora-product-top-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: .9375rem; text-decoration: none; }
 .metrora-product-top-links a:hover { text-decoration: underline; }
-.st-key-metrora_top_nav { margin: .25rem 0 1.5rem; }
-.st-key-metrora_top_nav [data-testid="stHorizontalBlock"] { display: flex; flex-wrap: wrap; gap: .375rem; }
-.st-key-metrora_top_nav [data-testid="stColumn"] { flex: 1 0 auto; width: auto; min-width: 0; }
-.st-key-metrora_top_nav [data-testid="stButton"] button { padding: .65rem .75rem; }
-.st-key-metrora_top_nav [data-testid="stButton"] button p { font-size: .9375rem; white-space: nowrap; }
-.metrora-workspace-topbar { margin: .5rem 0 1.5rem; }
-.metrora-workspace-location { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; margin-bottom: 1.25rem; font-size: .875rem; color: var(--muted); }
-.metrora-workspace-state { padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
-.metrora-workspace-title-row { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: center; gap: 2.5rem; }
-.metrora-workspace-page-title { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.2; font-weight: 650; letter-spacing: -.04em; }
-.metrora-workspace-title-copy p { margin: .75rem 0 0; color: var(--muted); max-width: 72ch; }
-.metrora-workspace-command-meta { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding-left: 1.5rem; border-left: 1px solid var(--line); }
-.metrora-workspace-context-item { display: grid; gap: .25rem; min-width: 0; }
-.metrora-workspace-context-item strong { font-size: .9375rem; font-weight: 600; overflow-wrap: anywhere; }
+.metrora-workspace-topbar { margin: 0 0 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.metrora-workspace-title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem 1.5rem; }
+.metrora-workspace-page-title { font-size: 1.5rem; line-height: 1.3; font-weight: 650; letter-spacing: -.035em; }
+.metrora-workspace-title-copy p { margin: .375rem 0 0; color: var(--muted); font-size: .875rem; }
+.metrora-workspace-command-meta { display: flex; flex-wrap: wrap; gap: .375rem 1rem; align-items: center; color: var(--muted); font-size: .8125rem; }
+.costavow-source-name { max-width: 28ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.costavow-model-status { padding: .25rem .5rem; border-radius: 5px; background: #e5f2ec; color: #116247; font-weight: 600; }
+.costavow-model-status.review { color: #805100; background: #fff0cf; }
 .metrora-panel-heading { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin: 1rem 0 .75rem; }
 .metrora-panel-heading > span { font-size: 1.125rem; font-weight: 650; }
 .metrora-panel-heading h3 { margin: 0; }
 .metrora-period-context { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .875rem; margin: .5rem 0 1.5rem; }
 .metrora-period-context strong { color: var(--ink); }
 .metrora-section-kicker, .metrora-subsection-label { color: var(--primary); font-size: .875rem; font-weight: 650; letter-spacing: .06em; }
-.metrora-analysis-flow, .metrora-decision-snapshot, .metrora-empty-state, .metrora-report-decision,
+.metrora-analysis-flow, .metrora-empty-state, .metrora-report-decision,
 .metrora-advanced-note { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; margin: .25rem 0 1.5rem; }
 .metrora-flow-heading { display: flex; justify-content: space-between; gap: 1rem; font-size: .9375rem; color: var(--muted); margin-bottom: 1.25rem; }
 .metrora-flow-track { display: flex; align-items: center; gap: 1rem; }
@@ -141,19 +154,18 @@ button, input, select, textarea { font: inherit; }
 .metrora-source-strip > div, .metrora-planning-strip > div { display: grid; gap: .375rem; min-width: 0; }
 .metrora-source-strip strong { overflow-wrap: anywhere; }
 .metrora-planning-strip span { font-size: .875rem; color: var(--muted); }
-.metrora-decision-snapshot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
-.metrora-snapshot-lead { grid-column: 1 / -1; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
-.metrora-snapshot-lead > span, .metrora-snapshot-signal > span { display: block; font-size: .875rem; color: var(--muted); margin-bottom: .5rem; }
-.metrora-snapshot-lead > strong { display: block; font-size: 1.5rem; letter-spacing: -.025em; }
-.metrora-snapshot-signal > strong { display: block; font-size: 1.125rem; }
-.metrora-snapshot-lead p, .metrora-snapshot-signal p { margin: .5rem 0 0; color: var(--muted); font-size: .9375rem; }
 .metrora-attention-item { padding: 1.25rem 0; border-top: 1px solid var(--line); }
 .metrora-attention-item p { margin: .5rem 0 0; color: var(--muted); font-size: .9375rem; }
-.metrora-driver-list, .metrora-governance-list, .metrora-decision-list { display: grid; gap: 1.25rem; margin: 1rem 0 2rem; }
-.metrora-driver-row, .metrora-governance-row, .metrora-decision-row, .metrora-connection-row {
-    display: grid; gap: 1.5rem; padding: 1.75rem; border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
+.metrora-driver-list, .metrora-governance-list { display: grid; gap: .625rem; margin: .75rem 0 1.5rem; }
+.metrora-driver-row, .metrora-governance-row, .metrora-connection-row {
+    display: grid; gap: 1rem; padding: 1.125rem; border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
 }
-.metrora-driver-row { grid-template-columns: minmax(0, 1fr); }
+.metrora-driver-row { display: block; }
+.metrora-driver-row summary { cursor: pointer; list-style: none; min-height: 44px; }
+.metrora-driver-row summary::-webkit-details-marker { display: none; }
+.metrora-driver-row summary b::after { content: ' +'; color: var(--muted); font-weight: 400; }
+.metrora-driver-row[open] summary b::after { content: ' −'; }
+.metrora-driver-row[open] summary { margin-bottom: 1rem; }
 .metrora-driver-head { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: start; gap: 1rem; }
 .metrora-driver-head > div { display: grid; gap: .4rem; }
 .metrora-driver-head strong, .metrora-driver-head b { font-size: 1.125rem; }
@@ -171,18 +183,6 @@ button, input, select, textarea { font: inherit; }
 .metrora-governance-row.attention span { color: var(--danger); }
 .metrora-connection-row { grid-template-columns: 1fr 1fr; }
 .metrora-connection-row span { color: var(--primary); font-size: .875rem; }
-.metrora-decision-row { grid-template-columns: 4rem minmax(0, 1fr); align-items: start; }
-.metrora-decision-score { display: grid; text-align: center; gap: .25rem; padding: .75rem .25rem; background: var(--page); border-radius: 8px; }
-.metrora-decision-score span { font-size: 1.75rem; font-weight: 650; }
-.metrora-decision-score small { font-size: .875rem; }
-.metrora-decision-main { display: grid; gap: .625rem; min-width: 0; }
-.metrora-decision-main > span { color: var(--primary); font-size: .875rem; }
-.metrora-decision-main > strong { font-size: 1.125rem; }
-.metrora-decision-main p { margin: 0; font-size: .9375rem; color: var(--muted); max-width: 85ch; }
-.metrora-decision-meta { grid-column: 2; display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
-.metrora-decision-meta > div { display: grid; align-content: start; gap: .375rem; min-width: 0; }
-.metrora-decision-meta strong, .metrora-decision-meta span { overflow-wrap: anywhere; font-size: .9375rem; }
-.metrora-decision-meta span { color: var(--muted); }
 .metrora-table-shell { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin: 1rem 0; }
 .metrora-data-table { border-collapse: collapse; width: 100%; font-size: .9375rem; font-variant-numeric: tabular-nums; }
 .metrora-data-table th, .metrora-data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
@@ -224,8 +224,8 @@ button, input, select, textarea { font: inherit; }
     .costavow-scenario { min-height: 23rem; }
 }
 @media (max-width: 900px) {
-    .metrora-workspace-title-row { grid-template-columns: 1fr; gap: 1.25rem; }
-    .metrora-workspace-command-meta { border-left: 0; border-top: 1px solid var(--line); padding: 1rem 0 0; }
+    .metrora-workspace-title-row { gap: .875rem; }
+    .metrora-workspace-command-meta { width: 100%; }
     [data-testid="stHorizontalBlock"]:has(.st-key-home-trend-surface),
     .st-key-demo-scenarios [data-testid="stHorizontalBlock"] { flex-direction: column; grid-template-columns: 1fr; }
     [data-testid="stHorizontalBlock"]:has(.st-key-home-trend-surface) > [data-testid="stColumn"],
@@ -236,18 +236,13 @@ button, input, select, textarea { font: inherit; }
     .costavow-scenario { min-height: 0; }
 }
 @media (max-width: 600px) {
-    .block-container { padding: 4.5rem 1rem 3rem; }
+    .block-container { padding: 3.5rem 1rem 2rem; }
     .metrora-topbar-context { display: none; }
     .metrora-topbar-subtitle { font-size: .875rem; }
     .metrora-product-top-links { justify-content: start; gap: 1rem; }
-    .st-key-metrora_top_nav [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: 1fr 1fr; }
-    .st-key-metrora_top_nav [data-testid="stColumn"] { width: 100%; }
-    .st-key-metrora_top_nav [data-testid="stButton"] button { padding-inline: .5rem; }
-    .metrora-decision-snapshot, .metrora-driver-body, .metrora-governance-row,
+    .metrora-driver-body, .metrora-governance-row,
     .metrora-connection-row, .metrora-report-kpis { grid-template-columns: 1fr; }
-    .metrora-driver-row, .metrora-decision-row { padding: 1.25rem; gap: 1.25rem; }
-    .metrora-decision-row { grid-template-columns: 3.5rem minmax(0, 1fr); }
-    .metrora-decision-meta { grid-column: 1 / -1; grid-template-columns: 1fr; gap: 1.25rem; }
+    .metrora-driver-row { padding: 1.25rem; gap: 1.25rem; }
     .metrora-driver-head strong, .metrora-driver-head b { overflow-wrap: anywhere; }
     .metrora-analysis-flow { padding: 1.25rem; }
     [data-testid="stMetric"] { padding: 1rem; }
@@ -260,7 +255,8 @@ button, input, select, textarea { font: inherit; }
     [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] [data-testid="stMetric"]) { grid-template-columns: 1fr; }
     .metrora-flow-track { grid-template-columns: 1fr; }
 }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+@media (prefers-reduced-motion: no-preference) { button, summary { transition: background-color 120ms ease, border-color 120ms ease; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
 </style>
 """
 
@@ -279,34 +275,17 @@ def render_top_navigation(settings: Settings) -> None:
     from .navigation import set_product_route, set_workspace_route
 
     is_workspace = bool(st.session_state.get("demo_authenticated", False))
-    has_source = st.session_state.get("loaded_table") is not None
-    has_model = st.session_state.get("normalized_table") is not None
-    report = st.session_state.get("quality_report")
-    analysis_ready = bool(has_model and report is not None and report.ready_for_analysis)
-
-    if is_workspace:
-        workspace_label = st.session_state.get(
-            "demo_workspace", f"{settings.app_env.title()} workspace"
-        )
-        status_label = "Analysis ready" if analysis_ready else "Review needed"
-        context = f"<i></i>{escape(str(workspace_label))} / {status_label}"
-    else:
-        context = "Interactive demo / synthetic data"
-
-    st.html(f"""
+    brand = f"""
         <header class="metrora-topbar">
             <div class="metrora-topbar-brand">
                 <span class="metrora-topbar-mark"><img class="metrora-logo" alt="" src="data:image/svg+xml,{quote(METRORA_LOGO_SVG)}"></span>
-                <div>
-                    <div class="metrora-topbar-name">Costavow</div>
-                    <div class="metrora-topbar-subtitle">FinOps decision evidence</div>
-                </div>
+                <div><div class="metrora-topbar-name">Costavow</div>
+                <div class="metrora-topbar-subtitle">Cost workspace</div></div>
             </div>
-            <div class="metrora-topbar-context">{context}</div>
         </header>
-        """)
-
+        """
     if not is_workspace:
+        st.html(brand)
         st.html("""
             <nav class="metrora-product-top-links" aria-label="Project links">
                 <a href="https://ndomathoti16-create.github.io/Costavow/" target="_top">Product website ↗</a>
@@ -316,78 +295,72 @@ def render_top_navigation(settings: Settings) -> None:
         return
 
     desktop_mode = bool(st.session_state.get("desktop_mode", False))
+    current_page = st.session_state.get("workspace_page", "Home")
     pages = [
-        ("Overview", "Home", "home"),
-        ("Explore spend", "Cost explorer", "cost_explorer"),
-        ("Forecast & alerts", "Plans & alerts", "plans_alerts"),
-        ("Decisions", "Decisions", "decisions"),
-        ("Reports & exports", "Reports", "reports"),
-        ("Data settings", "Advanced", "advanced"),
+        ("Overview", "Home", "home", "space_dashboard"),
+        ("Explore spend", "Cost explorer", "cost_explorer", "bar_chart"),
+        ("Forecast & alerts", "Plans & alerts", "plans_alerts", "monitoring"),
+        ("Decisions", "Decisions", "decisions", "task_alt"),
+        ("Reports & exports", "Reports", "reports", "description"),
     ]
     if desktop_mode:
-        pages.insert(5, ("Data sources", "Connections", "connections"))
-    legacy_pages = {
-        "Overview": "Home",
-        "Spend explorer": "Cost explorer",
-        "Forecast & alerts": "Plans & alerts",
-        "Reports & exports": "Reports",
-        "Data sources": "Connections",
-        "Data settings": "Advanced",
-        "Data & quality": "Advanced",
-        "Investigate": "Plans & alerts",
-    }
-    current_page = legacy_pages.get(
-        st.session_state.get("workspace_page", "Home"),
-        st.session_state.get("workspace_page", "Home"),
-    )
-    st.session_state["workspace_page"] = current_page
-
-    with st.container(key="metrora_top_nav"):
-        action_count = 1
-        weights = [1] * (len(pages) + action_count)
-        columns = st.columns(weights, gap="small")
-        for column, (label, destination, slug) in zip(columns[: len(pages)], pages, strict=True):
-            with column:
-                if st.button(
+        pages.append(("Data sources", "Connections", "connections", "database"))
+    pages.append(("Data settings", "Advanced", "advanced", "tune"))
+    with st.sidebar:
+        st.html(brand)
+        st.caption(f"v{__version__} · " + ("Local workspace" if desktop_mode else "Synthetic demo"))
+        with st.container(key="workspace-navigation"):
+            for index, (label, destination, slug, icon) in enumerate(pages, 1):
+                if index in (1, 6):
+                    st.html(
+                        f'<div class="costavow-nav-group">{"Workspace" if index == 1 else "Manage"}</div>'
+                    )
+                st.button(
                     label,
                     key=f"top_workspace_nav_{slug}",
+                    icon=f":material/{icon}:",
                     type="primary" if destination == current_page else "tertiary",
                     width="stretch",
-                ):
-                    set_workspace_route(destination)
-                    st.rerun()
-        with columns[-1]:
-            if desktop_mode:
+                    shortcut=f"Ctrl+Alt+{index}",
+                    on_click=set_workspace_route,
+                    args=(destination,),
+                )
+        st.divider()
+        st.caption("Ctrl + Alt + number to switch views")
+        if desktop_mode:
+            has_source = st.session_state.get("loaded_table") is not None
+            with st.popover("New analysis", icon=":material/add:", width="stretch"):
+                st.caption(
+                    "Clear this session's source and filters. Saved decisions and connections stay on disk."
+                )
                 if st.button(
-                    "New analysis",
+                    "Start new analysis",
                     key="top_workspace_new_analysis",
-                    disabled=not (has_source or has_model),
+                    disabled=not has_source,
                     width="stretch",
-                    help="Clear the current data and start a new analysis.",
                 ):
                     reset_workspace_state()
                     for key in ("demo_mode", "demo_scenario", "demo_workspace"):
                         st.session_state.pop(key, None)
-                    set_workspace_route("Home", scenario_id=None)
+                    set_workspace_route("Home")
                     st.rerun()
-            else:
-                if st.button(
-                    "Exit demo",
-                    key="top_workspace_back_to_product",
-                    width="stretch",
-                    help="Return to the Costavow demo scenarios.",
-                ):
-                    reset_workspace_state()
-                    for key in (
-                        "demo_authenticated",
-                        "demo_mode",
-                        "demo_scenario",
-                        "demo_user_email",
-                        "demo_workspace",
-                    ):
-                        st.session_state.pop(key, None)
-                    set_product_route("Demo")
-                    st.rerun()
+        elif st.button(
+            "Exit demo",
+            key="top_workspace_back_to_product",
+            width="stretch",
+            icon=":material/arrow_back:",
+        ):
+            reset_workspace_state()
+            for key in (
+                "demo_authenticated",
+                "demo_mode",
+                "demo_scenario",
+                "demo_user_email",
+                "demo_workspace",
+            ):
+                st.session_state.pop(key, None)
+            set_product_route("Demo")
+            st.rerun()
 
 
 def apply_plotly_theme(figure):

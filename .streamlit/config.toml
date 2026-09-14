@@ -4,6 +4,9 @@ enableCORS = true
 enableXsrfProtection = true
 maxUploadSize = 200
 
+[client]
+toolbarMode = "minimal"
+
 [browser]
 gatherUsageStats = false
 

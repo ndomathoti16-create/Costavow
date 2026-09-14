@@ -3,6 +3,20 @@
 Source changes on `main` are listed here before they are packaged. Downloaded release ZIPs remain
 unchanged until a new version is published.
 
+## [0.4.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.4.0) — 2026-09-14
+
+- Replace the website-like workspace navigation with a persistent native sidebar, compact page
+  headers, restrained styling, and working Ctrl+Alt+number navigation shortcuts.
+- Bring the overview chart and attention queue forward; expand driver evidence on demand.
+- Make the decision queue searchable and let desktop users select a row to review it.
+- Open the synthetic sample directly on first run and put report exports before the preview.
+- Calculate only the selected planning/decision panel and generate export files on download.
+- Package Windows as one executable to avoid the reproduced .NET failure on Internet-marked
+  loose runtime DLLs. Verify marked-download native startup and normal shutdown in release CI.
+- Remove duplicated Python data files, unused AWS service models, and PyArrow development
+  headers/test data from the Windows package. Preserve supported connectors and license notices.
+- Keep validation, hosted-demo restrictions, calculations, local storage paths, and saved decisions.
+
 ## [0.3.1](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.1) — 2026-09-14
 
 - Move the public project website to GitHub Pages with original responsive HTML/CSS, editorial

@@ -28,7 +28,9 @@ for package in (
     hiddenimports += collect_submodules(package)
 
 for package in ("streamlit", "webview"):
-    package_datas, package_binaries, package_hidden = collect_all(package)
+    package_datas, package_binaries, package_hidden = collect_all(
+        package, include_py_files=False, filter_submodules=lambda name: ".testing" not in name
+    )
     datas += package_datas
     binaries += package_binaries
     hiddenimports += package_hidden
@@ -46,13 +48,28 @@ a = Analysis(
     noarchive=False,
     optimize=0,
 )
+# Keep credentials/SSO support and the exact AWS services this application exposes.
+# ponytail: add a service here when a new connector needs its Botocore model.
+AWS_SERVICES = {"s3", "sts", "sso", "sso-oidc", "athena", "cost-optimization-hub", "signin"}
+
+def runtime_data(entry):
+    path = Path(entry[0]).as_posix()
+    if path.startswith(("pyarrow/include/", "pyarrow/tests/")):
+        return False
+    parts = path.split("/")
+    return not (
+        len(parts) > 3 and parts[:2] == ["botocore", "data"] and parts[2] not in AWS_SERVICES
+    )
+
+a.datas = [entry for entry in a.datas if runtime_data(entry)]
 pyz = PYZ(a.pure)
 
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.datas,
     [],
-    exclude_binaries=True,
     name="Costavow",
     icon=str(ROOT / "docs" / "assets" / "costavow.ico"),
     debug=False,
@@ -65,14 +82,4 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    strip=False,
-    upx=False,
-    upx_exclude=[],
-    name="Costavow",
 )

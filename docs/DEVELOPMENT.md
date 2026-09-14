@@ -184,13 +184,22 @@ filenames, desktop data directories, Docker volume names, and decision IDs remai
 rename does not orphan user data. Internal CSS selectors retain their old prefix.
 
 Future release builds use `packaging/costavow.spec`, `Costavow.exe`, and
-`Costavow-Windows-x64.zip`. The current release is `v0.3.1`; historical Metrora packages remain available in older releases.
+`Costavow-Windows-x64.zip`. The current release is `v0.4.0`; historical Metrora packages remain available in older releases.
 
 
 ### Release verification
 
 A `v*` tag runs the Windows release workflow and prepares a **draft** release with the ZIP and
 SHA-256 checksum. Before publishing the draft, download and verify the checksum, extract all files,
-and test `Costavow.exe` on Windows with a synthetic billing export. Check automatic analysis,
+and test `Costavow.exe` on Windows with a synthetic billing export. The workflow also runs
+`packaging/check_windows_release.ps1`, preserving Internet-origin metadata on the test executable.
+Do not substitute a Python ZIP extraction without that check: it misses the Windows DLL trust failure. Check automatic analysis,
 navigation, forecast traces, and receipt/report downloads. Publish the verified draft from GitHub
 Releases; retain earlier release assets unchanged.
+
+
+The single-executable spec retains only the Botocore models used by the supported connectors and
+credential providers: S3, Athena, Cost Optimization Hub, STS, SSO, SSO OIDC, and Signin. Update the
+allowlist when adding a service. PyArrow C++ headers and test fixtures are excluded; runtime DLLs,
+Parquet support, provider SDKs, and third-party license texts remain included. No machine-level
+trust settings or automatic file-unblocking code are used.

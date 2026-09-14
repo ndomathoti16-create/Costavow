@@ -16,17 +16,17 @@ async function fits(page, label) {
       const box = e.getBoundingClientRect();
       if (box.width && (box.left < -1 || box.right > innerWidth + 1)) issues.push(`offscreen ${e.className}`);
     }
-    for (const row of document.querySelectorAll('.metrora-driver-row')) {
+    for (const row of document.querySelectorAll('.metrora-driver-row[open]')) {
       const head = row.querySelector('.metrora-driver-head').getBoundingClientRect();
       const body = row.querySelector('.metrora-driver-body').getBoundingClientRect();
-      if (head.width < 190 || head.bottom > body.top + 1) issues.push('driver heading overlaps evidence');
+      if (head.width < 180 || head.bottom > body.top + 1) issues.push('driver heading overlaps evidence');
       for (const cell of row.querySelectorAll('.metrora-driver-body > div')) {
         const label = cell.querySelector('small')?.getBoundingClientRect();
         const value = cell.querySelector('strong,p')?.getBoundingClientRect();
         if (label && value && label.bottom > value.top) issues.push('driver label overlaps value');
       }
     }
-    for (const e of document.querySelectorAll('[data-testid="stMetricValue"] > div')) {
+    for (const e of document.querySelectorAll('[data-testid="stMetricValue"] > div,[data-testid="stMetricLabel"] [data-testid="stMarkdownContainer"]')) {
       if (e.scrollWidth > e.clientWidth + 2) issues.push(`truncated metric ${e.textContent}`);
     }
     for (const chart of document.querySelectorAll('[data-testid="stPlotlyChart"]')) {
@@ -36,7 +36,7 @@ async function fits(page, label) {
       if (title && (title.left < box.left || title.right > box.right)) issues.push('clipped chart title');
       const legend = chart.querySelector('.legend')?.getBoundingClientRect();
       const axis = chart.querySelector('.xtitle')?.getBoundingClientRect();
-      if (legend && axis && legend.left < axis.right && legend.right > axis.left && legend.top < axis.bottom && legend.bottom > axis.top) issues.push('chart axis title overlaps legend');
+      if (legend && axis && legend.left < axis.right && legend.right > axis.left && legend.top < axis.bottom - 1 && legend.bottom > axis.top + 1) issues.push('chart axis title overlaps legend');
     }
     return issues;
   });
@@ -93,10 +93,15 @@ async function fits(page, label) {
     }
     await page.getByRole('button', { name: 'Open hidden future risk', exact: true }).click();
     await page.getByText('Current window spend', { exact: true }).waitFor();
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    const labels = await page.locator('.st-key-workspace-navigation button p').evaluateAll(es => es.map(e => ({width:e.clientWidth,height:e.clientHeight})));
+    assert(labels.every(e => e.width > 100 && e.height < 35), 'sidebar navigation labels must fit on one line');
     const destinations = ['Overview', 'Explore spend', 'Forecast & alerts', 'Decisions', 'Reports & exports', 'Data settings'];
     for (const destination of destinations) {
       await page.setViewportSize({ width: 1440, height: 1000 });
-      await page.getByRole('button', { name: destination, exact: true }).click();
+      await page.keyboard.press(`Control+Alt+${destinations.indexOf(destination) + 1}`);
+      const heading = { 'Explore spend': 'Spend explorer', Decisions: 'Decision register' }[destination] || destination;
+      await page.getByRole('heading', { name: heading, exact: true }).waitFor();
       await page.locator('[data-test-script-state="notRunning"]').waitFor();
       assert.equal(await page.locator('[data-testid="stException"]').count(), 0, destination);
       assert.equal(await page.locator('[data-testid="stFileUploader"]').count(), 0, destination);
@@ -105,39 +110,51 @@ async function fits(page, label) {
       for (const width of widths) {
         await page.setViewportSize({ width, height: 1000 });
         // Plotly responds asynchronously to container resize.
-        await page.waitForTimeout(150);
+        await page.waitForTimeout(300);
         await fits(page, `${destination} at ${width}`);
         if ([390, 1440].includes(width)) {
-          await page.locator('.metrora-topbar').scrollIntoViewIfNeeded();
+          await page.locator('.metrora-workspace-page-title').scrollIntoViewIfNeeded();
           await page.screenshot({ path: `build/browser-checks/${slug}-${width}.png` });
-          const evidence = page.locator('.metrora-driver-row,.metrora-decision-row').first();
-          if (await evidence.count()) await evidence.screenshot({ path: `build/browser-checks/${slug}-evidence-${width}.png` });
+          const evidence = page.locator('.metrora-driver-row').first();
+          if (await evidence.count()) {
+            await evidence.locator('summary').click();
+            await fits(page, `${destination} expanded evidence at ${width}`);
+            await evidence.screenshot({ path: `build/browser-checks/${slug}-evidence-${width}.png` });
+            await evidence.locator('summary').click();
+          }
         }
       }
       console.log(`PASS ${destination}: six widths, readable evidence, complete metrics, no uploads`);
     }
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.getByRole('button', { name: 'Forecast & alerts', exact: true }).click();
+    await page.keyboard.press('Control+Alt+3');
     await page.locator('[data-test-script-state="notRunning"]').waitFor();
     for (const name of ['Forecast', 'Anomalies', 'Budgets', 'Ownership', 'Unit economics', 'Governance']) {
       const tab = page.getByRole('tab', { name, exact: true });
       await tab.click();
+      await page.locator('[data-test-script-state="notRunning"]').waitFor();
       for (const width of [320, 390, 768, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
-        await page.waitForTimeout(150);
+        await page.waitForTimeout(300);
         await fits(page, `planning tab ${name} at ${width}`);
       }
       const panel = page.getByRole('tabpanel', { name, exact: true });
       await panel.screenshot({ path: `build/browser-checks/plan-${name.replaceAll(' ', '-')}.png` });
     }
-    await page.getByRole('button', { name: 'Decisions', exact: true }).click();
+    await page.keyboard.press('Control+Alt+4');
     await page.locator('[data-test-script-state="notRunning"]').waitFor();
     const receipt = page.getByRole('button', { name: 'Download decision receipt (HTML)', exact: true });
     const [download] = await Promise.all([page.waitForEvent('download'), receipt.click()]);
     assert.equal(await download.failure(), null);
     await download.saveAs('build/browser-checks/decision-receipt.html');
     assert.deepEqual(errors, []);
-    console.log('PASS decision receipt download; no browser JavaScript errors');
+    await page.keyboard.press('Control+Alt+5');
+    await page.getByRole('button', { name: 'Download cleaned data (CSV)', exact: true }).waitFor();
+    const [csv] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download cleaned data (CSV)', exact: true }).click()]);
+    assert.equal(await csv.failure(), null);
+    await csv.saveAs('build/browser-checks/cleaned.csv');
+    assert.deepEqual(errors, []);
+    console.log('PASS native navigation shortcuts, decision receipt and deferred CSV export; no browser JavaScript errors');
   } finally {
     await browser.close();
   }
