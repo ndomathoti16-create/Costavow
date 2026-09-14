@@ -88,6 +88,10 @@ def build_license_bundle() -> str:
             ]
         )
         license_texts = _license_texts(distribution)
+        # Some wheels omit their upstream notice. Only use a reviewed exact-version copy.
+        fallback = Path(__file__).with_name("licenses") / f"{name.casefold()}-{version}.txt"
+        if not license_texts and fallback.is_file():
+            license_texts = [(fallback.name, fallback.read_text(encoding="utf-8"))]
         if not license_texts:
             sections.append(
                 "No license text was found in the installed package files; "
@@ -103,7 +107,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args()
-    arguments.output.write_text(build_license_bundle(), encoding="utf-8")
+    arguments.output.write_text(build_license_bundle(), encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":

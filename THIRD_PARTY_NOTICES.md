@@ -22,3 +22,10 @@ The application uses standard-library configuration, so Pydantic, pydantic-setti
 python-dotenv are no longer direct requirements. NumPy was already required by the numerical
 stack and is now declared explicitly because application code imports it. GitPython's minimum
 version constraint remains in place for Streamlit's transitive dependency.
+
+
+For installed wheels that omit notice text, the generator includes reviewed, exact-version copies
+from `packaging/licenses/`, each with an immutable upstream source URL. In particular,
+`proxy_tools` 0.1.0 declares MIT in its metadata but supplies a BSD-style license in its upstream
+repository. The complete upstream notice is preserved; metadata alone is not treated as the grant.
+No new dependency is introduced by this supplement.
