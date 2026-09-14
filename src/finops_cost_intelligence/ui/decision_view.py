@@ -187,11 +187,7 @@ def _render_priority_queue(decisions: list[DecisionRecord]) -> None:
         selected = st.session_state["decision_queue"].selection.rows
         if selected:
             item = ranked[selected[0]][0]
-            st.session_state["decision_update_selection"] = next(
-                label
-                for label, option in _decision_options(decisions).items()
-                if option.decision_id == item.decision_id
-            )
+            st.session_state["decision_update_selection"] = item.decision_id
             st.session_state["decision_tab"] = "Assign & decide"
 
     st.dataframe(
@@ -221,7 +217,7 @@ def _render_priority_queue(decisions: list[DecisionRecord]) -> None:
 
 def _decision_options(decisions: list[DecisionRecord]) -> dict[str, DecisionRecord]:
     return {
-        f"{item.title} — {item.status} — {item.owner} [{item.decision_id}]": item
+        item.decision_id: item
         for item in sorted(decisions, key=lambda value: value.title.casefold())
     }
 
@@ -236,7 +232,12 @@ def _render_update_form(settings: Settings, decisions: list[DecisionRecord]) -> 
         st.info("No decision is available to update yet.")
         return
     options = _decision_options(decisions)
-    selected_label = st.selectbox("Decision", list(options), key="decision_update_selection")
+    selected_label = st.selectbox(
+        "Decision",
+        list(options),
+        format_func=lambda key: f"{options[key].title} — {options[key].owner}",
+        key="decision_update_selection",
+    )
     selected = options[selected_label]
     status_options = [
         status
@@ -400,6 +401,7 @@ def _render_verification_form(settings: Settings, decisions: list[DecisionRecord
     selected_label = st.selectbox(
         "Implemented decision",
         list(options),
+        format_func=lambda key: f"{options[key].title} — {options[key].owner}",
         key="decision_verification_selection",
     )
     selected = options[selected_label]
@@ -525,7 +527,12 @@ def _render_exports(decisions: list[DecisionRecord]) -> None:
         return
     st.markdown("### Export the operating record")
     options = _decision_options(decisions)
-    selected = st.selectbox("Decision for receipt", list(options), key="decision_receipt_selection")
+    selected = st.selectbox(
+        "Decision for receipt",
+        list(options),
+        format_func=lambda key: f"{options[key].title} — {options[key].owner}",
+        key="decision_receipt_selection",
+    )
     st.caption(
         "A readable snapshot of the evidence, owner, decision, and supplied actuals. "
         "Review sensitive details before sharing."
