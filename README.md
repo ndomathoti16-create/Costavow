@@ -28,7 +28,7 @@ keeps the source, financial basis, human disposition, and supplied actuals toget
 
 The public website runs on GitHub Pages; the interactive synthetic workspace runs on Streamlit.
 The shared workspace layout has been rebuilt for readable evidence, properly spaced controls,
-and phone-to-desktop use. The current v0.4.0 app adds a persistent sidebar, keyboard navigation, searchable decisions, and lazy analytical panels; older release ZIPs stay unchanged.
+and phone-to-desktop use. The current v0.4.1 app adds a persistent sidebar, keyboard navigation, searchable decisions, and lazy analytical panels; older release ZIPs stay unchanged.
 See the [changelog](CHANGELOG.md), [design rationale](docs/DESIGN.md), and
 [deployment settings](docs/DEVELOPMENT.md#deploy-the-public-costavow-website).
 

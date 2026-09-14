@@ -31,6 +31,8 @@ try {
     $launcher = Start-Process -FilePath $executable -WindowStyle Hidden -PassThru `
         -RedirectStandardOutput (Join-Path $testRoot 'launcher.stdout.log') `
         -RedirectStandardError (Join-Path $testRoot 'launcher.stderr.log')
+    # Keep a live handle so Windows PowerShell 5.1 retains the exit code after shutdown.
+    $null = $launcher.Handle
     [void]$ownedIds.Add($launcher.Id)
     $deadline = (Get-Date).AddSeconds(90)
     $script:window = [IntPtr]::Zero

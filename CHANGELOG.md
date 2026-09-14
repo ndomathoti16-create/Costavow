@@ -3,6 +3,13 @@
 Source changes on `main` are listed here before they are packaged. Downloaded release ZIPs remain
 unchanged until a new version is published.
 
+## [0.4.1](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.4.1) — 2026-09-14
+
+- Publish the application changes below after correcting the release regression check: retain the
+  native process handle so Windows PowerShell 5.1 reports the real exit code after shutdown.
+- v0.4.0 was not published: its executable opened and closed, but the test received an empty exit
+  code and stopped the release. The check still requires an explicit successful exit.
+
 ## [0.4.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.4.0) — 2026-09-14
 
 - Replace the website-like workspace navigation with a persistent native sidebar, compact page
