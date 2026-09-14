@@ -51,6 +51,34 @@ python -m streamlit run app.py --server.address=127.0.0.1
 This opens the synthetic product demo. It does not enable real-data uploads. On Windows,
 `run-costavow.cmd` starts the same preview on port 8502 using the repository's virtual environment.
 
+### Deploy the public Costavow website
+
+In [Streamlit Community Cloud](https://share.streamlit.io/), choose **Create app** and deploy
+from GitHub using these settings:
+
+| Setting | Value |
+| --- | --- |
+| Repository | `ndomathoti16-create/Costavow` |
+| Branch | `main` |
+| Main file | `app.py` |
+| Python version (Advanced settings) | `3.12` |
+| Preferred app URL | `costavow.streamlit.app`, subject to availability |
+
+No secrets are required for the synthetic demo. Leave `COSTAVOW_DESKTOP` and
+`METRORA_DESKTOP` unset so personal uploads and cloud connections remain unavailable.
+`requirements.txt` installs the project and verified Streamlit version.
+
+After deployment, confirm the Costavow name, white cards, cobalt actions, and teal sample chart.
+Open a demo scenario and download a decision receipt. Update the README links to the verified new
+URL before retiring the old deployment.
+
+Streamlit binds each deployment to its GitHub owner, repository, branch, and entrypoint. Renaming
+a repository can leave its existing app disconnected or view-only; pushing another commit or
+changing the app URL alone does not repair those coordinates. See Streamlit's
+[rename and recovery instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/rename-your-app).
+A new deployment from the renamed repository is required. If an orphaned app cannot be managed,
+use the documented recovery process or ask Streamlit support to remove it.
+
 ### Real-data browser workspace
 
 PowerShell:

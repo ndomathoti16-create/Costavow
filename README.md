@@ -26,8 +26,10 @@ keeps the source, financial basis, human disposition, and supplied actuals toget
 
 [Costavow v0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) introduces
 a light analytical workspace, the Costavow desktop identity, and portable decision receipts.
-The hosted demo keeps its existing URL. See the [changelog](CHANGELOG.md) and
-[design rationale](docs/DESIGN.md).
+The old hosted address currently serves the previous styling while the renamed repository is
+being redeployed. The Windows release and current source include the new design. See the
+[deployment settings](docs/DEVELOPMENT.md#deploy-the-public-costavow-website),
+[changelog](CHANGELOG.md), and [design rationale](docs/DESIGN.md).
 
 ## What it does
 
