@@ -1,4 +1,4 @@
-"""Streamlit entry point for Costavow."""
+"""Streamlit entry point for Costavow's light analytical workspace."""
 
 from finops_cost_intelligence.config import Settings
 from finops_cost_intelligence.logging_utils import configure_logging

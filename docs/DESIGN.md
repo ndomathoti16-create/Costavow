@@ -19,7 +19,7 @@ remote font, copied component, or new service is introduced.
   to organize working surfaces. Costavow uses white cards against a pale page, thin separators,
   compact tables, and typography to organize dense financial information.
 - [Carbon chart guidance](https://carbondesignsystem.com/data-visualization/chart-types/) starts
-  with the comparison the chart needs to support. Actuals use solid teal lines, forecasts use
+  with the comparison the chart needs to support. In forecast charts, actuals use solid teal lines, forecasts use
   dashed amber lines, and anomalies use red diamonds. Legends, hover values, and detail tables
   provide additional cues. Cobalt is also used for labeled category comparisons; it does not
   denote a good or bad financial outcome.
