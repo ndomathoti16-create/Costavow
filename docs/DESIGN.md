@@ -53,7 +53,7 @@ White button text on cobalt uses the same contrast ratio as cobalt on white.
 ## Layout and interaction
 
 - System fonts, including Segoe UI on Windows; tabular numerals in metrics and data tables.
-- A small spacing scale, 6–10 px corner radii, thin borders, and minimal shadow.
+- A small spacing scale, 6â€“10 px corner radii, thin borders, and minimal shadow.
 - A single light theme for the public preview, workspace, native desktop startup, and charts.
 - Navigation above the work; stacked content and a two-column navigation grid on narrow screens.
 - Visible keyboard focus, at least 24 px icon targets, and 44 px main button targets.

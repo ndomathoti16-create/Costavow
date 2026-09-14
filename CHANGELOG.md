@@ -3,7 +3,7 @@
 Source changes on `main` are listed here before they are packaged. Downloaded release ZIPs remain
 unchanged until a new version is published.
 
-## [0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) — 2026-09-13
+## [0.3.0](https://github.com/ndomathoti16-create/Costavow/releases/tag/v0.3.0) â€” 2026-09-13
 
 - Ship the new `Costavow.exe` portable Windows application and matching icon.
 - Replace accumulated dark theme overrides with one light workspace theme and one product

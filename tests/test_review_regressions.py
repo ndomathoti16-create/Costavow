@@ -380,14 +380,16 @@ def test_hosted_demo_does_not_offer_configured_external_actions(monkeypatch):
     assert "Refresh narrative with configured AI" not in labels
 
 
-def test_license_bundle_uses_reviewed_exact_version_notice(monkeypatch, tmp_path):
+def test_license_bundle_uses_reviewed_exact_version_notice(monkeypatch):
     import runpy
+    from email.message import Message
     from importlib import metadata
     from types import SimpleNamespace
 
-    distribution = SimpleNamespace(
-        metadata={"Name": "proxy_tools", "License": "MIT"}, version="0.1.0", files=[]
-    )
+    package_metadata = Message()
+    package_metadata["Name"] = "proxy_tools"
+    package_metadata["License"] = "MIT"
+    distribution = SimpleNamespace(metadata=package_metadata, version="0.1.0", files=[])
     monkeypatch.setattr(metadata, "distributions", lambda: [distribution])
     module = runpy.run_path(
         str(Path(__file__).parents[1] / "packaging/generate_third_party_licenses.py")
