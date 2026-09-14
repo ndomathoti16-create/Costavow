@@ -188,6 +188,7 @@ def _launch_desktop() -> None:
         )
         try:
             _wait_until_ready(base_url, process)
+            webview.settings["ALLOW_DOWNLOADS"] = True
             webview.create_window(
                 "Costavow · FinOps Decision Evidence",
                 workspace_url,

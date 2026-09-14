@@ -10,6 +10,7 @@ unchanged until a new version is published.
 - Bring the overview chart and attention queue forward; expand driver evidence on demand.
 - Make the decision queue searchable and let desktop users select a row to review it.
 - Open the synthetic sample directly on first run and put report exports before the preview.
+- Enable the native Save dialog: pywebview previously canceled downloads inside the executable.
 - Calculate only the selected planning/decision panel and generate export files on download.
 - Package Windows as one executable to avoid the reproduced .NET failure on Internet-marked
   loose runtime DLLs. Verify marked-download native startup and normal shutdown in release CI.

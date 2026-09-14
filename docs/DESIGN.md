@@ -124,6 +124,10 @@ trademarks, or proprietary interface were copied. Icons use the existing Streaml
 Control transitions last 120ms and respect reduced-motion preferences. Evidence uses native
 `details` elements; collapsed evidence is available through mouse, touch, and keyboard.
 
+The native window enables [pywebview downloads](https://pywebview.flowrl.com/examples/downloads),
+which are otherwise disabled by default. Exports use the standard Save dialog; users choose the
+path and confirm replacement of an existing file. No custom downloader or automatic save is added.
+
 The decision queue uses a searchable native grid. In the desktop app, selecting a row opens its
 existing review form; saved decisions and their evidence remain in the same local store. Starting a
 new analysis explicitly describes the session reset. First-run users can load the bundled synthetic

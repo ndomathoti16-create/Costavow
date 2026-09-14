@@ -84,3 +84,26 @@ def test_rebrand_keeps_legacy_storage_and_supports_new_override(monkeypatch, tmp
     monkeypatch.setenv("METRORA_USER_DATA_DIR", str(tmp_path / "legacy"))
     monkeypatch.setenv("COSTAVOW_USER_DATA_DIR", str(tmp_path / "current"))
     assert desktop._user_data_directory() == (tmp_path / "current").resolve()
+
+
+def test_native_launcher_allows_exports_and_stops_its_service(monkeypatch, tmp_path) -> None:
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+
+    settings = {}
+
+    def start(**kwargs):
+        assert settings["ALLOW_DOWNLOADS"] is True
+        assert kwargs == {"debug": False, "private_mode": True}
+
+    window = SimpleNamespace(settings=settings, create_window=Mock(), start=start)
+    process = Mock()
+    process.poll.return_value = None
+    monkeypatch.setitem(sys.modules, "webview", window)
+    monkeypatch.setattr(desktop, "_configure_desktop_environment", lambda: tmp_path)
+    monkeypatch.setattr(desktop, "_available_port", lambda: 8530)
+    monkeypatch.setattr(desktop, "_wait_until_ready", lambda *_args: None)
+    monkeypatch.setattr(desktop.subprocess, "Popen", lambda *_args, **_kwargs: process)
+    desktop._launch_desktop()
+    process.terminate.assert_called_once()
+    process.wait.assert_called_once_with(timeout=5)
